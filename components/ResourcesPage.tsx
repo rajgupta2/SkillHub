@@ -5,6 +5,7 @@ import { FileText, Eye, Download, Filter, Search, Building2, Users } from "lucid
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import FilesPreview, {SingleFilePreview} from "@/components/FilesPreview";
+import { usePathname } from "next/navigation";
 import { formateDate } from "./formateDate";
 
 interface Material {
@@ -81,13 +82,19 @@ export function ResourcesPage({url,title}:{url:string,title:string}) {
   const [singleFilePreview,setSingleFilePreview]=useState<string | null>();
 
   const handleSinglePreview=async (file:Material["files"][0])=>{
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/contribute/${file.id}`,{
-        credentials: "include",
-    });
-    const { url } = await res.json();
-    setSingleFilePreview(url);
+    // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/contribute/${file.id}`,{
+    //     credentials: "include",
+    // });
+    // const { url } = await res.json();
+    setSingleFilePreview(file.url);
     setSingleFileModal(true);
   }
+  const pathname = usePathname();
+  const baseTypes = ["All", "Notes", "Assignment", "Project"];
+  const filterTypes =
+    pathname === "/student/resources" //when accessing college resources.
+      ? [...baseTypes, "PYQ"]
+      : baseTypes;
 
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
@@ -119,7 +126,7 @@ export function ResourcesPage({url,title}:{url:string,title:string}) {
       {/* Filter Section */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-4 flex-wrap px-4 md:px-10">
         <div className="flex gap-3 flex-wrap justify-center">
-          {["All", "Notes", "Assignment","Project", "PYQ"].map((type) => (
+          { filterTypes.map((type) => (
             <Button
               key={type}
               onClick={() => setFilter(type)}

@@ -14,7 +14,9 @@ import {
   LogOut,
   GraduationCap,
   FilePlus,
-  Lightbulb
+  Lightbulb,
+  PenSquare,
+  PercentSquare
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,6 +43,7 @@ export default function StudentLayout({ upcomingChildren, studentName }: Student
     { name: "Profile", icon: <User className="w-5 h-5" />, href: "/student/profile" },
     { name: "Contribute", icon: <FilePlus className="w-5 h-5" /> , href: "/student/contribute" },
     { name: "Suggestion", icon: <Lightbulb className="w-5 h-5" /> , href: "/student/suggestion" },
+    { name: "Articles", icon: <PenSquare className="w-5 h-5" />, href: "/student/articles" },
   ];
 
   return (

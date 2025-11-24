@@ -25,11 +25,14 @@ interface Contribution {
   };
   createdAt: string;
   files: {
-    id:number,
-    originalName:string,
-    url: string,
-    contentType:string
+    id:number;
+    originalName:string;
+    url: string;
+    contentType:string;
+    materialId: number;
    }[];
+  studentId: string | null;
+  collegeId: number | null;
 }
 
 //used for preview files in form
@@ -190,7 +193,6 @@ export default function ContributePage() {
         }, 250);
       });
     }
-    setIsUploading(false);
     // Return filenames as the "uploaded" result (in real flow, return file URLs)
     return updatedFiles.map((u) => u.file.name);
   };
@@ -259,6 +261,8 @@ export default function ContributePage() {
       resetForm();
     } catch (err: any) {
       setError(err.message || "Something went wrong");
+    }finally{
+     setIsUploading(false);
     }
   };
 
@@ -277,7 +281,7 @@ export default function ContributePage() {
   };
 
   if(previewContribution && modalOpen)
-    return  ( <FilePreview material={previewContribution} open={modalOpen} onClose={() => setModalOpen(false)} /> )
+    return  ( <FilePreview material={previewContribution} onClose={() => setModalOpen(false)} /> )
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">
@@ -291,7 +295,7 @@ export default function ContributePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
         {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
@@ -300,7 +304,7 @@ export default function ContributePage() {
           transition={{ duration: 0.35 }}
           className="bg-white rounded-xl shadow p-6 border border-gray-100"
         >
-          <div className="grid gap-4">
+          <div className="grid gap-4 overflow-y-auto">
             <label className="text-sm text-gray-600">
               Title <span className="text-red-400">*</span>
             </label>

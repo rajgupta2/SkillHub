@@ -4,6 +4,8 @@ import "../globals.css";
 import SiteNavbar from "@/components/SiteNavbar";
 import SiteFooter from "@/components/SiteFooter";
 import { GraduationCap } from "lucide-react";
+import { cookies } from "next/headers";
+
 
 
 const geistSans = Geist({
@@ -61,11 +63,14 @@ export const metadata: Metadata = {
 };
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const isLoggedIn:Boolean = cookieStore.get("user")?.value ? true :false;
+
   return (
     <html lang="en">
       <head>
@@ -74,7 +79,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SiteNavbar />
+        <SiteNavbar isLoggedIn={isLoggedIn} />
           {children}
         <SiteFooter />
       </body>

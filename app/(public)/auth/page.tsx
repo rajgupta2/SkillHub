@@ -43,7 +43,7 @@ export default function AuthPage() {
 
 
 
-export const RegisterForm=({toggleMode}:{ toggleMode:(mode:string)=>void})=>{
+export const RegisterForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "otp")=>void})=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -259,7 +259,7 @@ export const RegisterForm=({toggleMode}:{ toggleMode:(mode:string)=>void})=>{
   )
 }
 
-export const LoginForm=({toggleMode})=>{
+export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "otp")=>void})=>{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

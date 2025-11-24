@@ -23,9 +23,27 @@ interface Material {
     contentType: string;
     materialId: number;
   }[];
-  studentId: string;
+  studentId: string | null;
   collegeId: number | null;
 }
+const getPreviewElement = (url:string,height:string) => {
+  //const url = previewUrls[file.id]; //for presigned url
+  if (!url) return null;
+  const ext = url.split(".").pop()!.toLowerCase();
+
+  if (["png", "jpg", "jpeg", "webp"].includes(ext))
+    return <img src={url} className={`w-full ${height} object-cover rounded-xl`} />;
+
+  if (ext === "pdf")
+    return <iframe src={url} className={`w-full ${height} rounded-xl border`} />;
+
+  return (
+    <iframe
+      src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`}
+      className={`w-full ${height}  rounded-xl border shadow-sm bg-white`}
+    />
+  );
+};
 export function SingleFilePreview({
   presignedUrl,
   onClose,
@@ -34,7 +52,7 @@ export function SingleFilePreview({
   onClose: () => void;
 }){
   return (
-    <div className="w-full mt-6 border rounded-xl shadow p-4 bg-white">
+    <div className=" mx-8 mt-6 border rounded-xl shadow p-4 bg-white">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">File Preview</h3>
         <button
@@ -44,7 +62,7 @@ export function SingleFilePreview({
           <X className="w-5 h-5" />
         </button>
       </div>
-      <iframe src={presignedUrl} className="w-full h-[600px] rounded border" />
+      { getPreviewElement(presignedUrl,"h-[600px]")}
     </div>
   )
 }
@@ -56,6 +74,8 @@ export default function FilesPreview({
   material: Material;
   onClose: () => void;
 }) {
+{
+  /*
   const [previewUrls, setPreviewUrls] = useState<{ [key: number]: string }>({});
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
@@ -79,29 +99,13 @@ export default function FilesPreview({
     // Fetch preview URL for each file (signed URL)
     material.files.forEach((file) => fetchPreview(file));
   }, []);
+  */
+}
 
 
   //single file preview
   const [singleFileModal,setSingleFileModal]=useState(false);
   const [singleFilePreview,setSingleFilePreview]=useState<string | null>();
-
-  const getPreviewElement = (file: Material["files"][0]) => {
-    const url = previewUrls[file.id];
-    if (!url) return null;
-    const ext = file.originalName.split(".").pop()?.toLowerCase();
-
-    if (["png", "jpg", "jpeg", "webp"].includes(ext))
-      return <img src={url} className="w-full h-48 object-cover rounded-xl" />;
-
-    if (ext === "pdf")
-      return <iframe src={url} className="w-full h-48 rounded-xl border" />;
-
-    return (
-      <div className="w-full h-48 flex items-center justify-center text-gray-500 bg-gray-100 rounded-xl">
-        <FileIcon className="w-10 h-10" />
-      </div>
-    );
-  };
 
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
@@ -138,13 +142,18 @@ export default function FilesPreview({
             //onClick={() => window.open(previewUrls[file.id], "_blank")}
           >
             <div className="mb-4 relative">
-              {!previewUrls[file.id] || loadingId === file.id ? (
+              {/* for presigned url
+                !previewUrls[file.id] || loadingId === file.id ? (
                 <div className="w-full h-48 flex items-center justify-center bg-gray-100 rounded-xl">
                   <Loader2 className="animate-spin w-8 h-8 text-blue-600" />
                 </div>
               ) : (
                 getPreviewElement(file)
-              )}
+              )
+              */}
+              {
+                getPreviewElement(file.url,"h-48")
+              }
             </div>
 
             <p className="font-semibold text-gray-800 truncate">
@@ -152,7 +161,8 @@ export default function FilesPreview({
             </p>
             <button
               onClick={()=>{
-                    setSingleFilePreview(previewUrls[file.id]);
+                    //setSingleFilePreview(previewUrls[file.id]);
+                    setSingleFilePreview(file.url);
                     setSingleFileModal(true);
               }}
               className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">

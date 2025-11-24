@@ -1,11 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, GraduationCap } from "lucide-react";
 
-export  default function SiteNavbar() {
+export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
   const [open, setOpen] = useState(false);
-  const isLoggedIn = false; // later replace with auth state
 
   return (
     <nav className="bg-white shadow sticky top-0 z-50">
@@ -29,7 +28,7 @@ export  default function SiteNavbar() {
 
           {isLoggedIn ? (
             <Link
-              href="/student-dashboard"
+              href="/student"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
             >
               Dashboard
@@ -59,8 +58,11 @@ export  default function SiteNavbar() {
           <div className="flex flex-col p-4 gap-3 text-gray-700 font-medium">
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
             <Link href="/about" onClick={() => setOpen(false)}>About</Link>
-            <Link href="/blog" onClick={() => setOpen(false)}>Resources</Link>
-            <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link>
+            <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>
+            { /*
+              <Link href="/resources" onClick={() => setOpen(false)}>Resources</Link>
+              <Link href="/challenges" onClick={() => setOpen(false)}>Challenges</Link>
+              <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
             <Link href="/faq" onClick={() => setOpen(false)}>FAQs</Link>
             <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
 

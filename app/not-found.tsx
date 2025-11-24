@@ -10,7 +10,7 @@ import "./globals.css"
 export default function NotFoundPage() {
   return (
     <>
-      <SiteNavbar/>
+      <SiteNavbar isLoggedIn={false}/>
           <div className=" flex flex-col items-center justify-center bg-gradient-to-b from-blue-50 to-white px-6 py-16 text-center">
 
             {/* Illustration */}

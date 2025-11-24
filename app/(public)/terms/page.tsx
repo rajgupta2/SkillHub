@@ -48,7 +48,7 @@ export default function TermsPage() {
 
             <h3 className="text-xl font-semibold mt-6 mb-2">3. Intellectual Property</h3>
             <p>
-              All content on SkillHub, except user-uploaded materials, is the property of SkillHub Pvt. Ltd.
+              All content on SkillHub, except user-uploaded materials, is the property of SkillHub.
               Reproduction, redistribution, or commercial use without permission is prohibited.
             </p>
 
@@ -107,7 +107,7 @@ export default function TermsPage() {
                 href="mailto:legal@skillhub.in"
                 className="text-blue-600 hover:underline"
               >
-                legal@skillhub.in
+                {process.env.NEXT_PUBLIC_EMAIL}
               </a>.
             </p>
           </section>

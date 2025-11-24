@@ -55,7 +55,7 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-white text-center">
+      <section className="py-20 px-6 md:px-20 bg-white text-center">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-gradient-to-r from-blue-50 to-white text-center">
+      <section id="features" className="py-20 px-6 md:px-20 bg-gradient-to-r from-blue-50 to-white text-center">
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -160,7 +160,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-white text-center">
+      <section className="py-20 px-6 md:px-20 bg-white text-center">
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
