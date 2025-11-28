@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import StudentBar from "@/components/StudentBar";
+import {wakeupBackendServer} from "../run";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -52,6 +53,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const userCookie = cookieStore.get("user")?.value;
   const studentName= userCookie  ? JSON.parse(userCookie).name : "Student";
+  wakeupBackendServer();
   return (
     <html lang="en">
       <head>

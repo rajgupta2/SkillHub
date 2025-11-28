@@ -5,6 +5,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import SiteFooter from "@/components/SiteFooter";
 import { GraduationCap } from "lucide-react";
 import { cookies } from "next/headers";
+import {wakeupBackendServer} from "../run";
 
 
 
@@ -70,6 +71,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const isLoggedIn:Boolean = cookieStore.get("user")?.value ? true :false;
+  wakeupBackendServer();
 
   return (
     <html lang="en">
