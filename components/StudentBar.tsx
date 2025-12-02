@@ -90,22 +90,11 @@ export default function StudentLayout({ upcomingChildren, studentName }: Student
             );
           })}
             <Link
-              href="/auth"
-              onClick={async()=>{
-                try{
-                  const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-                    method: "POST",
-                    credentials: "include", // IMPORTANT to clear cookies
-                  });
-                  if(res.status===200)
-                  {
-                    router.push("/auth");
-                  }else{
-                    console.log("Logout Failed!");
-                  }
-                }catch(err){
-                    console.log("Error");
-                }
+              href="#"
+              onClick={async (e) => {
+                e.preventDefault();
+                await fetch("/api/logout", { method: "POST" });
+                router.push("/auth");
               }}
               className="flex items-center gap-3 px-3 py-2   text-red-200 rounded-lg transition hover:bg-blue-600">
               <LogOut className="w-5 h-5" /> Logout

@@ -70,7 +70,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const isLoggedIn:Boolean = cookieStore.get("user")?.value ? true :false;
+  const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
   wakeupBackendServer();
 
   return (

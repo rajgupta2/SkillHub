@@ -120,7 +120,7 @@ export default function FAQPage() {
           </div>
         ) : (
           <p className="text-center text-gray-600 mt-10">
-            No FAQs found for "{search}". Try a different keyword.
+            No FAQs found for &quot;{search}&quot;. Try a different keyword.
           </p>
         )}
       </main>
