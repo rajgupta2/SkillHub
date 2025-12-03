@@ -284,17 +284,17 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
       setMessage("Login successful!");
 
       // Redirect or update app state
-      if (data.user?.token) {
-        await fetch("/api/set-auth-cookie", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token: data.user.token,
-            name: data.user.name,
-            role: data.user.role
-          }),
-        });
-      }
+      // if (data.user?.token) {
+      //   await fetch("/api/set-auth-cookie", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({
+      //       token: data.user.token,
+      //       name: data.user.name,
+      //       role: data.user.role
+      //     }),
+      //   });
+      // }
 
       if(data.user?.role=="student" || "Student")
         window.location.href = "/student";

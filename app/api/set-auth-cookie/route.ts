@@ -7,7 +7,7 @@ export function OPTIONS() {
 
   res.headers.set("Access-Control-Allow-Origin", allowedOrigin);
   res.headers.set("Access-Control-Allow-Credentials", "true");
-  res.headers.set("Access-Control-Allow-Headers", "Content-Type");
+  res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.headers.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
 
   return res;
@@ -46,6 +46,5 @@ export async function POST(req: Request) {
     // CORS headers
   res.headers.set("Access-Control-Allow-Origin", allowedOrigin  );
   res.headers.set("Access-Control-Allow-Credentials", "true");
-
   return res;
 }
