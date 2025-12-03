@@ -68,10 +68,17 @@ export default function CreateArticlePage() {
     form.append("tags", tags);
     if (thumbnail) form.append("thumbnail", thumbnail);
 
+    const tokenRes = await fetch("/api/find-token", {method: "GET"});
+    const dataToken = await tokenRes.json();
+    const token=dataToken.token;
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/articles`, {
       method: "POST",
       credentials: "include",
       body: form,
+      headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+      },
     });
 
     const data = await res.json();

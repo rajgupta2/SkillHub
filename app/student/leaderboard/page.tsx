@@ -16,8 +16,15 @@ export default function LeaderboardPage() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/leaderboard`, {
-          credentials:"include"
+          credentials:"include",
+           headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         });
         const data = await res.json();
         console.log(data);

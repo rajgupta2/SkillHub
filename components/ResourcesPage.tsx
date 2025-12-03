@@ -40,8 +40,15 @@ export function ResourcesPage({url,title}:{url:string,title:string}) {
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(url, {
-          credentials:"include"
+          credentials:"include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) throw new Error("Failed to fetch materials");

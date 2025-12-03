@@ -17,8 +17,15 @@ export default function StudentDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/dashboard-stats`, {
           credentials:"include",
+          headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          },
         });
         const data = await res.json();
         setStats(data);

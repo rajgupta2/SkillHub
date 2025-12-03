@@ -76,8 +76,15 @@ export default function ContributePage() {
 
   const fetchContributions = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(`${API_URL}/my-upload?limit=5`, {
-          credentials:"include"
+          credentials:"include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) throw new Error("Failed to fetch");
@@ -240,10 +247,17 @@ export default function ContributePage() {
     });
 
     try {
+      const tokenRes = await fetch("/api/find-token", {method: "GET"});
+      const dataToken = await tokenRes.json();
+      const token=dataToken.token;
       const res = await fetch(API_URL, {
         method: "POST",
         credentials:"include",
         body: formData,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
       });
       const data = await res.json();
 

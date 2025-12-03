@@ -45,8 +45,15 @@ export default function StudentProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(API_URL, {
-          credentials:"include"
+          credentials:"include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) throw new Error("Failed to fetch profile");
@@ -72,10 +79,13 @@ export default function StudentProfilePage() {
   const handleSave = async () => {
     if (!profile) return;
     try {
+      const tokenRes = await fetch("/api/find-token", {method: "GET"});
+      const token = await tokenRes.json();
       const res = await fetch(API_URL, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         credentials:"include",
         body: JSON.stringify({

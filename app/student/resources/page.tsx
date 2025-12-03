@@ -27,13 +27,19 @@ export default function Resources(){
 
 export const FetchPeers=()=>{
   const [peers, setPeers] = useState<Peers[]>([]);
-
   // Fetch peers
   useEffect(() => {
     const fetchPeers = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/college-peers`, {
-          credentials:"include"
+          credentials:"include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) throw new Error("Failed to fetch peers");
