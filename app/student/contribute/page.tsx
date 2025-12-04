@@ -255,7 +255,6 @@ export default function ContributePage() {
         credentials:"include",
         body: formData,
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
       });
