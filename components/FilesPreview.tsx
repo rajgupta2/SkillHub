@@ -32,10 +32,10 @@ const getPreviewElement = (url:string,height:string) => {
   const ext = url.split(".").pop()!.toLowerCase();
 
   if (["png", "jpg", "jpeg", "webp"].includes(ext))
-    return <img src={url} className={`w-full ${height} object-cover rounded-xl`} />;
+    return <img src={url} className={`w-full ${height} object-contain rounded-xl`} />;
 
   if (ext === "pdf")
-    return <iframe src={url} className={`w-full ${height} rounded-xl border`} />;
+    return <iframe src={`https://docs.google.com/gview?embedded=true&url=${url}`} className={`w-full ${height} rounded-xl border`} />;
 
   return (
     <iframe
