@@ -1,8 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FileIcon, Eye, Loader2, X } from "lucide-react";
+import { FileIcon, Eye, Loader2, X, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { formateDate } from "@/components/formateDate";
+
+
+const handleShare = async (url:string) => {
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Check this out",
+        text: "View this resource",
+        url,
+      });
+    } catch (e) {
+      console.log("Share cancelled");
+    }
+  } else {
+    await navigator.clipboard.writeText(url);
+    alert("Link copied to clipboard!");
+  }
+};
 
 
 interface Material {
@@ -13,7 +32,6 @@ interface Material {
   description: string;
   uploadedBy: {
     name: string;
-    email: string;
   };
   createdAt: string;
   files: {
@@ -106,34 +124,6 @@ export default function FilesPreview({
   material: Material;
   onClose: () => void;
 }) {
-{
-  /*
-  const [previewUrls, setPreviewUrls] = useState<{ [key: number]: string }>({});
-  const [loadingId, setLoadingId] = useState<number | null>(null);
-
-  useEffect(() => {
-    // Fetch preview URL for a file (signed URL)
-    const fetchPreview = async (file: Material["files"][0]) => {
-      try {
-        setLoadingId(file.id);
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/student/contribute/${file.id}`,
-          {
-            credentials: "include",
-          }
-        );
-        const { url } = await res.json();
-        setPreviewUrls((prev) => ({ ...prev, [file.id]: url }));
-      } finally {
-        setLoadingId(null);
-      }
-    };
-    // Fetch preview URL for each file (signed URL)
-    material.files.forEach((file) => fetchPreview(file));
-  }, []);
-  */
-}
-
 
   //single file preview
   const [singleFileModal,setSingleFileModal]=useState(false);
@@ -142,6 +132,18 @@ export default function FilesPreview({
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
 
+  const getShareUrl = (id: number) => {
+    const current = window.location.href;
+
+    // Extract last part of URL
+    const lastPart = current.split("/").pop();
+
+    // If last part is already a number / ID then return current
+    if (Number(lastPart) === Number(id)) return current;
+
+    // Otherwise append the ID
+    return `${window.location.href}/${id}`;
+  };
 
   return (
     <div className="p-6 relative">
@@ -162,6 +164,17 @@ export default function FilesPreview({
         Uploaded by {material.uploadedBy.name} • {formateDate(material.createdAt)}
       </p>
 
+      <div className="absolute top-16 right-4">
+        <button
+          onClick={()=>{handleShare(getShareUrl(material.id))}}
+          className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
+                    rounded-md hover:bg-blue-700 transition shadow-sm mt-2 md:mt-0
+                    w-fit text-sm"
+        >
+          <Share2 className="w-4 h-4" />
+          Share
+        </button>
+      </div>
       {/* Files Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         {material.files.map((file) => (

@@ -1,12 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FileText, Eye, Download, Filter, Search, Building2, Users } from "lucide-react";
+import { FileText, Eye, Download, Filter, Search, Building2, Users, Share2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import FilesPreview, {SingleFilePreview} from "@/components/FilesPreview";
 import { usePathname } from "next/navigation";
 import { formateDate } from "./formateDate";
+import Link from "next/link";
 
 interface Material {
   id: number;
@@ -16,7 +17,6 @@ interface Material {
   description: string;
   uploadedBy: {
     name: string;
-    email: string;
   };
   createdAt: string;
   files: {
@@ -30,6 +30,24 @@ interface Material {
   collegeId: number | null;
 }
 
+const handleShare = async (url:string) => {
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Check this out",
+        text: "View this resource",
+        url,
+      });
+    } catch (e) {
+      console.log("Share cancelled");
+    }
+  } else {
+    await navigator.clipboard.writeText(url);
+    alert("Link copied to clipboard!");
+  }
+};
+
 export function ResourcesPage({url,title,homePage=false}:{url:string,title:string,homePage?:boolean}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
@@ -40,14 +58,10 @@ export function ResourcesPage({url,title,homePage=false}:{url:string,title:strin
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
-        const tokenRes = await fetch("/api/find-token", {method: "GET"});
-        const dataToken = await tokenRes.json();
-        const token=dataToken.token;
         const res = await fetch(url, {
           credentials:"include",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
           },
         });
 
@@ -97,7 +111,6 @@ export function ResourcesPage({url,title,homePage=false}:{url:string,title:strin
     setSingleFileModal(true);
   }
   const filterTypes = ["All", "Notes", "Assignment", "Project","PYQ"];
-
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
 
@@ -111,17 +124,29 @@ export function ResourcesPage({url,title,homePage=false}:{url:string,title:strin
         <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
           <Building2 className="w-6 h-6 text-blue-600" /> {title}
         </h1>
+        {/* Search + Share Container */}
+        <div className="w-full md:w-auto flex flex-row items-center gap-3">
+          <div className="relative w-90 mt-4 md:mt-0">
+            <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search by title, subject, or uploader..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
 
-        {/* Search Bar */}
-        <div className="relative w-full md:w-96 mt-4 md:mt-0">
-          <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search by title, subject, or uploader..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
+          {/* Share button – small & inline on mobile */}
+          <button
+            onClick={()=>{handleShare(window.location.href)}}
+            className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
+                      rounded-md hover:bg-blue-700 transition shadow-sm md:mt-0
+                      w-fit text-sm mt-4"
+          >
+            <Share2 className="w-5 h-5" />
+            Share
+          </button>
         </div>
       </div>
 
@@ -162,7 +187,7 @@ export function ResourcesPage({url,title,homePage=false}:{url:string,title:strin
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="bg-white rounded-2xl shadow-md hover:shadow-lg p-6 border border-blue-100"
+                    className=" flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg p-6 border border-blue-100"
                   >
                     <div className="flex items-center justify-between">
                       <FileText className="w-8 h-8 text-blue-600" />
@@ -189,7 +214,7 @@ export function ResourcesPage({url,title,homePage=false}:{url:string,title:strin
                     <p className="text-gray-400 text-xs mt-1">
                       📅 {formateDate(resource.createdAt)}
                     </p>
-                    <div className="flex justify-end mt-5">
+                    <div className="flex justify-end mt-auto">
                         <Button className="bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer"
                           onClick={
                             ()=>{
