@@ -36,7 +36,7 @@ export default function StudentLayout({ upcomingChildren, studentName }: Student
 
   const links = [
     { name: "Dashboard", icon: <Home className="w-5 h-5" />, href: "/student" },
-    { name: "Materials", icon: <BookOpen className="w-5 h-5" />, href: "/student/materials" },
+    // { name: "Materials", icon: <BookOpen className="w-5 h-5" />, href: "/student/materials" },
     // { name: "Challenges", icon: <CodeXml className="w-5 h-5" />, href: "/student/challenges" },
     { name: "Leaderboard", icon: <Trophy className="w-5 h-5" />, href: "/student/leaderboard" },
     { name: "College Resources", icon: <Building2 className="w-5 h-5" />, href: "/student/resources" },

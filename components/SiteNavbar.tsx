@@ -7,7 +7,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow sticky top-0 z-50">
+    <nav className="bg-white shadow top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
@@ -19,9 +19,8 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
         <div className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
           <Link href="/">Home</Link>
           <Link href="/about">About</Link>
-          <Link href="/#features">Features</Link>
-         { /* <Link href="/resources">Resources</Link>
-          <Link href="/challenges">Challenges</Link>
+          <Link href="/materials">Resources</Link>
+          { /* <Link href="/challenges">Challenges</Link>
           <Link href="/leaderboard">Leaderboard</Link> */}
           <Link href="/faq">FAQs</Link>
           <Link href="/contact">Contact</Link>

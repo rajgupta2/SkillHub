@@ -26,23 +26,53 @@ interface Material {
   studentId: string | null;
   collegeId: number | null;
 }
-const getPreviewElement = (url:string,height:string) => {
+const getPreviewElement = (url:string,height?:string) => {
   //const url = previewUrls[file.id]; //for presigned url
   if (!url) return null;
   const ext = url.split(".").pop()!.toLowerCase();
+  const isSmall = height === "h-48"; // grid preview
+  const isLarge = !isSmall;          // single modal view
 
-  if (["png", "jpg", "jpeg", "webp"].includes(ext))
-    return <img src={url} className={`w-full ${height} object-contain rounded-xl`} />;
+  // ----------- IMAGE -----------
+  if (["png", "jpg", "jpeg", "webp"].includes(ext)) {
+    return (
+      <img
+        src={url}
+        className={
+          isSmall
+            ? "w-full h-[680px] object-cover rounded-xl" // grid preview
+            : "max-w-full object-contain rounded-xl" // full preview
+        }
+      />
+    );
+  }
 
-  if (ext === "pdf")
-    return <iframe src={`https://docs.google.com/gview?embedded=true&url=${url}`} className={`w-full ${height} rounded-xl border`} />;
+   // ----------- PDF -----------
+  if (ext === "pdf") {
+    return (
+      <iframe
+        src={`https://docs.google.com/gview?embedded=true&url=${url}`}
+        className={
+          isSmall
+            ? "w-full h-48 pointer-events-none rounded-xl border" // small card, disabled scroll
+            : "w-full h-[680px] rounded-xl border" // modal view scroll inside iframe
+        }
+      />
+    );
+  }
 
+   // ----------- DOCX / PPTX -----------
   return (
     <iframe
       src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`}
-      className={`w-full ${height}  rounded-xl border shadow-sm bg-white`}
+      className={
+        isSmall
+          ? "w-full h-48 rounded-xl border" // thumbnail, no scroll
+          : "w-full h-[680px] rounded-xl border shadow-sm bg-white" // modal scroll
+      }
     />
   );
+
 };
 export function SingleFilePreview({
   presignedUrl,
@@ -52,7 +82,7 @@ export function SingleFilePreview({
   onClose: () => void;
 }){
   return (
-    <div className=" mx-8 mt-6 border rounded-xl shadow p-4 bg-white">
+    <div className=" mx-8 mt-6 border rounded-xl shadow p-4 bg-white overflow-hidden">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">File Preview</h3>
         <button
@@ -62,7 +92,9 @@ export function SingleFilePreview({
           <X className="w-5 h-5" />
         </button>
       </div>
-      { getPreviewElement(presignedUrl,"h-[600px]")}
+       <div className="overflow-hidden">
+        {getPreviewElement(presignedUrl,"h-[700px]")}
+      </div>
     </div>
   )
 }

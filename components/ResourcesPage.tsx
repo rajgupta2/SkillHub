@@ -30,7 +30,7 @@ interface Material {
   collegeId: number | null;
 }
 
-export function ResourcesPage({url,title}:{url:string,title:string}) {
+export function ResourcesPage({url,title,homePage=false}:{url:string,title:string,homePage?:boolean}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -96,12 +96,7 @@ export function ResourcesPage({url,title}:{url:string,title:string}) {
     setSingleFilePreview(file.url);
     setSingleFileModal(true);
   }
-  const pathname = usePathname();
-  const baseTypes = ["All", "Notes", "Assignment", "Project"];
-  const filterTypes =
-    pathname === "/student/resources" //when accessing college resources.
-      ? [...baseTypes, "PYQ"]
-      : baseTypes;
+  const filterTypes = ["All", "Notes", "Assignment", "Project","PYQ"];
 
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
@@ -150,7 +145,7 @@ export function ResourcesPage({url,title}:{url:string,title:string}) {
       </div>
 
       {/* Scrollable Materials Section */}
-      <main className="px-8 md:px-16 py-10 overflow-y-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100">
+      <main className={`px-8 md:px-16 py-10 overflow-y-auto ${homePage ? "" : "max-h-[60vh]"} scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}>
         {loading ? (
           <div className="text-center text-gray-500 py-10">Loading materials...</div>
         ) : filteredResources.length === 0 ? (
@@ -159,7 +154,7 @@ export function ResourcesPage({url,title}:{url:string,title:string}) {
             <p>No materials found. Try searching something else.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className={`grid grid-cols-1 sm:grid-cols-2 ${homePage ? "lg:grid-cols-4 gap-6" : "lg:grid-cols-3 gap-8"} `}>
             {
               filteredResources.map((resource) => (
                 <motion.div

@@ -80,7 +80,8 @@ export default function StudentProfilePage() {
     if (!profile) return;
     try {
       const tokenRes = await fetch("/api/find-token", {method: "GET"});
-      const token = await tokenRes.json();
+      const dataToken = await tokenRes.json();
+      const token=dataToken.token;
       const res = await fetch(API_URL, {
         method: "PUT",
         headers: {
