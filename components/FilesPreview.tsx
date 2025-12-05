@@ -139,7 +139,7 @@ export default function FilesPreview({
     const lastPart = current.split("/").pop();
 
     // If last part is already a number / ID then return current
-    if (Number(lastPart) === Number(id)) return current;
+    if (Number(lastPart) === id) return current;
 
     // Otherwise append the ID
     return `${window.location.href}/${id}`;
