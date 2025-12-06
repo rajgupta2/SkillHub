@@ -9,7 +9,7 @@ export default function MaterialPage(){
   return (
   <>
     <ResourcesPage
-      url={`${process.env.NEXT_PUBLIC_API_URL}/student/get-materials?limit=150`}
+      url={`${process.env.NEXT_PUBLIC_API_URL}/material?limit=150`}
       title="All Study Resources"
     />
     <section className="text-center bg-blue-600 text-white py-16 mt-12">

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import {
   User,
   BookOpen,
@@ -12,8 +11,6 @@ import {
   Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const API_URL=`${process.env.NEXT_PUBLIC_API_URL}/student/profile`;
 
 // ✅ Define types from your backend response
 interface UserProfile {
@@ -48,7 +45,7 @@ export default function StudentProfilePage() {
         const tokenRes = await fetch("/api/find-token", {method: "GET"});
         const dataToken = await tokenRes.json();
         const token=dataToken.token;
-        const res = await fetch(API_URL, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
           credentials:"include",
           headers: {
             "Content-Type": "application/json",
@@ -82,7 +79,7 @@ export default function StudentProfilePage() {
       const tokenRes = await fetch("/api/find-token", {method: "GET"});
       const dataToken = await tokenRes.json();
       const token=dataToken.token;
-      const res = await fetch(API_URL, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

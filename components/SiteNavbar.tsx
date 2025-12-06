@@ -57,9 +57,10 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
           <div className="flex flex-col p-4 gap-3 text-gray-700 font-medium">
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
             <Link href="/about" onClick={() => setOpen(false)}>About</Link>
-            <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>
+            <Link href="/materials" onClick={() => setOpen(false)}>Material</Link>
+
             { /*
-              <Link href="/resources" onClick={() => setOpen(false)}>Resources</Link>
+              <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>
               <Link href="/challenges" onClick={() => setOpen(false)}>Challenges</Link>
               <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
             <Link href="/faq" onClick={() => setOpen(false)}>FAQs</Link>
@@ -67,7 +68,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
 
             {isLoggedIn ? (
               <Link
-                href="/student-dashboard"
+                href="/student"
                 onClick={() => setOpen(false)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center"
               >

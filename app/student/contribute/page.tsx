@@ -9,8 +9,6 @@ import FilePreview from "@/components/FilesPreview";
 import { log } from "console";
 import { formateDate } from "@/components/formateDate";
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/student/contribute`; // 🔹 update if your backend runs elsewhere
-
 
 //used for preview files in recent contribution section
 interface Contribution {
@@ -79,7 +77,7 @@ export default function ContributePage() {
         const tokenRes = await fetch("/api/find-token", {method: "GET"});
         const dataToken = await tokenRes.json();
         const token=dataToken.token;
-        const res = await fetch(`${API_URL}/my-upload?limit=5`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recent-contribution?limit=5`, {
           credentials:"include",
           headers: {
             "Content-Type": "application/json",
@@ -250,7 +248,7 @@ export default function ContributePage() {
       const tokenRes = await fetch("/api/find-token", {method: "GET"});
       const dataToken = await tokenRes.json();
       const token=dataToken.token;
-      const res = await fetch(API_URL, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material`, {
         method: "POST",
         credentials:"include",
         body: formData,

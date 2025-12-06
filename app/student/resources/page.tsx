@@ -17,7 +17,7 @@ export default function Resources(){
   return (
     <>
         <ResourcesPage
-            url={`${process.env.NEXT_PUBLIC_API_URL}/student/contribute/college-resources?limit=50`}
+            url={`${process.env.NEXT_PUBLIC_API_URL}/college-resources?limit=50`}
             title="My College Resources"
           />
         <FetchPeers/>
@@ -34,7 +34,7 @@ export const FetchPeers=()=>{
         const tokenRes = await fetch("/api/find-token", {method: "GET"});
         const dataToken = await tokenRes.json();
         const token=dataToken.token;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/college-peers`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/college-peers`, {
           credentials:"include",
           headers: {
             "Content-Type": "application/json",

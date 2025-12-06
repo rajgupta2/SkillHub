@@ -7,7 +7,7 @@ interface DashboardStats {
   email: string,
   role: string,
   rank: number;
-  materialsCount: number;
+  materials_count: number;
   xpPoints: number;
 }
 
@@ -20,7 +20,7 @@ export default function StudentDashboard() {
         const tokenRes = await fetch("/api/find-token", {method: "GET"});
         const dataToken = await tokenRes.json();
         const token=dataToken.token;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/dashboard-stats`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard-stats`, {
           credentials:"include",
           headers: {
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function StudentDashboard() {
 
       <div className="bg-white rounded-xl shadow p-6 border-t-4 border-green-600">
         <h3 className="text-lg font-semibold mb-2 text-gray-700">Materials Uploaded</h3>
-        <p className="text-3xl font-bold text-green-700">{stats.materialsCount}</p>
+        <p className="text-3xl font-bold text-green-700">{stats.materials_count}</p>
         <p className="text-sm text-gray-500 mt-1">Total Contributions</p>
       </div>
 

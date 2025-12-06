@@ -58,10 +58,14 @@ export function ResourcesPage({url,title,homePage=false}:{url:string,title:strin
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
         const res = await fetch(url, {
           credentials:"include",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
         });
 

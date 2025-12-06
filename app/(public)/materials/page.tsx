@@ -1,6 +1,5 @@
 "use client";
 
-import { Upload} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ResourcesPage } from "@/components/ResourcesPage";
@@ -9,7 +8,7 @@ export default function MaterialPage(){
   return (
   <>
     <ResourcesPage
-      url={`${process.env.NEXT_PUBLIC_API_URL}/public/get-materials?limit=150`}
+      url={`${process.env.NEXT_PUBLIC_API_URL}/material?limit=150`}
       homePage={true}
       title="All Study Resources"
     />

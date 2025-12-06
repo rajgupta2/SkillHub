@@ -40,7 +40,7 @@ export default function MaterialDetailsPage() {
     async function materialLoad() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/public/get-materials/${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}/material/${id}`
         );
         const data = await res.json();
         setMaterial(data.material);

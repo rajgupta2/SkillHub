@@ -47,7 +47,7 @@ export default function ArticleDetailPage() {
         const tokenRes = await fetch("/api/find-token", {method: "GET"});
         const dataToken = await tokenRes.json();
         const token=dataToken.token;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/articles/${id}`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/${id}`,{
             credentials:"include",
             headers: {
             "Content-Type": "application/json",

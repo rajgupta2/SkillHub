@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Lightbulb, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/student/suggestion`;
 
 
 export default function SuggestionsPage() {
@@ -18,7 +17,7 @@ export default function SuggestionsPage() {
     const tokenRes = await fetch("/api/find-token", {method: "GET"});
     const dataToken = await tokenRes.json();
     const token=dataToken.token;
-    const res = await fetch(API_URL, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/suggestion`, {
         method: "POST",
         credentials:"include",
         body: JSON.stringify(formData),

@@ -132,18 +132,6 @@ export default function FilesPreview({
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
 
-  const getShareUrl = (id: number) => {
-    const current = window.location.href;
-
-    // Extract last part of URL
-    const lastPart = current.split("/").pop();
-
-    // If last part is already a number / ID then return current
-    if (Number(lastPart) === id) return current;
-
-    // Otherwise append the ID
-    return `${window.location.href}/${id}`;
-  };
 
   return (
     <div className="p-6 relative">
@@ -166,7 +154,7 @@ export default function FilesPreview({
 
       <div className="absolute top-16 right-4">
         <button
-          onClick={()=>{handleShare(getShareUrl(material.id))}}
+          onClick={()=>{handleShare(`${window.location.origin}/materials/${material.id}`)}}
           className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
                     rounded-md hover:bg-blue-700 transition shadow-sm mt-2 md:mt-0
                     w-fit text-sm"

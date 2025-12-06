@@ -4,10 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, User, GraduationCap, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/auth`; //update if your backend runs elsewhere
-
-
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register" | "otp">("login");
   const toggleMode = (mode:"login" | "register" | "otp") => setMode(mode);
@@ -60,7 +56,7 @@ export const RegisterForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" 
     setMessage("");
 
     try {
-      const res = await fetch(`${API_URL}/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,7 +79,7 @@ export const RegisterForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" 
   const verifyOtp = async () => {
     setLoading(true);
     try{
-     const res = await fetch(`${API_URL}/verify-otp`, {
+     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify-otp`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -272,7 +268,7 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
     setMessage("");
 
     try {
-      const res = await fetch(`${API_URL}/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

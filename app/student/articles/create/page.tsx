@@ -71,7 +71,7 @@ export default function CreateArticlePage() {
     const tokenRes = await fetch("/api/find-token", {method: "GET"});
     const dataToken = await tokenRes.json();
     const token=dataToken.token;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/articles`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article`, {
       method: "POST",
       credentials: "include",
       body: form,
