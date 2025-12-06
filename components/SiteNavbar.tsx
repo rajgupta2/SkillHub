@@ -57,7 +57,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
           <div className="flex flex-col p-4 gap-3 text-gray-700 font-medium">
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
             <Link href="/about" onClick={() => setOpen(false)}>About</Link>
-            <Link href="/materials" onClick={() => setOpen(false)}>Material</Link>
+            <Link href="/materials" onClick={() => setOpen(false)}>Resources</Link>
 
             { /*
               <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>

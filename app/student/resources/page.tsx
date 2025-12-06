@@ -52,14 +52,13 @@ export const FetchPeers=()=>{
 
     fetchPeers();
   }, []);
-
   return (
       <div className="mt-8 mb-6 px-4 md:px-10">
         <h2 className="text-xl font-semibold mb-4 text-gray-700 flex items-center gap-2">
           <Users className="w-5 h-5 text-green-600" /> College Peers
         </h2>
 
-        <div className="overflow-x-auto bg-white rounded-xl shadow">
+        <div className="overflow-x-auto bg-white rounded-xl shadow overflow-auto">
           <table className="min-w-full table-auto">
             <thead className="bg-blue-600 text-white">
               <tr>

@@ -22,7 +22,7 @@ export default function SiteFooter() {
           <ul className="space-y-2 text-sm opacity-90">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/about">About</Link></li>
-            <li><Link href="/blog">Resources</Link></li>
+            <li><Link href="/materials">Resources</Link></li>
             {/*<li><Link href="/leaderboard">Leaderboard</Link></li>*/}
             <li><Link href="/faq">FAQs</Link></li>
             <li><Link href="/contact">Contact</Link></li>

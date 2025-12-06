@@ -47,7 +47,7 @@ export default function StudentLayout({ upcomingChildren, studentName }: Student
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 z-40 w-64 h-screen flex flex-col bg-gradient-to-b from-blue-800 to-blue-600 text-white transition-transform duration-300 ease-in-out ${
