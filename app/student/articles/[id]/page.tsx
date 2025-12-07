@@ -153,5 +153,6 @@ export default function ArticleDetailPage() {
         */}
       </div>
     </div>
+  </>
   );
 }

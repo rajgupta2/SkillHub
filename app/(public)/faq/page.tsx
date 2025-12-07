@@ -1,5 +1,5 @@
 import FAQPage from "./FAQ";
-
+import { Metadata } from "next";
 
 export const metadata:Metadata = {
   title: "SkillHub FAQ – Answers to Student & College Queries",

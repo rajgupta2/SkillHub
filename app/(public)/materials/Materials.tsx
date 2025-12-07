@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ResourcesPage } from "@/components/ResourcesPage";
 import { useEffect, useState } from "react";
-import { Head } from "next/document";
 
 interface Material {
   id: number;

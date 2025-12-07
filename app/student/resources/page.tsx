@@ -1,8 +1,9 @@
 "use server"
+import { GET } from "@/app/api/find-token/route";
 import Resources from "./Resources";
 
 async function getCollege(){
-  const tokenRes = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/find-token`, {method: "GET", cache: "no-store"});
+  const tokenRes = await GET();
   const dataToken = await tokenRes.json();
   const token=dataToken.token;
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/college`, {
@@ -14,8 +15,7 @@ async function getCollege(){
   });
 
   const data = await res.json();
-  console.log(data);
-  return null;
+  return data.college;
 }
 
 export async function generateMetadata() {
