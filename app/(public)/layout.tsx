@@ -21,26 +21,32 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: "SkillHub – Connect, Learn, and Grow with College Peers",
+  title: "SkillHub – Connect, Learn, and Grow with College Peers | Student Resources & Achievements",
   description:
-    "SkillHub connects students with study materials, challenges, and peers to enhance college learning and collaboration. SkillHub is an online platform for students and educators to share knowledge, track achievements, and collaborate on learning.",
+    "SkillHub is a modern student platform to share achievements, attend events, explore projects, and find high-quality study resources to grow your skills.",
   keywords: [
     "SkillHub",
-    "College learning platform",
+    "student platform",
     "student resources",
+    "college resources",
     "study materials",
-    "college challenges",
+    "student achievements",
+    "events and workshops",
+    "projects for students",
     "Student Zone",
     "Education",
     "Learning",
     "Courses",
-    "Achievements"
+    "Achievements",
+    "PYQs",
+    "Previous Year Question Papers",
+    "tech community"
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
     title: "SkillHub – Empowering Learners Together",
     description:
-      "Access study materials, compete in challenges, and connect with your college peers.",
+      "Join SkillHub to discover resources, showcase achievements, attend events, and connect with peers.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     siteName: "SkillHub",
     images: [
@@ -48,7 +54,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SkillHub Platform",
+        alt: "SkillHub Student Platform",
       },
     ],
     locale: "en_US",

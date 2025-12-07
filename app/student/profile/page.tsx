@@ -11,6 +11,8 @@ import {
   Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Head } from "next/document";
+import ProfileHead from "./ProfileHead";
 
 // ✅ Define types from your backend response
 interface UserProfile {
@@ -107,6 +109,8 @@ export default function StudentProfilePage() {
   if (!profile) return null;
 
   return (
+    <>
+    <ProfileHead profile={profile}/>
     <section className="p-6 min-h-screen bg-gray-50">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
@@ -298,5 +302,6 @@ export default function StudentProfilePage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

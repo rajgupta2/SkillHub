@@ -8,9 +8,10 @@ import DOMPurify from "dompurify";
 import { Calendar, User, Clock, ArrowLeft, Heart } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import ArticleHead from "./ArticleHead";
 
 // Interface from your backend
-interface Article {
+export interface Article {
   id: number;
   title: string;
   thumbnail?: string | null;
@@ -75,6 +76,8 @@ export default function ArticleDetailPage() {
   const readingTime = calculateReadingTime(article.contentMd);
 
   return (
+    <>
+    <ArticleHead article={article}/>
     <div className="min-h-screen pb-20">
 
       {/* BACK BUTTON */}

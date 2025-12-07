@@ -48,40 +48,9 @@ const handleShare = async (url:string) => {
   }
 };
 
-export function ResourcesPage({url,title,homePage=false}:{url:string,title:string,homePage?:boolean}) {
+export function ResourcesPage({materials,title,loading,homePage=false}:{materials:Material[],title:string,loading:boolean,homePage?:boolean}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
-  const [materials, setMaterials] = useState<Material[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // ✅ Fetch materials from backend
-  useEffect(() => {
-    const fetchMaterials = async () => {
-      try {
-        const tokenRes = await fetch("/api/find-token", {method: "GET"});
-        const dataToken = await tokenRes.json();
-        const token=dataToken.token;
-        const res = await fetch(url, {
-          credentials:"include",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch materials");
-
-        const data = await res.json();
-        setMaterials(data.materials || []);
-      } catch (err) {
-        console.error("Error fetching materials:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMaterials();
-  }, []);
 
     // ✅ Filter + Search logic
   const filteredResources = materials.filter((r) => {

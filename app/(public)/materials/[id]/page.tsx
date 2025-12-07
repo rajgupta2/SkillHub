@@ -1,8 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import FilesPreview from "@/components/FilesPreview";
+import { Metadata } from "next";
 
 interface Material {
   id: number;
@@ -10,11 +6,9 @@ interface Material {
   subject: string;
   type: string;
   description: string;
-  uploadedBy: {
-    name: string;
-  };
+  uploadedBy: { name: string };
   createdAt: string;
-  files: {
+  files:{
     id: number;
     originalName: string;
     url: string;
@@ -25,67 +19,52 @@ interface Material {
   collegeId: number | null;
 }
 
+export async function getMaterial(id: string): Promise<Material> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material/${id}`);
+  const data = await res.json();
+  return data.material;
+}
 
-export default function MaterialDetailsPage() {
-  const { id } = useParams();
-  const router = useRouter();
+export async function generateMetadata({
+    params,
+  }: {
+    params:{  id:string};
+  }): Promise<Metadata> {
+  const {id}=await params;
+  const material = await getMaterial(id);
 
-  const [material, setMaterial] = useState<Material>();
-  const [loading, setLoading] = useState(true);
+  const keywords = ["SkillHub", "student material", material.type, material.subject,material.title,material.description];
 
-  // ---------------------------
-  // Fetch material by ID
-  // ---------------------------
-  useEffect(() => {
-    async function materialLoad() {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/material/${id}`
-        );
-        const data = await res.json();
-        setMaterial(data.material);
-      } catch (error) {
-        console.error("Error loading material", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (id) materialLoad();
-  }, [id]);
-
-  // ---------------------------
-  // Share handler
-  // ---------------------------
-  const handleShare = async () => {
-    const url = window.location.href;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: material?.title,
-          text: "Check this material",
-          url,
-        });
-      } catch {}
-    } else {
-      await navigator.clipboard.writeText(url);
-      alert("Link copied!");
-    }
+  return {
+    title: `${material.title} – ${material.type} | SkillHub`,
+    description: material.description || material.title,
+    keywords,
+    openGraph: {
+      title: `${material.title} – ${material.type} | SkillHub`,
+      description: material.description,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/student/materials/${material.id}`,
+      siteName: "SkillHub",
+      images: [
+        {
+          url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: material.title,
+        },
+      ],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${material.title} – ${material.type} | SkillHub`,
+      description: material.description,
+      images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`],
+    },
   };
+}
 
-  if (loading) {
-    return (
-      <div className="p-10 text-center text-gray-600">Loading...</div>
-    );
-  }
+import SingleMaterialPage from "./SingleMaterial";
 
-  if (!material) {
-    return (
-      <div className="p-10 text-center text-red-600">Material not found.</div>
-    );
-  }
-
-  return <FilesPreview material={material} onClose={()=>router.push("/materials")}/>
-
+export default async function MaterialPage({ params }: { params: {id:string} }) {
+  return <SingleMaterialPage />
 }
