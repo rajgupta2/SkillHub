@@ -28,9 +28,10 @@ export async function getMaterial(id: string): Promise<Material> {
 export async function generateMetadata({
     params,
   }: {
-    params:{  id:string};
+    params:any;
   }): Promise<Metadata> {
-  const {id}=await params;
+  const parameters=await params;
+  const id=parameters.params[1];
   const material = await getMaterial(id);
 
   const keywords = ["SkillHub", "student material", material.type, material.subject,material.title,material.description];
@@ -42,7 +43,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${material.title} – ${material.type} | SkillHub`,
       description: material.description,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/student/materials/${material.id}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/student/materials/${material.title}/${material.id}`,
       siteName: "SkillHub",
       images: [
         {
@@ -65,6 +66,6 @@ export async function generateMetadata({
 
 import SingleMaterialPage from "./SingleMaterial";
 
-export default async function MaterialPage({ params }: { params: {id:string} }) {
+export default async function MaterialPage() {
   return <SingleMaterialPage />
 }

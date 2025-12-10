@@ -37,7 +37,7 @@ const handleShare = async (url:string) => {
       await navigator.share({
         title: "Check this out",
         text: "View this resource",
-        url,
+        url:`${window.location.origin}/materials`,
       });
     } catch (e) {
       console.log("Share cancelled");

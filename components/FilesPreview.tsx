@@ -5,12 +5,12 @@ import { motion } from "framer-motion";
 import { formateDate } from "@/components/formateDate";
 
 
-const handleShare = async (url:string) => {
+const handleShare = async (url:string,title:string) => {
 
   if (navigator.share) {
     try {
       await navigator.share({
-        title: "Check this out",
+        title:title,
         text: "View this resource",
         url,
       });
@@ -132,6 +132,7 @@ export default function FilesPreview({
   if(singleFilePreview && singleFileModal)
     return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
 
+  const title=material.title.split(" ").join("-");
 
   return (
     <div className="p-6 relative">
@@ -154,7 +155,7 @@ export default function FilesPreview({
 
       <div className="absolute top-16 right-4">
         <button
-          onClick={()=>{handleShare(`${window.location.origin}/materials/${material.id}`)}}
+          onClick={()=>{handleShare(`${window.location.origin}/materials/${title}/${material.id}`,material.title)}}
           className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
                     rounded-md hover:bg-blue-700 transition shadow-sm mt-2 md:mt-0
                     w-fit text-sm"

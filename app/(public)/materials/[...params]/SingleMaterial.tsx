@@ -27,7 +27,9 @@ interface Material {
 
 
 export default function SingleMaterialPage() {
-  const { id } = useParams();
+  const para:{params:string[]} = useParams();
+  const params:string[]=para.params;
+  const id=params[1];
   const router = useRouter();
 
   const [material, setMaterial] = useState<Material>();
