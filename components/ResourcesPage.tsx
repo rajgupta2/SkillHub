@@ -4,10 +4,9 @@ import { motion } from "framer-motion";
 import { FileText, Eye, Download, Filter, Search, Building2, Users, Share2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import FilesPreview, {SingleFilePreview} from "@/components/FilesPreview";
-import { usePathname } from "next/navigation";
 import { formateDate } from "./formateDate";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Material {
   id: number;
@@ -62,34 +61,8 @@ export function ResourcesPage({materials,title,loading,homePage=false}:{material
     return matchesFilter && matchesSearch;
   });
 
-  //preview Material
-  const [previewMaterial, setpreviewMaterial] = useState<Material | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleView = (material: Material) => {
-    setpreviewMaterial(material);
-    setModalOpen(true);
-  };
-
-  //single file preview
-  const [singleFileModal,setSingleFileModal]=useState(false);
-  const [singleFilePreview,setSingleFilePreview]=useState<string | null>();
-
-  const handleSinglePreview=async (file:Material["files"][0])=>{
-    // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/contribute/${file.id}`,{
-    //     credentials: "include",
-    // });
-    // const { url } = await res.json();
-    setSingleFilePreview(file.url);
-    setSingleFileModal(true);
-  }
   const filterTypes = ["All", "Notes", "Assignment", "Project","PYQ"];
-  if(singleFilePreview && singleFileModal)
-    return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
-
-  if(previewMaterial && modalOpen)
-    return  <FilesPreview material={previewMaterial}  onClose={() =>{setModalOpen(false); setpreviewMaterial(null);}} />
-
+  const pathname=usePathname();
   return (
     <div className="flex flex-col  bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
@@ -188,16 +161,19 @@ export function ResourcesPage({materials,title,loading,homePage=false}:{material
                       📅 {formateDate(resource.createdAt)}
                     </p>
                     <div className="flex justify-end mt-auto">
-                        <Button className="bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer"
-                          onClick={
-                            ()=>{
-                              if(resource.files.length===1)
-                                return handleSinglePreview(resource.files[0]);
-                              handleView(resource);
+                      <Link
+                      href={
+                            pathname.includes("/student/resources")
+                            ?
+                              `/student/resources/${resource.title.split(" ").join("-")}/${resource.id}`
+                            :
+                              `materials/${resource.title.split(" ").join("-")}/${resource.id}`
                             }
-                          }>
+                      >
+                        <Button className=" bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer">
                           <Eye className="w-4 h-4" /> View
                         </Button>
+                      </Link>
                     </div>
                   </motion.div>
               )

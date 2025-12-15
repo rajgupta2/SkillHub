@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { FileIcon, Eye, Loader2, X, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { formateDate } from "@/components/formateDate";
+import Link from "next/link";
 
 
 const handleShare = async (url:string,title:string) => {
@@ -125,15 +127,8 @@ export default function FilesPreview({
   onClose: () => void;
 }) {
 
-  //single file preview
-  const [singleFileModal,setSingleFileModal]=useState(false);
-  const [singleFilePreview,setSingleFilePreview]=useState<string | null>();
-
-  if(singleFilePreview && singleFileModal)
-    return <SingleFilePreview presignedUrl={singleFilePreview} onClose={()=>{ setSingleFileModal(false); setSingleFilePreview(null);}} />
-
   const title=material.title.split(" ").join("-");
-
+  const pathname=usePathname();
   return (
     <div className="p-6 relative">
       {/* Close Button */}
@@ -176,15 +171,6 @@ export default function FilesPreview({
             //onClick={() => window.open(previewUrls[file.id], "_blank")}
           >
             <div className="mb-4 relative">
-              {/* for presigned url
-                !previewUrls[file.id] || loadingId === file.id ? (
-                <div className="w-full h-48 flex items-center justify-center bg-gray-100 rounded-xl">
-                  <Loader2 className="animate-spin w-8 h-8 text-blue-600" />
-                </div>
-              ) : (
-                getPreviewElement(file)
-              )
-              */}
               {
                 getPreviewElement(file.url,"h-48")
               }
@@ -193,15 +179,17 @@ export default function FilesPreview({
             <p className="font-semibold text-gray-800 truncate">
               {file.originalName}
             </p>
-            <button
-              onClick={()=>{
-                    //setSingleFilePreview(previewUrls[file.id]);
-                    setSingleFilePreview(file.url);
-                    setSingleFileModal(true);
-              }}
+            <Link
+              href={
+                pathname.includes("/student/resources")
+                ?
+                  `/student/resources/${material.title.split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
+                :
+                  `/materials/${material.title.split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
+              }
               className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">
               <Eye className="w-4 h-4" /> Open
-            </button>
+            </Link>
           </motion.div>
         ))}
       </div>

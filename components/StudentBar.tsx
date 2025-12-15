@@ -81,7 +81,7 @@ export default function StudentLayout({ upcomingChildren, studentName }: Student
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition ${
                   isActive
                     ? "bg-blue-600 text-white font-semibold"
-                    : "hover:bgPI_URL-blue-600 text-gray-100"
+                    : "hover:bg-blue-600 text-gray-100"
                 }`}
               >
                 {link.icon}

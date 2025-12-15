@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import FilesPreview from "@/components/FilesPreview";
-import { SingleFilePreview } from "@/components/FilesPreview";
+import FilesPreview, { SingleFilePreview } from "@/components/FilesPreview";
 
 interface Material {
   id: number;
@@ -38,7 +37,7 @@ export default function SingleMaterialPage() {
   const [loading, setLoading] = useState(true);
 
   const searchParams=useSearchParams();
-  const fileurl=searchParams.get("fileurl") || "";
+  const fileurl=searchParams.get("fileurl") || null;
   // ---------------------------
   // Fetch material by ID
   // ---------------------------
@@ -93,11 +92,12 @@ export default function SingleMaterialPage() {
   }
 
   if(material.files.length===1){
-    return <SingleFilePreview presignedUrl={material.files[0].url} onClose={()=>router.push("/materials")} />
+    return <SingleFilePreview presignedUrl={material.files[0].url} onClose={()=>router.push("/student/resources")} />
   }
 
   if(isFile)
-   return <SingleFilePreview presignedUrl={fileurl!} onClose={()=>router.push(`/materials/${material.title.split(" ").join("-")}/${material.id}`)} />
+    return <SingleFilePreview presignedUrl={fileurl!} onClose={()=>router.push(`/student/resources/${material.title.split(" ").join("-")}/${material.id}`)} />
 
-  return <FilesPreview material={material} onClose={()=>router.push("/materials")}/>
+  return <FilesPreview material={material} onClose={()=>router.push("/student/resources")}/>
+
 }
