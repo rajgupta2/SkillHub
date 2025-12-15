@@ -183,9 +183,9 @@ export default function FilesPreview({
               href={
                 pathname.includes("/student/resources")
                 ?
-                  `/student/resources/${material.title.split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
+                  `/student/resources/${material.title.toLowerCase().split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
                 :
-                  `/materials/${material.title.split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
+                  `/materials/${material.title.toLowerCase().split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
               }
               className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">
               <Eye className="w-4 h-4" /> Open

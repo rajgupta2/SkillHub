@@ -165,9 +165,9 @@ export function ResourcesPage({materials,title,loading,homePage=false}:{material
                       href={
                             pathname.includes("/student/resources")
                             ?
-                              `/student/resources/${resource.title.split(" ").join("-")}/${resource.id}`
+                              `/student/resources/${resource.title.toLowerCase().split(" ").join("-")}/${resource.id}`
                             :
-                              `materials/${resource.title.split(" ").join("-")}/${resource.id}`
+                              `/materials/${resource.title.toLowerCase().split(" ").join("-")}/${resource.id}`
                             }
                       >
                         <Button className=" bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer">
