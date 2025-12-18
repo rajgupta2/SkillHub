@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, User, GraduationCap, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register" | "otp">("login");
@@ -260,6 +261,12 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  function isSafeRedirect(url: string) {
+    return url.startsWith("/") && !url.startsWith("//");
+  }
 
     // 🧩 Handle Login
   const handleLogin = async (e: React.FormEvent) => {
@@ -292,8 +299,11 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
         });
       }
 
-      if(data.user?.role=="student" || "Student")
-        window.location.href = "/student";
+      const redirectUrl = searchParams.get("redirect");
+      if (redirectUrl && isSafeRedirect(redirectUrl))
+       return router.replace(redirectUrl);
+      if(data.user?.role.toLowerCase() ==="student")
+       return router.replace("/student");
     } catch (err: any) {
       setMessage(err.message);
     } finally {

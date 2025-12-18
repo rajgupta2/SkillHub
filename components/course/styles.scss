@@ -1,0 +1,42 @@
+/* blocknote-theme.scss */
+
+.editor-wrapper {
+  background: transparent;
+  border-radius: 12px;
+}
+
+/* Main editor surface */
+.editor-wrapper .bn-editor {
+  background-color: transparent !important;
+  color: var(--foreground);
+  min-height: 60vh;
+  cursor: text;
+  padding-top:18px;
+}
+
+/* Toolbar */
+.editor-wrapper .bn-toolbar {
+  background-color: var(--card-bg);
+  border-radius: 10px;
+}
+
+/* Slash menu */
+.editor-wrapper .bn-slash-menu {
+  background-color: var(--card-bg);
+  color: var(--foreground);
+}
+
+/* Block hover */
+.editor-wrapper .bn-block:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Selected block */
+.editor-wrapper .bn-block.bn-selected {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Placeholder text */
+.editor-wrapper .bn-placeholder {
+  color: var(--muted-foreground);
+}

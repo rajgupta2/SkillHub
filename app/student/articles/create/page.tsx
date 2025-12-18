@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Upload, FileText, Tags, ImageIcon } from "lucide-react";
 import { marked } from "marked";
+import  DOMPurify  from "dompurify";
 
 // Dynamically load the Markdown editor
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -58,8 +59,10 @@ export default function CreateArticlePage() {
       return;
     }
     // Convert markdown → HTML
-    const content = await marked(contentMd);
-
+    const content =await DOMPurify.sanitize(await marked(contentMd),{
+        FORBID_TAGS: ["script"],
+      });
+    console.log(content);
     // FormData for file upload
     const form = new FormData();
     form.append("title", title);
