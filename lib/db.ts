@@ -35,13 +35,25 @@ export interface CourseDB extends DBSchema {
   };
 }
 
-export const dbPromise = await openDB<CourseDB>("course-db", 1, {
-  upgrade(db) {
-    const store = db.createObjectStore("courses", {
-      keyPath: "localCourseId",
-    });
+let dbPromise: ReturnType<typeof openDB<CourseDB>> | null = null;
 
-    store.createIndex("by-owner-email", "owner.email");
-    store.createIndex("by-status", "status");
-  },
-});
+export function getDB() {
+  if (typeof window === "undefined") {
+    throw new Error("IndexedDB can only be used in the browser");
+  }
+
+  if (!dbPromise) {
+    dbPromise = openDB<CourseDB>("course-db", 1, {
+      upgrade(db) {
+        const store = db.createObjectStore("courses", {
+          keyPath: "localCourseId",
+        });
+
+        store.createIndex("by-owner-email", "owner.email");
+        store.createIndex("by-status", "status");
+      },
+    });
+  }
+
+  return dbPromise;
+}

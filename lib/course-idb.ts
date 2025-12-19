@@ -1,11 +1,11 @@
-import { dbPromise } from "./db";
+import { getDB } from "./db";
 import { CourseDB } from "./db";
 
 /**
  * Create / Update a course
  */
 export async function saveLocalCourse(course: CourseDB["courses"]["value"]) {
-  const db = await dbPromise;
+  const db = await getDB();
   await db.put("courses", {
     ...course,
     updatedAt: Date.now(),
@@ -16,12 +16,12 @@ export async function saveLocalCourse(course: CourseDB["courses"]["value"]) {
  * Get all local courses
  */
 export async function getAllLocalCourses() {
-  const db = await dbPromise;
+  const db = await getDB();
   return db.getAll("courses");
 }
 
 export async function getLocalCourseById(courseId:string) {
-  const db = await dbPromise;
+  const db = await getDB();
   return db.get("courses", courseId);
 }
 
@@ -29,7 +29,7 @@ export async function getLocalCourseById(courseId:string) {
  * Get draft courses only
  */
 export async function getDraftCourses() {
-  const db = await dbPromise;
+  const db = await getDB();
   return db.getAllFromIndex("courses", "by-status", "draft");
 }
 
@@ -37,7 +37,7 @@ export async function getDraftCourses() {
  * Get courses by owner email
  */
 export async function getCoursesByOwner(email: string) {
-  const db = await dbPromise;
+  const db = await getDB();
   return db.getAllFromIndex("courses", "by-owner-email", email);
 }
 
@@ -45,6 +45,6 @@ export async function getCoursesByOwner(email: string) {
  * Delete local course
  */
 export async function deleteLocalCourse(localCourseId: string) {
-  const db = await dbPromise;
+  const db = await getDB();
   await db.delete("courses", localCourseId);
 }

@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { AddSidebarItem } from "./AddSidebarItem";
 import type {  PartialBlock } from "@blocknote/core";
 import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
-import { dbPromise , CourseDB} from "@/lib/db";
+import { CourseDB} from "@/lib/db";
 
 
 export default function CourseLayout({
