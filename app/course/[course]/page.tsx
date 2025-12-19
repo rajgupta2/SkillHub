@@ -20,7 +20,7 @@ export default function CourseDetailPage({
 }) {
   const router = useRouter();
 
-  const [course, setCourse] = useState<CourseDB["courses"]["value"] | null>(null);
+  const [course, setCourse] = useState<CourseDB["courses"]["value"]>();
   const [loading, setLoading] = useState(true);
   const [courseId,setCourseId]=useState<string>("");
   const searchParams=useSearchParams();
@@ -84,20 +84,17 @@ export default function CourseDetailPage({
 
 
 
-  if (loading) {
+  if (loading || !course) {
     return (
-    <CourseLayout course={course} isServerCourse={"false"}>
       <div className="flex items-center justify-center h-[60vh] text-gray-500">
         Loading course...
       </div>
-    </CourseLayout>
     );
   }
 
-  if (!course) return null;
 
   return (
-    <CourseLayout course={course} isServerCourse={"false"}>
+    <CourseLayout course={course} isServerCou={"false"}>
       <div className="max-w-5xl mx-auto">
         <div className="text-center space-y-6">
           {/* Badge */}
@@ -159,7 +156,7 @@ export default function CourseDetailPage({
           <button
             className="rounded-xl border px-8 py-4 font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
             onClick={() => router.push(
-            `/course/${course.title}/${course.links[0].title}?courseId=${course.localCourseId}&linkId=${course.links[0].linkId}`
+            `/course/${course.title}/${course.links[0].title}?courseId=${course.localCourseId}&linkId=${course.links[0].linkId}&server=false`
             )}
           >
             Continue Editing

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X, GraduationCap } from "lucide-react";
 
-export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:Boolean}) {
+export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
   const [open, setOpen] = useState(false);
 
   return (

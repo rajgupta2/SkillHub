@@ -3,7 +3,6 @@
 import { Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ResourcesPage } from "@/components/ResourcesPage";
-import { Head } from "next/document";
 
 
 interface Peers {

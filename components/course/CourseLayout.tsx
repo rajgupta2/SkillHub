@@ -18,73 +18,88 @@ import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
 import { dbPromise , CourseDB} from "@/lib/db";
 
 
-async function addLinkToCourse(courseId: string, linkName: string) {
- try{
-  const course = await getLocalCourseById(courseId);
-
-  if (!course) {
-    console.error("Course not found");
-    return {created:false,error:"Course not found"};
-  }
-
-  const link={
-    linkId: crypto.randomUUID(),
-    title: linkName,
-    order: course.links.length,
-  }
-
-  course.links.push(link);
-
-  await saveLocalCourse(course);
-  return {created:true,link};
- }catch(error){
-  return {created:false,error};
- }
-}
-
-async function deleteLinkFromCourse(courseId: string, linkId: string) {
- try{
-  const course = await getLocalCourseById(courseId);
-
-  if (!course) {
-    console.error("Course not found");
-    return {deleted:false,error:"Course not found"};
-  }
-
-  // 2️⃣ Filter out the link to delete
-  const updatedLinks = course.links.filter(
-    (link: any) => link.linkId !== linkId
-  );
-
-  // 3️⃣ Re-order links (VERY IMPORTANT)
-  const reorderedLinks = updatedLinks.map((link, index:number) => ({
-    ...link,
-    order: index,
-  }));
-
-  // 4️⃣ Update course
-  course.links = reorderedLinks;
-  course.status = "edited";
-
-  // 5️⃣ Save back
-  await saveLocalCourse(course);
-
-  return { deleted: true,link:reorderedLinks};
-  } catch (error) {
-    console.error("Delete failed:", error);
-    return { deleted: false, error: "Something went wrong" };
-  }
-}
-
-export default function CourseLayout({ children, course,isServerCourse }: Readonly<{
+export default function CourseLayout({
+  children,
+  course,
+  isServerCou
+ }: Readonly<{
   children: React.ReactNode;
-  course:CourseDB["courses"]["value"] | null;
-  isServerCourse:string
+  course:CourseDB["courses"]["value"];
+  isServerCou:string;
 }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isServerCourse,setIsServerCourse]=useState(isServerCou|| "false");
   const pathname = usePathname();
   const [links,setLinks]=useState(course?.links || []);
   const searchParams=useSearchParams();
+
+  useEffect(()=>{
+    setLinks(course?.links || []);
+  },[course])
+
+  async function addLinkToCourse(courseId: string, linkName: string) {
+    try{
+
+      if (!course) {
+        console.error("Course not found");
+        return {created:false,error:"Course not found"};
+      }
+
+      const link={
+        linkId: crypto.randomUUID(),
+        title: linkName,
+        order: course.links.length,
+      }
+
+      const updatedCourse = {
+        ...course,
+        links: [...links, link],
+        status: course.status === "published" ? "edited" : course.status,
+      };
+
+      await saveLocalCourse(updatedCourse);
+      setIsServerCourse("false");
+      return {created:true,link};
+    }catch(error){
+      return {created:false,error};
+    }
+  }
+
+  async function deleteLinkFromCourse(courseId: string, linkId: string) {
+  try{
+
+    if (!course) {
+      console.error("Course not found");
+      return {deleted:false,error:"Course not found"};
+    }
+
+    // 2️⃣ Filter out the link to delete
+    const updatedLinks = links.filter(
+      (link: any) => link.linkId !== linkId
+    );
+
+
+    // 3️⃣ Re-order links (VERY IMPORTANT)
+    const reorderedLinks = updatedLinks.map((link, index:number) => ({
+      ...link,
+      order: index,
+    }));
+
+    // 4️⃣ Update course
+    const updatedCourse = {
+      ...course,
+      links: reorderedLinks,
+      status: course.status === "published" ? "edited" : course.status,
+    };
+    // 5️⃣ Save back
+    await saveLocalCourse(updatedCourse);
+    setIsServerCourse("false");
+    return { deleted: true,link:reorderedLinks};
+  } catch (error) {
+      console.error("Delete failed:", error);
+      return { deleted: false, error: "Something went wrong" };
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -117,7 +132,7 @@ export default function CourseLayout({ children, course,isServerCourse }: Readon
           return (
               <Link
                 key={link.linkId}
-                href={`/course/${course?.title}/${link?.title}?courseId=${course?.localCourseId || course?._id}&linkId=${link?.linkId}&server=${isServerCourse}`}
+                href={`/course/${course.title}/${link.title}?courseId=${course.localCourseId}&linkId=${link.linkId}&server=${isServerCourse}`}
                 className={`group flex items-center justify-between px-3 py-2 rounded-lg transition ${
                   isActive
                     ? "bg-blue-600 text-white font-semibold"
@@ -144,7 +159,7 @@ export default function CourseLayout({ children, course,isServerCourse }: Readon
                   onClick={async (e) => {
                     e.preventDefault(); // prevent navigation
                     e.stopPropagation();
-                    const result=await deleteLinkFromCourse(course!.localCourseId,link.linkId);
+                    const result=await deleteLinkFromCourse(course.localCourseId,link.linkId);
                     result.deleted && setLinks(result.link!)
                   }}
                 >
@@ -155,7 +170,7 @@ export default function CourseLayout({ children, course,isServerCourse }: Readon
           })}
           <AddSidebarItem
             set_Links={async (linkName)=>{
-              const result=await addLinkToCourse(course!.localCourseId,linkName);
+              const result=await addLinkToCourse(course.localCourseId,linkName);
               result.created &&
                 setLinks((prev)=>[
                   ...prev,
@@ -185,7 +200,7 @@ export default function CourseLayout({ children, course,isServerCourse }: Readon
               <Menu className="w-6 h-6" />
             </button>
             <h1 className="text-xl md:text-2xl font-semibold text-gray-700">
-               {course?.title} Course Zone
+               {course.title} Course Zone
             </h1>
           </div>
 

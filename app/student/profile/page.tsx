@@ -11,7 +11,6 @@ import {
   Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Head } from "next/document";
 import ProfileHead from "./ProfileHead";
 
 // ✅ Define types from your backend response

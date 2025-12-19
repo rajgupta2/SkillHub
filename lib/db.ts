@@ -35,7 +35,7 @@ export interface CourseDB extends DBSchema {
   };
 }
 
-export const dbPromise = openDB<CourseDB>("course-db", 1, {
+export const dbPromise = await openDB<CourseDB>("course-db", 1, {
   upgrade(db) {
     const store = db.createObjectStore("courses", {
       keyPath: "localCourseId",
