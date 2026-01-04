@@ -132,7 +132,7 @@ export default function CourseLayout({
           return (
               <Link
                 key={link.linkId}
-                href={`/course/${course.title}/${link.title}?courseId=${course.localCourseId}&linkId=${link.linkId}&server=${isServerCourse}`}
+                href={`/course/${course.title.split(" ").join("-").toLowerCase()}/${link.title.split(" ").join("-").toLowerCase()}?courseId=${course.localCourseId}&linkId=${link.linkId}&server=${isServerCourse}`}
                 className={`group flex items-center justify-between px-3 py-2 rounded-lg transition ${
                   isActive
                     ? "bg-blue-600 text-white font-semibold"

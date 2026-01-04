@@ -128,8 +128,8 @@ export default function CoursesPage() {
                 <Link
                   href={
                     !course.owner
-                      ? `/course/${course.title}?courseId=${course.id}`
-                      : `/course/${course.title}/${course.links[0].title}?courseId=${course.id}&linkId=${course.links[0].linkId}&server=${isServerCourse}`
+                      ? `/course/${course.title.split(" ").join("-").toLowerCase()}?courseId=${course.id}`
+                      : `/course/${course.title.split(" ").join("-").toLowerCase()}/${course.links[0].title.split(" ").join("-").toLowerCase()}?courseId=${course.id}&linkId=${course.links[0].linkId}&server=${isServerCourse}`
                   }
                   className="inline-flex items-center justify-center gap-2
                   w-full rounded-xl bg-blue-600 text-white

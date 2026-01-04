@@ -22,7 +22,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
           <Link href="/materials">Resources</Link>
           { /* <Link href="/challenges">Challenges</Link>
           <Link href="/leaderboard">Leaderboard</Link> */}
-          <Link href="/faq">FAQs</Link>
+          <Link href="/course">Tutorials</Link>
           <Link href="/contact">Contact</Link>
 
           {isLoggedIn ? (

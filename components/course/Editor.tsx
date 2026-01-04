@@ -26,7 +26,6 @@ export default function Editor({
   const [content, setContent] = useState< PartialBlock[] | null>(null);
   const [isEditable,setIsEditable]=useState(false);
 
-
   const editor = useCreateBlockNote({
     initialContent:
       initialContent && Array.isArray(initialContent)
@@ -55,7 +54,6 @@ export default function Editor({
           <Button
             className="mb-4 bg-green-600 cursor-pointer"
             onClick={() =>{
-              setContent(content);
               updateLinkContent(courseId!, linkId!, content!);
               setIsEditable(false)
             }}
@@ -74,15 +72,30 @@ export default function Editor({
   );
 }
 
+export async function fetchServerCourses(id:string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res.json();
+}
 
 export async function updateLinkContent(
   localCourseId: string,
   linkId: string,
   content: PartialBlock[]
 ) {
-  const course = await getLocalCourseById(localCourseId);
-  if (!course) return;
-
+  let course = await getLocalCourseById(localCourseId);
+  if (!course){
+    const serverCourse=await fetchServerCourses(localCourseId);
+    course=serverCourse;
+    course!.localCourseId=serverCourse._id;
+  }
+  if(!course){
+      console.log("Course neither found locally nor in server. while saving.")
+      return;
+  }
   const link = course.links.find(l => l.linkId === linkId);
   if (!link) return;
 
