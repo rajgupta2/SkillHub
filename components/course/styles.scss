@@ -40,3 +40,9 @@
 .editor-wrapper .bn-placeholder {
   color: var(--muted-foreground);
 }
+@media (max-width: 640px) {
+  .bn-editor {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}

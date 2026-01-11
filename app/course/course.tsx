@@ -36,7 +36,7 @@ export default function CoursesPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-6 min-h-[70vh]">
+    <div className="max-w-7xl mx-auto py-6 min-h-[70vh] px-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
