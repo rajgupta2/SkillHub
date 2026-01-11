@@ -63,7 +63,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
               <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>
               <Link href="/challenges" onClick={() => setOpen(false)}>Challenges</Link>
               <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
-            <Link href="/faq" onClick={() => setOpen(false)}>FAQs</Link>
+            <Link href="/course" onClick={() => setOpen(false)}>Tutorials</Link>
             <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
 
             {isLoggedIn ? (
