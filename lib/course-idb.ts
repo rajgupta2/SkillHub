@@ -36,10 +36,10 @@ export async function getDraftCourses() {
 /**
  * Get courses by owner email
  */
-export async function getCoursesByOwner(email: string) {
-  const db = await getDB();
-  return db.getAllFromIndex("courses", "by-owner-email", email);
-}
+// export async function getCoursesByOwner(email: string) {
+//   const db = await getDB();
+//   return db.getAllFromIndex("courses", "by-owner-email", email);
+// }
 
 /**
  * Delete local course

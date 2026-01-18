@@ -6,11 +6,38 @@ import { ArrowRight, BookOpen, Plus } from "lucide-react";
 import Link from "next/link";
 import { mergeCourses, fetchLocalCourses, fetchServerCourses } from "@/lib/mergeCourses";
 import { UICourse } from "@/lib/courseSchema";
+import TutorialInfoModal from "./TutorialInfoModal";
 
 export default function CoursesPage() {
   const router = useRouter();
   const [courses, setCourses] = useState<UICourse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+
+  useEffect(() => {
+    //Show modals once in a week.
+      const LAST_SHOWN_KEY = "tutorial-info-last-shown";
+      const ONE_WEEK = 7 * 24 * 60 * 60 * 1000; // ms
+
+      const lastShown = localStorage.getItem(LAST_SHOWN_KEY);
+      if (!lastShown) {
+        // Never shown before
+        setShowInfoModal(true);
+        return;
+      }
+      const lastShownTime = Number(lastShown);
+      const now = Date.now();
+
+      if (now - lastShownTime > ONE_WEEK) {
+        setShowInfoModal(true);
+      }
+  }, []);
+
+  function closeModal() {
+    localStorage.setItem("tutorial-info-last-shown", Date.now().toString());
+    setShowInfoModal(false);
+  }
+
 
   useEffect(() => {
     async function load() {
@@ -30,7 +57,7 @@ export default function CoursesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[60vh] text-gray-500">
-        Loading courses...
+        Loading tutorials...
       </div>
     );
   }
@@ -41,7 +68,7 @@ export default function CoursesPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">
-            Your Courses
+            Your Tutorials
           </h1>
           <p className="text-gray-500 mt-1">
             Manage and build your learning content
@@ -54,7 +81,7 @@ export default function CoursesPage() {
           bg-blue-600 text-white hover:bg-blue-700 transition"
         >
           <Plus className="w-5 h-5" />
-          Create Course
+          Create Tutorial
         </Link>
       </div>
 
@@ -136,7 +163,7 @@ export default function CoursesPage() {
                   py-2.5 text-sm font-medium
                   hover:bg-blue-700 transition-colors"
                 >
-                  Open Course
+                  View tutorial
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -144,6 +171,10 @@ export default function CoursesPage() {
           );
         })}
       </div>
+      <TutorialInfoModal
+        open={showInfoModal}
+        onClose={closeModal}
+      />
     </div>
   );
 }

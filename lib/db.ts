@@ -29,7 +29,6 @@ export interface CourseDB extends DBSchema {
     };
 
     indexes: {
-      "by-owner-email": string;
       "by-status": string;
     };
   };
@@ -49,7 +48,6 @@ export function getDB() {
           keyPath: "localCourseId",
         });
 
-        store.createIndex("by-owner-email", "owner.email");
         store.createIndex("by-status", "status");
       },
     });
