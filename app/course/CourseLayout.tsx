@@ -68,16 +68,15 @@ export function CourseLayout({
   const router = useRouter();
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
-  const [loading, setLoading] = useState(true);
   const {course, setCourse} = useCourse();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [links,setLinks]=useState(course?.links || []);
   const courseSlug=segments[1]; //act as courseId only for browser stored course.
   const linkSlug=segments.length===3 ? segments[2] : "";
+  const loading=!course;
 
   useEffect(()=>{
-    setLinks(course?.links || []);
-    setLoading(false);
+    if(course) setLinks(course?.links || []);
   },[course])
 
 

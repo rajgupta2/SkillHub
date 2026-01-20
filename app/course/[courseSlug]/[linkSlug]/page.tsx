@@ -18,7 +18,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useCourse } from "../../CourseContext";
 import React from "react";
 
-export default function Page({params}){
+export default function Page({params}:{
+  params:any
+}){
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState< PartialBlock[] | null>(null);
   const param:{courseSlug:string,linkSlug:string}=React.use(params);

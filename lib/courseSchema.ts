@@ -20,5 +20,5 @@ export type UICourse = {
     email: string;
   };
 
-  updatedAt: number | string;
+  updatedAt: string;
 };

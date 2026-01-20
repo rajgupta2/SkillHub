@@ -8,7 +8,6 @@ import {
   Plus,
   Layers,
 } from "lucide-react";
-import CourseLayout from "@/components/course/CourseLayout";
 import { deleteLocalCourse, getLocalCourseById } from "@/lib/course-idb";
 import { CourseDB } from "@/lib/db";
 import React from "react";
