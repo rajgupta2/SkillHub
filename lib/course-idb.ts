@@ -14,7 +14,7 @@ export async function saveLocalCourse(course: CourseDB["courses"]["value"]) {
 
 /**
  * Get all local courses
- */
+*/
 export async function getAllLocalCourses() {
   const db = await getDB();
   return db.getAll("courses");
@@ -28,10 +28,10 @@ export async function getLocalCourseById(courseId:string) {
 /**
  * Get draft courses only
  */
-export async function getDraftCourses() {
-  const db = await getDB();
-  return db.getAllFromIndex("courses", "by-status", "draft");
-}
+// export async function getDraftCourses() {
+//   const db = await getDB();
+//   return db.getAllFromIndex("courses", "by-status", "draft");
+// }
 
 /**
  * Get courses by owner email

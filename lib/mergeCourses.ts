@@ -30,10 +30,11 @@ export function mergeCourses(
 
   // 1️⃣ Add server courses
   serverCourses.forEach((course) => {
-    map.set(course._id, {
+    map.set(course.slug, {
       id: course._id,
       title: course.title,
       description: course.description,
+      slug:course.slug,
       links: course.links,
       source: "server",
       owner: course.owner,
@@ -44,9 +45,10 @@ export function mergeCourses(
   // 2️⃣ Add / override with local courses
   localCourses.forEach((local) => {
     const uiCourse: UICourse = {
-      id: local.localCourseId,
+      id: local.slug,
       title: local.title,
       description: local.description,
+      slug:local.slug,
       links: local.links,
       source: local.status === "draft"
         ? "local-draft"
@@ -55,13 +57,14 @@ export function mergeCourses(
       updatedAt: local.updatedAt,
     };
 
+    map.set(local.slug, uiCourse);
     // If this local course is an edit of a published one
     // (future-proofing)
-    if ((local as any).publishedCourseId) {
-      map.set((local as any).publishedCourseId, uiCourse);
-    } else {
-      map.set(local.localCourseId, uiCourse);
-    }
+    // if ((local as any).publishedCourseId) {
+    //   map.set((local as any).publishedCourseId, uiCourse);
+    // } else {
+    //   map.set(local.slug, uiCourse);
+    // }
   });
 
   return Array.from(map.values()).sort(

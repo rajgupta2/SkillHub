@@ -16,28 +16,72 @@ import { AddSidebarItem } from "./AddSidebarItem";
 import type {  PartialBlock } from "@blocknote/core";
 import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
 import { CourseDB} from "@/lib/db";
+import { CourseContext, useCourse } from "./CourseContext";
 
-
-export default function CourseLayout({
+export default function CoursePage({
   children,
-  course,
-  isServerCou
+  isLoggedIn
+}: {
+  children: React.ReactNode;
+  isLoggedIn:boolean;
+}){
+  const [course, setCourse] = useState<CourseDB["courses"]["value"] | null>(null);
+  const pathname = usePathname();
+  const segments = pathname.split("/").filter(Boolean);
+  const courseSlug=segments[1];
+  //localStorage.setItem("isLoggedIn",isLoggedIn?"true":"false");
+  useEffect(() => {
+    (async () => {
+      const res=await fetchServerCoursesBySlug(courseSlug);
+      let course;
+      if(res.status===200) course=await res.json();
+      const data=await getLocalCourseById(courseSlug);
+      if(data && data.slug===course.slug) course=data;
+
+      if(course) setCourse(course);
+    })();
+  }, []);
+
+  return (
+    <CourseContext.Provider value={{ course, setCourse }}>
+      <CourseLayout>
+        {children}
+      </CourseLayout>
+    </CourseContext.Provider>
+  );
+}
+
+export async function fetchServerCoursesBySlug(courseSlug:string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res;
+}
+
+export function CourseLayout({
+  children,
  }: Readonly<{
   children: React.ReactNode;
-  course:CourseDB["courses"]["value"];
-  isServerCou:string;
 }>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isServerCourse,setIsServerCourse]=useState(isServerCou|| "false");
+  const router = useRouter();
   const pathname = usePathname();
+  const segments = pathname.split("/").filter(Boolean);
+  const [loading, setLoading] = useState(true);
+  const {course, setCourse} = useCourse();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [links,setLinks]=useState(course?.links || []);
-  const searchParams=useSearchParams();
+  const courseSlug=segments[1]; //act as courseId only for browser stored course.
+  const linkSlug=segments.length===3 ? segments[2] : "";
 
   useEffect(()=>{
     setLinks(course?.links || []);
+    setLoading(false);
   },[course])
 
-  async function addLinkToCourse(courseId: string, linkName: string) {
+
+  async function addLinkToCourse(linkName: string) {
     try{
 
       if (!course) {
@@ -58,14 +102,14 @@ export default function CourseLayout({
       };
 
       await saveLocalCourse(updatedCourse);
-      setIsServerCourse("false");
+      setCourse(updatedCourse);
       return {created:true,link};
     }catch(error){
       return {created:false,error};
     }
   }
 
-  async function deleteLinkFromCourse(courseId: string, linkId: string) {
+  async function deleteLinkFromCourse(linkId: string) {
   try{
 
     if (!course) {
@@ -93,7 +137,7 @@ export default function CourseLayout({
     };
     // 5️⃣ Save back
     await saveLocalCourse(updatedCourse);
-    setIsServerCourse("false");
+    setCourse(updatedCourse);
     return { deleted: true,link:reorderedLinks};
   } catch (error) {
       console.error("Delete failed:", error);
@@ -128,11 +172,11 @@ export default function CourseLayout({
         {/* Sidebar Links */}
         <nav className="flex flex-col overflow-y-auto gap-2 px-4 pt-6 py-16">
           {links.map((link) => {
-            const isActive = searchParams.get("linkId")===link.linkId;
+            const isActive = linkSlug===link.title.split(" ").join("-").toLowerCase();
           return (
               <Link
                 key={link.linkId}
-                href={`/course/${course.title.split(" ").join("-").toLowerCase()}/${link.title.split(" ").join("-").toLowerCase()}?courseId=${course.localCourseId}&linkId=${link.linkId}&server=${isServerCourse}`}
+                href={`/course/${course!.slug}/${link.title.split(" ").join("-").toLowerCase()}`}
                 className={`group flex items-center justify-between px-3 py-2 rounded-lg transition ${
                   isActive
                     ? "bg-blue-600 text-white font-semibold"
@@ -159,8 +203,7 @@ export default function CourseLayout({
                   onClick={async (e) => {
                     e.preventDefault(); // prevent navigation
                     e.stopPropagation();
-                    const result=await deleteLinkFromCourse(course.localCourseId,link.linkId);
-                    result.deleted && setLinks(result.link!)
+                    await deleteLinkFromCourse(link.linkId);
                   }}
                 >
                   <Delete className="w-4 h-4 text-red-500 hover:text-white" />
@@ -170,12 +213,7 @@ export default function CourseLayout({
           })}
           <AddSidebarItem
             set_Links={async (linkName)=>{
-              const result=await addLinkToCourse(course.localCourseId,linkName);
-              result.created &&
-                setLinks((prev)=>[
-                  ...prev,
-                  result.link!
-                ])
+             await addLinkToCourse(linkName);
             }}
           />
         </nav>
@@ -200,7 +238,7 @@ export default function CourseLayout({
               <Menu className="w-6 h-6" />
             </button>
             <h1 className="text-xl md:text-2xl font-semibold text-gray-700">
-               {course.title} Course Zone
+               {course?.title} Tutorial Zone
             </h1>
           </div>
 
@@ -218,9 +256,17 @@ export default function CourseLayout({
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto min-h-[82vh] py-6">
-          {children}
-        </main>
+        {
+          (loading)
+          ?
+            <div className="flex items-center justify-center h-[60vh] text-gray-500">
+              Loading course...
+            </div>
+          :
+            <main className="flex-1 overflow-y-auto min-h-[82vh] py-6">
+                  {children}
+            </main>
+        }
 
         {/* Page Footer */}
         <footer className="bg-white border-t mt-auto text-center py-4 text-gray-500 text-sm">

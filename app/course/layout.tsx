@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
+import { cookies } from "next/headers";
 import {wakeupBackendServer} from "../run";
-
+import CoursePage from "./CourseLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,13 +65,15 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
   wakeupBackendServer();
+
   return (
     <html lang="en">
       <head>
@@ -79,7 +82,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <CoursePage isLoggedIn={isLoggedIn}>
+          {children}
+        </CoursePage>
       </body>
     </html>
   );

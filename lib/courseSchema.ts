@@ -4,6 +4,7 @@ export type UICourse = {
   id: string; // mongoId OR localCourseId
   title: string;
   description?: string;
+  slug?:string;
 
   links: {
     linkId: string;

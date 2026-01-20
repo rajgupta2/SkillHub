@@ -40,13 +40,11 @@ export default function TutorialInfoModal({
           </p>
 
           <p>
-            ✏️ Any <strong>edited content</strong> is stored only in your browser.
-            No one else can see it.
+            ✏️ Any <strong>content edited by you</strong> is stored only in your browser.
           </p>
 
           <p>
-            🔒 Tutorials you create remain <strong>private</strong> until you
-            publish them.
+            🔒 Tutorials created by you are stored only on <strong>your browser</strong>. No one else can access them until you publish the tutorial.
           </p>
         </div>
 

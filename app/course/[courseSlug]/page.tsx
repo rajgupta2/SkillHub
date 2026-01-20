@@ -11,38 +11,16 @@ import {
 import CourseLayout from "@/components/course/CourseLayout";
 import { deleteLocalCourse, getLocalCourseById } from "@/lib/course-idb";
 import { CourseDB } from "@/lib/db";
-
+import React from "react";
+import { useCourse } from "../CourseContext";
 
 export default function CourseDetailPage({
-  params,
+  params
 }: {
-  params: { courseId: string };
+  params: { courseSlug: string; };
 }) {
   const router = useRouter();
-
-  const [course, setCourse] = useState<CourseDB["courses"]["value"]>();
-  const [loading, setLoading] = useState(true);
-  const [courseId,setCourseId]=useState<string>("");
-  const searchParams=useSearchParams();
-
-  useEffect(() => {
-    (async () => {
-      const  courseId  = searchParams.get("courseId");
-      if(!courseId) return router.push("/course");
-      setCourseId(courseId);
-
-      const data = await getLocalCourseById(courseId);
-
-      if (!data) {
-        router.replace("/course");
-        return;
-      }
-
-      setCourse(data);
-      setLoading(false);
-    })();
-  }, [courseId, router]);
-
+  const {course} = useCourse();
   const [publishing, setPublishing] = useState(false);
 
   async function handlePublish() {
@@ -52,7 +30,7 @@ export default function CourseDetailPage({
     const token=dataToken.token;
 
     if (!token) {
-        router.push(`/auth?redirect=/course/${course!.title}?courseId=${courseId}`);
+        router.push(`/auth?redirect=/course/${course!.slug}`);
         return;
     }
 
@@ -73,7 +51,7 @@ export default function CourseDetailPage({
     const data = await res.json();
 
     if (data.published) {
-      await deleteLocalCourse(courseId);
+      await deleteLocalCourse(course!.slug);
       alert("Course Published Successfully.");
       router.back();
     }else{
@@ -82,19 +60,7 @@ export default function CourseDetailPage({
     setPublishing(false);
   }
 
-
-
-  if (loading || !course) {
-    return (
-      <div className="flex items-center justify-center h-[60vh] text-gray-500">
-        Loading course...
-      </div>
-    );
-  }
-
-
   return (
-    <CourseLayout course={course} isServerCou={"false"}>
       <div className="max-w-5xl mx-auto">
         <div className="text-center space-y-6">
           {/* Badge */}
@@ -137,7 +103,7 @@ export default function CourseDetailPage({
             <div className="text-3xl mb-3">✏️</div>
             <h3 className="font-semibold text-lg">Edit Anytime</h3>
             <p className="text-sm text-gray-600 mt-2">
-              Don’t worry — you can update and improve your course even after publishing.
+              Don&apos;t worry — you can update and improve your course even after publishing.
             </p>
           </div>
         </div>
@@ -156,7 +122,7 @@ export default function CourseDetailPage({
           <button
             className="rounded-xl border px-8 py-4 font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
             onClick={() => router.push(
-            `/course/${course.title}/${course.links[0].title}?courseId=${course.localCourseId}&linkId=${course.links[0].linkId}&server=false`
+            `/course/${course?.slug}/${course?.links[0].title.split(" ").join("-").toLowerCase()}`
             )}
           >
             Continue Editing
@@ -169,6 +135,5 @@ export default function CourseDetailPage({
           Points & creator rewards are coming soon ✨
         </p>
       </div>
-    </CourseLayout>
   );
 }

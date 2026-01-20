@@ -7,7 +7,7 @@ import Link from "next/link";
 import { mergeCourses, fetchLocalCourses, fetchServerCourses } from "@/lib/mergeCourses";
 import { UICourse } from "@/lib/courseSchema";
 import TutorialInfoModal from "./TutorialInfoModal";
-
+import { formateDate } from "@/components/formateDate";
 export default function CoursesPage() {
   const router = useRouter();
   const [courses, setCourses] = useState<UICourse[]>([]);
@@ -145,7 +145,7 @@ export default function CoursesPage() {
 
                   <p className="text-xs text-gray-400">
                     Last updated ·{" "}
-                    {new Date(course.updatedAt).toLocaleDateString()}
+                    {formateDate(course.updatedAt)}
                   </p>
                 </div>
               </div>
@@ -155,8 +155,8 @@ export default function CoursesPage() {
                 <Link
                   href={
                     !course.owner
-                      ? `/course/${course.title.split(" ").join("-").toLowerCase()}?courseId=${course.id}`
-                      : `/course/${course.title.split(" ").join("-").toLowerCase()}/${course.links[0].title.split(" ").join("-").toLowerCase()}?courseId=${course.id}&linkId=${course.links[0].linkId}&server=${isServerCourse}`
+                      ? `/course/${course.slug}`
+                      : `/course/${course.slug}/${course.links[0].title.split(" ").join("-").toLowerCase()}`
                   }
                   className="inline-flex items-center justify-center gap-2
                   w-full rounded-xl bg-blue-600 text-white

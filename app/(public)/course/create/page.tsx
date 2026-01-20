@@ -36,13 +36,14 @@ export default function CreateCoursePage() {
     await saveLocalCourse({
       localCourseId,
       title:courseName,
+      slug:localCourseId,
       status: "draft",
       links,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
 
-    router.push(`/course/${courseName}/?courseId=${localCourseId}`);
+    router.push(`/course/${localCourseId}`);
   }
 
   return (
