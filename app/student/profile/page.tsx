@@ -31,9 +31,25 @@ interface UserProfile {
   materials_count: number,
   rank:number
 }
+interface College{
+  id:number,
+  name:string,
+  city:string,
+  district:string,
+  state:string
+}
+
+interface Course{
+  id:number,
+  name:string
+}
 
 // ✅ Profile page component
 export default function StudentProfilePage() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [colleges, setColleges] = useState<College[]>([]);
+  const [showCustomCollege, setShowCustomCollege] = useState(false);
+  const [showCustomCourse, setShowCustomCourse] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -67,6 +83,19 @@ export default function StudentProfilePage() {
 
     fetchProfile();
   }, [isEditing]);
+
+  useEffect(() => {
+    const fetchMeta = async () => {
+      const courseRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/colleges-courses`)
+      if(courseRes.status===200) setCourses(await courseRes.json());
+
+      const collegeRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/colleges`)
+      if(collegeRes.status===200) setColleges(await collegeRes.json());
+    };
+
+    fetchMeta();
+  }, [isEditing]);
+
 
   // ✅ Handle field edits
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,19 +190,61 @@ export default function StudentProfilePage() {
 
         <div>
           <label className="block text-sm text-gray-600 mb-1">Course</label>
-          <input
-            type="text"
-            name="course"
-            value={profile.course ?? ""}
-            disabled={!isEditing}
-            onChange={handleChange}
-            placeholder="Course Name"
-            className={`w-full border rounded-lg px-4 py-2 ${
-              isEditing
-                ? "border-blue-400 focus:ring-2 focus:ring-blue-500"
-                : "border-gray-200 bg-gray-100 cursor-not-allowed"
-            }`}
-          />
+            {
+              isEditing && !showCustomCourse ? (
+              <select
+                value={profile.course_id ?? ""}
+                disabled={!isEditing}
+                onChange={(e) => {
+                   // 👉 User wants to add custom course
+                  if (e.target.value === "__other__") {
+                    setShowCustomCourse(true);
+                    setProfile({ ...profile, course: "", course_id: null });
+                    return;
+                  }
+                  // 👉 User selected existing course
+                  const selectedCourse = courses.find(
+                    (c) => String(c.id) ===e.target.value
+                  );
+                  if (!selectedCourse) return;
+                  setProfile({ ...profile, course: selectedCourse.name , course_id:selectedCourse.id.toString()});
+                }}
+                className={`w-full border rounded-lg px-4 py-2 ${
+                  isEditing
+                    ? "border-blue-400 focus:ring-2 focus:ring-blue-500"
+                    : "border-gray-200 bg-gray-100 cursor-not-allowed"
+                }`}
+              >
+                <option value="">Select Course</option>
+                {
+                  courses.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+                <option value="__other__">Other (Add manually)</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                value={profile.course ?? ""}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    course: e.target.value,
+                    course_id: null, // 👈 ALWAYS null for custom
+                  })
+                }
+                name="course"
+                disabled={!isEditing}
+                placeholder="Enter course name"
+                className={`w-full border rounded-lg px-4 py-2 ${
+                  isEditing
+                    ? "border-blue-400 focus:ring-2 focus:ring-blue-500"
+                    : "border-gray-200 bg-gray-100 cursor-not-allowed"
+                }`}
+              />
+            )}
         </div>
 
         <div>
@@ -181,6 +252,8 @@ export default function StudentProfilePage() {
           <input
             type="number"
             name="startYear"
+            min={1990}
+            max={new Date().getFullYear()}
             value={profile.startYear ?? ""}
             disabled={!isEditing}
             onChange={handleChange}
@@ -196,6 +269,7 @@ export default function StudentProfilePage() {
           <label className="block text-sm text-gray-600 mb-1">Course End Year</label>
           <input
             type="number"
+            min={profile.startYear ?? undefined}
             name="endYear"
             value={profile.endYear ?? ""}
             disabled={!isEditing}
@@ -211,19 +285,76 @@ export default function StudentProfilePage() {
 
         <div>
           <label className="block text-sm text-gray-600 mb-1">College</label>
-          <input
-            type="text"
-            name="college"
-            value={profile.college ?? ""}
-            placeholder="College Name"
-            disabled={!isEditing}
-            onChange={handleChange}
-            className={`w-full border rounded-lg px-4 py-2 ${
-              isEditing
-                ? "border-blue-400 focus:ring-2 focus:ring-blue-500"
-                : "border-gray-200 bg-gray-100 cursor-not-allowed"
-            }`}
-          />
+            {
+              isEditing && !showCustomCollege ? (
+              <select
+                value={profile.college_id ?? ""}
+                disabled={!isEditing}
+                onChange={(e) => {
+                  // 👉 User wants to add custom college
+                  if (e.target.value === "__other__") {
+                    setShowCustomCollege(true);
+                    setProfile({
+                      ...profile,
+                      college_id: null,
+                      college: "",
+                      college_city: "",
+                      college_district: "",
+                      college_state: "",
+                    });
+                    return;
+                  }
+                  // 👉 User selected existing college
+                  const selectedCollege = colleges.find(
+                    (c) => String(c.id) === e.target.value
+                  );
+                  if (!selectedCollege) return;
+                  setShowCustomCollege(false);
+
+                  setProfile({
+                    ...profile,
+                    college_id: selectedCollege.id.toString(),
+                    college: selectedCollege.name,
+                    college_city: selectedCollege.city,
+                    college_district: selectedCollege.district,
+                    college_state: selectedCollege.state,
+                  });
+                }}
+                className={`w-full border rounded-lg px-4 py-2 ${
+                  isEditing
+                    ? "border-blue-400 focus:ring-2 focus:ring-blue-500"
+                    : "border-gray-200 bg-gray-100 cursor-not-allowed"
+                }`}
+              >
+                <option value="">Select College</option>
+                {colleges.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+                <option value="__other__">Other (Add manually)</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                name="college"
+                value={profile.college ?? ""}
+                onChange={(e) =>
+                  setProfile({
+                    ...profile,
+                    college: e.target.value,
+                    college_id: null, // 👈 ALWAYS null for custom
+                  })
+                }
+                disabled={!isEditing}
+                placeholder="College Name"
+                className={`w-full border rounded-lg px-4 py-2 ${
+                  isEditing
+                    ? "border-blue-400 focus:ring-2 focus:ring-blue-500"
+                    : "border-gray-200 bg-gray-100 cursor-not-allowed"
+                }`}
+              />
+            )}
         </div>
 
         <div>
@@ -233,7 +364,7 @@ export default function StudentProfilePage() {
             name="college_city"
             value={profile.college_city?? ""}
             placeholder="College City"
-            disabled={!isEditing}
+            disabled={!isEditing || !showCustomCollege}
             onChange={handleChange}
             className={`w-full border rounded-lg px-4 py-2 ${
               isEditing
@@ -250,7 +381,7 @@ export default function StudentProfilePage() {
             name="college_district"
             value={profile.college_district ?? ""}
             placeholder="College District"
-            disabled={!isEditing}
+            disabled={!isEditing || !showCustomCollege}
             onChange={handleChange}
             className={`w-full border rounded-lg px-4 py-2 ${
               isEditing
@@ -267,7 +398,7 @@ export default function StudentProfilePage() {
             name="college_state"
             value={profile.college_state ?? ""}
             placeholder="College State"
-            disabled={!isEditing}
+            disabled={!isEditing || !showCustomCollege}
             onChange={handleChange}
             className={`w-full border rounded-lg px-4 py-2 ${
               isEditing
