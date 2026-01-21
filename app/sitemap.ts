@@ -26,7 +26,7 @@ async function materialLinks(){
 
   const materialLinks = materials.map((material: any) => ({
     url: `${baseUrl}/materials/${generateCourseSlug(material.title)}/${material.id}`,
-    lastModified: new Date(material.updatedAt),
+    lastModified: new Date(material.createdAt),
   }));
 
   return materialLinks;
