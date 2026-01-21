@@ -17,6 +17,7 @@ import type {  PartialBlock } from "@blocknote/core";
 import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
 import { CourseDB} from "@/lib/db";
 import { CourseContext, useCourse } from "./CourseContext";
+import { generateCourseSlug } from "@/components/slugify";
 
 export default function CoursePage({
   children,
@@ -36,7 +37,7 @@ export default function CoursePage({
       let course;
       if(res.status===200) course=await res.json();
       const data=await getLocalCourseById(courseSlug);
-      if(data && data.slug===course.slug) course=data;
+      if(data) course=data;
 
       if(course) setCourse(course);
     })();
@@ -171,11 +172,11 @@ export function CourseLayout({
         {/* Sidebar Links */}
         <nav className="flex flex-col overflow-y-auto gap-2 px-4 pt-6 py-16">
           {links.map((link) => {
-            const isActive = linkSlug===link.title.split(" ").join("-").toLowerCase();
+            const isActive = linkSlug===generateCourseSlug(link.title);
           return (
               <Link
                 key={link.linkId}
-                href={`/course/${course!.slug}/${link.title.split(" ").join("-").toLowerCase()}`}
+                href={`/course/${course!.slug}/${generateCourseSlug(link.title)}`}
                 className={`group flex items-center justify-between px-3 py-2 rounded-lg transition ${
                   isActive
                     ? "bg-blue-600 text-white font-semibold"

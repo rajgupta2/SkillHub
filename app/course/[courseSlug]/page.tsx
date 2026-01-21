@@ -12,6 +12,7 @@ import { deleteLocalCourse, getLocalCourseById } from "@/lib/course-idb";
 import { CourseDB } from "@/lib/db";
 import React from "react";
 import { useCourse } from "../CourseContext";
+import { generateCourseSlug } from "@/components/slugify";
 
 export default function CourseDetailPage({
   params
@@ -121,7 +122,7 @@ export default function CourseDetailPage({
           <button
             className="rounded-xl border px-8 py-4 font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
             onClick={() => router.push(
-            `/course/${course?.slug}/${course?.links[0].title.split(" ").join("-").toLowerCase()}`
+            `/course/${course?.slug}/${generateCourseSlug(course?.links[0].title || "")}`
             )}
           >
             Continue Editing

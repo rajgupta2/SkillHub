@@ -8,6 +8,7 @@ import { mergeCourses, fetchLocalCourses, fetchServerCourses } from "@/lib/merge
 import { UICourse } from "@/lib/courseSchema";
 import TutorialInfoModal from "./TutorialInfoModal";
 import { formateDate } from "@/components/formateDate";
+import { generateCourseSlug } from "@/components/slugify";
 export default function CoursesPage() {
   const router = useRouter();
   const [courses, setCourses] = useState<UICourse[]>([]);
@@ -156,7 +157,7 @@ export default function CoursesPage() {
                   href={
                     !course.owner
                       ? `/course/${course.slug}`
-                      : `/course/${course.slug}/${course.links[0].title.split(" ").join("-").toLowerCase()}`
+                      : `/course/${course.slug}/${generateCourseSlug(course.links[0].title)}`
                   }
                   className="inline-flex items-center justify-center gap-2
                   w-full rounded-xl bg-blue-600 text-white

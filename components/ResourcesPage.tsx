@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { formateDate } from "./formateDate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { generateCourseSlug } from "./slugify";
 
 interface Material {
   id: number;
@@ -165,9 +166,9 @@ export function ResourcesPage({materials,title,loading,homePage=false}:{material
                       href={
                             pathname.includes("/student/resources")
                             ?
-                              `/student/resources/${resource.title.toLowerCase().split(" ").join("-")}/${resource.id}`
+                              `/student/resources/${generateCourseSlug(resource.title)}/${resource.id}`
                             :
-                              `/materials/${resource.title.toLowerCase().split(" ").join("-")}/${resource.id}`
+                              `/materials/${generateCourseSlug(resource.title)}/${resource.id}`
                             }
                       >
                         <Button className=" bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer">

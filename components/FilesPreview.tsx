@@ -5,6 +5,7 @@ import { FileIcon, Eye, Loader2, X, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { formateDate } from "@/components/formateDate";
 import Link from "next/link";
+import { generateCourseSlug } from "./slugify";
 
 
 const handleShare = async (url:string,title:string) => {
@@ -127,7 +128,7 @@ export default function FilesPreview({
   onClose: () => void;
 }) {
 
-  const title=material.title.split(" ").join("-");
+  const title=generateCourseSlug(material.title);
   const pathname=usePathname();
   return (
     <div className="p-6 relative">
@@ -183,9 +184,9 @@ export default function FilesPreview({
               href={
                 pathname.includes("/student/resources")
                 ?
-                  `/student/resources/${material.title.toLowerCase().split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
+                  `/student/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${file.url}`
                 :
-                  `/materials/${material.title.toLowerCase().split(" ").join("-")}/${material.id}/file?fileurl=${file.url}`
+                  `/materials/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${file.url}`
               }
               className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">
               <Eye className="w-4 h-4" /> Open

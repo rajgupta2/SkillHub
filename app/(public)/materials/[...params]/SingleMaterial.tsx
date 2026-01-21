@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import FilesPreview from "@/components/FilesPreview";
 import { SingleFilePreview } from "@/components/FilesPreview";
+import { generateCourseSlug } from "@/components/slugify";
 
 interface Material {
   id: number;
@@ -97,7 +98,7 @@ export default function SingleMaterialPage() {
   }
 
   if(isFile)
-   return <SingleFilePreview presignedUrl={fileurl!} onClose={()=>router.push(`/materials/${material.title.split(" ").join("-")}/${material.id}`)} />
+   return <SingleFilePreview presignedUrl={fileurl!} onClose={()=>router.push(`/materials/${generateCourseSlug(material.title)}/${material.id}`)} />
 
   return <FilesPreview material={material} onClose={()=>router.push("/materials")}/>
 }

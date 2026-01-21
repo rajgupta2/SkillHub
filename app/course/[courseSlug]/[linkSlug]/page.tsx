@@ -17,6 +17,7 @@ import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCourse } from "../../CourseContext";
 import React from "react";
+import { generateCourseSlug } from "@/components/slugify";
 
 export default function Page({params}:{
   params:any
@@ -30,7 +31,7 @@ export default function Page({params}:{
   useEffect(() => {
     (async () => {
       if(!course) return;
-      const link = course.links.find((l:any) => l.title.split(" ").join("-").toLowerCase() === linkSlug);
+      const link = course.links.find((l:any) => generateCourseSlug(l.title) === linkSlug);
       setContent(link?.content ?? [{ type: "heading", content: ["Start Typing..."]}]);
       setLoading(false);
     })();
@@ -70,7 +71,7 @@ export function Editor({
     if (!course) return;
 
     const updatedLinks = course.links.map(link => {
-      const slug = link.title.split(" ").join("-").toLowerCase();
+      const slug = generateCourseSlug(link.title);
 
       if (slug === linkSlug) {
         link.content=content;
@@ -92,7 +93,7 @@ export function Editor({
     const tokenRes = await fetch("/api/find-token", {method: "GET"});
     const dataToken = await tokenRes.json();
     const token=dataToken.token;
-    const links=course?.links.filter((l)=>l.title.split(" ").join("-").toLowerCase()===linkSlug)
+    const links=course?.links.filter((l)=>generateCourseSlug(l.title)===linkSlug)
     const updateLink=links![0];
     updateLink.content=content;
     const res = await fetch(
