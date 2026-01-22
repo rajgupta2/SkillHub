@@ -30,7 +30,6 @@ export default function CoursePage({
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
   const courseSlug=segments[1];
-  //localStorage.setItem("isLoggedIn",isLoggedIn?"true":"false");
   useEffect(() => {
     (async () => {
       const res=await fetchServerCoursesBySlug(courseSlug);
@@ -41,6 +40,7 @@ export default function CoursePage({
 
       if(course) setCourse(course);
     })();
+    localStorage.setItem("isLoggedIn",isLoggedIn?"true":"false");
   }, []);
 
   return (

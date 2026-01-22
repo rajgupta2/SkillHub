@@ -63,8 +63,35 @@ export function Editor({
   const param:{courseSlug:string,linkSlug:string}=React.use(params);
   const courseSlug=param.courseSlug;
   const linkSlug=param.linkSlug;
+  const [isCourseOwner,setCourseOwner]=useState<boolean>(false);
   const {course,setCourse}=useCourse();
 
+  useEffect(()=>{
+    async function isOwner(){
+      if(!course) return;
+      if(isCourseOwner) return;
+      const isLoggedIn=localStorage.getItem("isLoggedIn");
+      if(isLoggedIn!== "true") return;
+
+      const tokenRes = await fetch("/api/find-token", {method: "GET"});
+      const dataToken = await tokenRes.json();
+      const token=dataToken.token;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/iscourseowner/${course.slug}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      setCourseOwner(data.isOwner);
+      console.log(data.isOwner);
+    }
+    isOwner();
+  },[course]);
   const editor = useCreateBlockNote({initialContent});
 
   async function updateLinkContent() {
@@ -107,7 +134,6 @@ export function Editor({
         body: JSON.stringify({updateLink}),
       }
     );
-    console.log(res.json());
     if (!res.ok) {
       throw new Error("Failed to update course content");
     }
@@ -116,6 +142,7 @@ export function Editor({
   return (
   <div className=" mx-auto px-6">
     <div className="flex justify-end">
+
       {
         !isEditable
         ?
@@ -127,16 +154,28 @@ export function Editor({
           </Button>
         :
           <Button
-            className="mb-4 bg-green-600 cursor-pointer"
+            className="mb-4 bg-green-600 hover:bg-green-700 text-white cursor-pointer mr-4"
             onClick={() =>{
               //updateServerContent();
               updateLinkContent();
               setIsEditable(false)
             }}
           >
-            <Save/> Save Content
+            <Save/> {isCourseOwner? "Save Local" : "Save Content"}
           </Button>
       }
+      {
+        isEditable && isCourseOwner && (
+        <Button
+          className="mb-4 bg-pink-600 hover:bg-pink-700 text-white cursor-pointer"
+          onClick={() =>{
+            updateServerContent();
+            setIsEditable(false)
+          }}
+        >
+          <Save/> Save at Server
+        </Button>
+      )}
     </div>
     <div
       className={`editor-wrapper ${isEditable ? 'border' : ''} rounded-lg min-h-[60vh] cursor-text`}
