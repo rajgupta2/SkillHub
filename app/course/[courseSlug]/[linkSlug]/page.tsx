@@ -1,11 +1,13 @@
 import { Metadata } from "next";
+import { generateCourseSlug } from "@/components/slugify";
 
-
-export async function getTutorial(endPoint: string){
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${endPoint}`);
-  if(res.status===404) return null;
-  const tutorial = await res.json();
-  return tutorial;
+async function fetchServerCoursesBySlug(courseSlug:string) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return res.status===200 ? (await res.json()) : null;
 }
 
 export async function generateMetadata({
@@ -16,9 +18,10 @@ export async function generateMetadata({
   const parameters=await params;
   const courseSlug=parameters.courseSlug
   const linkSlug=parameters.linkSlug;
-  const tutorial= await getTutorial(`/courses/slug/${courseSlug}/${linkSlug}`);
+  const course=await fetchServerCoursesBySlug(courseSlug);
+  const tutorial= course?.links.find((l:any)=>generateCourseSlug(l.title)===linkSlug);
 
-  if (!tutorial) {
+  if (!course) {
     return {
       title: "SkillHub Tutorial",
       description: "This tutorial is not published or no longer available on server.",
@@ -36,7 +39,8 @@ export async function generateMetadata({
 
   const keywords = [
     "SkillHub Tutorial",
-    tutorial.title,
+    `${course.title}`,
+    `${course.title} ${tutorial.title}`,
     tutorial.description,
     "Last minute tutorial",
     "Fast revision tutorial",
@@ -45,12 +49,12 @@ export async function generateMetadata({
   ].filter(Boolean);
 
   return {
-    title: `${tutorial.title} | SkillHub`,
-    description: tutorial.description || tutorial.title,
+    title: `${course.title} ${tutorial.title} | SkillHub`,
+    description: tutorial.description || `${course.title} ${tutorial.title}`,
     keywords,
     openGraph: {
-      title: `${tutorial.title}`,
-      description: tutorial.description || tutorial.title,
+      title: `${course.title} ${tutorial.title}`,
+      description: tutorial.description || `${course.title} ${tutorial.title}`,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/course/${courseSlug}/${linkSlug}`,
       siteName: "SkillHub",
       images: [
@@ -58,15 +62,15 @@ export async function generateMetadata({
           url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: tutorial.title,
+          alt: `${course.title} ${tutorial.title}`
         },
       ],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tutorial.title}`,
-      description: tutorial.description || tutorial.title,
+      title: `${course.title} ${tutorial.title}`,
+      description: tutorial.description || `${course.title} ${tutorial.title}`,
       images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`],
     },
   };
