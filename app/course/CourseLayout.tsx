@@ -41,7 +41,7 @@ export default function CoursePage({
       if(course) setCourse(course);
     })();
     localStorage.setItem("isLoggedIn",isLoggedIn?"true":"false");
-  }, []);
+  }, [courseSlug]);
 
   return (
     <CourseContext.Provider value={{ course, setCourse }}>
@@ -75,9 +75,10 @@ export function CourseLayout({
   const courseSlug=segments[1]; //act as courseId only for browser stored course.
   const linkSlug=segments.length===3 ? segments[2] : "";
   const loading=!course;
-
+  const [isLoggedIn,setIsLoggedIn]=useState(false);
   useEffect(()=>{
     if(course) setLinks(course?.links || []);
+    setIsLoggedIn(localStorage.getItem("isLoggedIn")==="true" ?true :false);
   },[course])
 
 
@@ -203,7 +204,8 @@ export function CourseLayout({
                   onClick={async (e) => {
                     e.preventDefault(); // prevent navigation
                     e.stopPropagation();
-                    await deleteLinkFromCourse(link.linkId);
+                    const wantToDelete=confirm(`Are You want to delete the page of ${link?.title}`);
+                    wantToDelete && (await deleteLinkFromCourse(link.linkId));
                   }}
                 >
                   <Delete className="w-4 h-4 text-red-500 hover:text-white" />
@@ -253,6 +255,23 @@ export function CourseLayout({
               height={40}
               className="rounded-full border-2 border-blue-500"
             />
+          {isLoggedIn ? (
+            <Link
+              href="/student"
+              onClick={() => setOpen(false)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center hidden sm:block"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              href="/auth"
+              onClick={() => setOpen(false)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center hidden sm:block"
+            >
+              Login / Register
+            </Link>
+          )}
           </div>
         </header>
 

@@ -17,32 +17,21 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: "SkillHub – Connect, Learn, and Grow with College Peers | Student Resources & Achievements",
+  title: "SkillHub – Tutorials for Beginners & Interviews Preparation",
   description:
-    "SkillHub is a modern student platform to share achievements, attend events, explore projects, and find high-quality study resources to grow your skills.",
+    "SkillHub tutorial is beginner and interview preparation friendly. The tutorial is also best for fast and last minute revision.",
   keywords: [
-    "SkillHub",
-    "student platform",
-    "student resources",
-    "college resources",
-    "study materials",
-    "student achievements",
-    "events and workshops",
-    "projects for students",
-    "Student Zone",
-    "Education",
-    "Learning",
-    "Courses",
-    "Achievements",
-    "PYQs",
-    "Previous Year Question Papers",
+    "SkillHub tutorials",
+    "skillhub student platform",
+    "Operating System tutorial",
+    "JavaScript tutorial",
     "tech community"
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
-    title: "SkillHub – Empowering Learners Together",
+    title: "SkillHub – Tutorials for Beginners & Interviews Preparation",
     description:
-      "Join SkillHub to discover resources, showcase achievements, attend events, and connect with peers.",
+      "Join SkillHub to find last minute preparation tutorials and beginner friendly tutorials.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     siteName: "SkillHub",
     images: [
@@ -58,9 +47,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SkillHub – Connect, Learn, and Grow",
+    title: "SkillHub – Tutorials for Beginners & Interviews Preparation",
     description:
-      " SkillHub is an online platform for students and educators to share knowledge, track achievements, and collaborate on learning. Join SkillHub to share resources and grow together with your college community.",
+      "SkillHub is an online platform for learners to share knowledge, tutorials, PYQs, blogs  and collaborate on learning. Join SkillHub to share resources and grow together with your college community.",
     images: ["/og-image.png"],
   },
 };

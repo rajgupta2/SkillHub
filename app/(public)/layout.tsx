@@ -23,30 +23,26 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SkillHub – Connect, Learn, and Grow with College Peers | Student Resources & Achievements",
   description:
-    "SkillHub is a modern student platform to share achievements, attend events, explore projects, and find high-quality study resources to grow your skills.",
+    "SkillHub is a modern platform to share PYQs, projects, tutorials, articles, blogs, and achievements and find high-quality study resources to grow your skills.",
   keywords: [
     "SkillHub",
-    "student platform",
+    "Learner platform",
     "student resources",
     "college resources",
     "study materials",
-    "student achievements",
-    "events and workshops",
     "projects for students",
-    "Student Zone",
-    "Education",
     "Learning",
-    "Courses",
-    "Achievements",
-    "PYQs",
+    "Tutorials",
     "Previous Year Question Papers",
-    "tech community"
+    "tech community",
+    "operating system tutorial",
+    "javascript tutorial"
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
     title: "SkillHub – Empowering Learners Together",
     description:
-      "Join SkillHub to discover resources, showcase achievements, attend events, and connect with peers.",
+      "Join SkillHub to discover PYQs, projects, tutorials, blogs, and connect with peers.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     siteName: "SkillHub",
     images: [
@@ -64,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SkillHub – Connect, Learn, and Grow",
     description:
-      " SkillHub is an online platform for students and educators to share knowledge, track achievements, and collaborate on learning. Join SkillHub to share resources and grow together with your college community.",
+      "SkillHub is an online platform for learners to share knowledge, tutorials, PYQs, blogs  and collaborate on learning. Join SkillHub to share resources and grow together with your college community.",
     images: ["/og-image.png"],
   },
 };

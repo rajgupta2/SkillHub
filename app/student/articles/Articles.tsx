@@ -70,7 +70,7 @@ export default function ArticlesPage() {
 
         <Link href="/student/articles/create">
           <Button className="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-2 rounded-lg">
-            <PenSquare className="w-5 h-5" /> Write Article
+            <PenSquare className="w-5 h-5" /> Start Writing..
           </Button>
         </Link>
       </div>
@@ -127,7 +127,7 @@ export default function ArticlesPage() {
               </div>
 
               <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                <Link href={`/student/articles/${a.id}`}>Read Article</Link>
+                <Link href={`/student/articles/${a.id}`}>Read blog</Link>
               </Button>
             </div>
           </motion.div>
@@ -135,7 +135,7 @@ export default function ArticlesPage() {
 
         {articles.length === 0 && (
           <p className="text-center text-gray-600 col-span-full mt-10">
-            No articles found. Be the first to write one!
+            No articles/blogs found. Be the first to write one!
           </p>
         )}
       </main>

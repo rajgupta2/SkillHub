@@ -107,68 +107,51 @@ export default function CoursesPage() {
           const status = statusMap[course.source];
           const isServerCourse=course.source==="server";
           return (
-            <div
+            <Link
               key={course.id}
-              className="group bg-white rounded-2xl border border-gray-100
-              shadow-sm hover:shadow-xl transition-all duration-300
-              hover:-translate-y-1 flex flex-col overflow-hidden"
+              href={
+                !course.owner
+                  ? `/course/${course.slug}`
+                  : `/course/${course.slug}/${generateCourseSlug(
+                      course.links[0].title
+                    )}`
+              }
+              className="group relative flex flex-col items-center justify-center
+              rounded-2xl border border-gray-200
+              bg-gradient-to-br from-blue-200 to-white
+              shadow-sm hover:shadow-xl
+              transition-all duration-300
+              hover:-translate-y-1
+              min-h-[220px]"
             >
-              {/* Card Body */}
-              <div className="p-5 flex-1">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 text-blue-700">
-                      <BookOpen className="w-5 h-5" />
-                    </div>
 
-                    <h2 className="text-lg font-semibold text-gray-800 line-clamp-2">
-                      {course.title}
-                    </h2>
-                  </div>
-                </div>
+              {/* Content */}
+              <div className="px-6 text-center">
+                <h2
+                  className="text-xl font-semibold text-gray-900 leading-snug
+                  line-clamp-2 group-hover:text-blue-600 transition-colors"
+                >
+                  {course.title}
+                </h2>
 
-                {/* Status Badge */}
                 {status && (
                   <span
-                    className={`inline-block mt-3 px-3 py-1 text-xs font-medium rounded-full ${status.color}`}
+                    className={`absolute bottom-4 right-4
+                      px-3 py-1 text-xs font-semibold rounded-full
+                    bg-white/70 backdrop-blur ${status.color}`}
                   >
                     {status.label}
                   </span>
                 )}
-
-                {/* Meta */}
-                <div className="mt-4 space-y-1">
-                  <p className="text-sm text-gray-600">
-                    {course.links.length} lesson
-                    {course.links.length !== 1 ? "s" : ""}
-                  </p>
-
-                  <p className="text-xs text-gray-400">
-                    Last updated ·{" "}
-                    {formateDate(course.updatedAt)}
-                  </p>
-                </div>
               </div>
+              {/* Hover Accent */}
+              <div
+                className="absolute inset-x-0 bottom-0 h-1
+                bg-gradient-to-r from-blue-500 to-indigo-500
+                opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+            </Link>
 
-              {/* Footer / CTA */}
-              <div className="border-t px-5 py-4">
-                <Link
-                  href={
-                    !course.owner
-                      ? `/course/${course.slug}`
-                      : `/course/${course.slug}/${generateCourseSlug(course.links[0].title)}`
-                  }
-                  className="inline-flex items-center justify-center gap-2
-                  w-full rounded-xl bg-blue-600 text-white
-                  py-2.5 text-sm font-medium
-                  hover:bg-blue-700 transition-colors"
-                >
-                  View tutorial
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
           );
         })}
       </div>

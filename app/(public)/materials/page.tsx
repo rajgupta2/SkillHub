@@ -4,20 +4,23 @@ import MaterialPage from "./Materials";
 export const metadata:Metadata = {
   title: "SkillHub – Student Materials, Projects, PYQs & Notes",
   description:
-    "Explore a collection of study materials, projects, PYQs, assignments, and notes on SkillHub to enhance your learning and skills.",
+    "Explore a collection of study materials, projects, PYQs, assignments, and notes of any college on SkillHub to enhance your learning and skills.",
   keywords: [
     "student materials",
-    "SkillHub PYQs",
+    "College PYQs",
     "college projects",
-    "study notes",
-    "assignments",
+    "collge study notes",
+    "college assignments",
     "SkillHub resources",
-    "college learning"
+    "college learning",
+    "Tutorials",
+    "Blogs",
+    "Articles"
   ],
   openGraph: {
     title: "SkillHub – Study Materials & Projects",
     description:
-      "Find and download PYQs, assignments, project reports, and notes on SkillHub to boost your learning.",
+      "Find and download PYQs, assignments, project reports, and notes of any college on SkillHub to boost your learning.",
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/materials`,
     siteName: "SkillHub",
     images: [
@@ -35,7 +38,7 @@ export const metadata:Metadata = {
     card: "summary_large_image",
     title: "SkillHub – Student Materials & Resources",
     description:
-      "Download PYQs, assignments, project reports, and notes from SkillHub to improve your skills.",
+      "Download PYQs, assignments, project reports, and notes of any college from SkillHub to improve your skills.",
     images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`],
   },
 };
