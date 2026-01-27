@@ -74,6 +74,6 @@ export async function generateMetadata({
 
 import Tutorial from "./Tutorial";
 
-export default async function MaterialPage() {
+export default async function TutorialPage() {
   return <Tutorial/>
 }

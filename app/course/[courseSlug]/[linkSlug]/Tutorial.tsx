@@ -20,9 +20,7 @@ import React from "react";
 import { generateCourseSlug } from "@/components/slugify";
 import Link from "next/link";
 
-export default function Page({params}:{
-  params:any
-}){
+export default function Page(){
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState< PartialBlock[] | null>(null);
   const param:{courseSlug:string,linkSlug:string}=useParams();
@@ -51,7 +49,7 @@ export default function Page({params}:{
 
   return (
     <>
-      <Editor initialContent={content} params={params}/>
+      <Editor initialContent={content}/>
       {
         nextLink && (
         <div className="flex justify-end">
@@ -80,10 +78,8 @@ export default function Page({params}:{
 }
 
 export function Editor({
-  params,
   initialContent
   }:{
-  params:any,
   initialContent:any
 }) {
   const [content, setContent] = useState< PartialBlock[]>(initialContent);

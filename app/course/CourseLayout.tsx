@@ -258,7 +258,6 @@ export function CourseLayout({
           {isLoggedIn ? (
             <Link
               href="/student"
-              onClick={() => setOpen(false)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center hidden sm:block"
             >
               Dashboard
@@ -266,7 +265,6 @@ export function CourseLayout({
           ) : (
             <Link
               href="/auth"
-              onClick={() => setOpen(false)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center hidden sm:block"
             >
               Login / Register
