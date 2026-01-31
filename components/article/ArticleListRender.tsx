@@ -44,7 +44,16 @@ export default function ArticlesList({
   useEffect(() => {
     async function loadArticles() {
       try {
-        const res = await fetch(url);
+        const tokenRes = await fetch("/api/find-token", {method: "GET"});
+        const dataToken = await tokenRes.json();
+        const token=dataToken.token;
+        const res = await fetch(url, {
+          credentials:"include",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         setArticles(data.articles);
       } catch (err) {
