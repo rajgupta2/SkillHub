@@ -141,7 +141,7 @@ export default function StudentLayout({ upcomingChildren, studentName }: Student
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto ">{upcomingChildren}</main>
+        <main className="flex-1 overflow-y-auto min-h-[83vh] ">{upcomingChildren}</main>
 
         {/* Page Footer */}
         <footer className="bg-white border-t mt-auto text-center py-4 text-gray-500 text-sm">

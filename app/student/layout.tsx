@@ -53,7 +53,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const userCookie = cookieStore.get("user")?.value;
   const studentName= userCookie  ? JSON.parse(userCookie).name : "Student";
-  wakeupBackendServer();
+  //wakeupBackendServer();
   return (
     <html lang="en">
       <head>

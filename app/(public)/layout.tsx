@@ -73,7 +73,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
-  wakeupBackendServer();
+  //wakeupBackendServer();
 
   return (
     <html lang="en">
@@ -84,7 +84,9 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SiteNavbar isLoggedIn={isLoggedIn} />
-          {children}
+          <div className="min-h-[75vh]">
+            {children}
+          </div>
         <SiteFooter />
       </body>
     </html>
