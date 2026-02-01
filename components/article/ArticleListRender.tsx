@@ -159,7 +159,10 @@ export default function ArticlesList({
               <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white">
                 <Link href={
                   isStudentZone?
-                  `/student/articles/${a.slug}`
+                    a.isPublished ?
+                     `/student/articles/${a.slug}`
+                    :
+                     `/student/articles/create?slug=${a.slug}&type=${a.type}`
                   :
                   `${a.type}/${a.slug}`
                 }>

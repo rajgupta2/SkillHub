@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,14 +15,28 @@ const Editor = dynamic(() => import("./Editor"), {
   ssr: false,
 });
 import { convertBlockNoteToHTML } from "./blocknoteToHtml";
+import { ArticleSchema } from "./schema";
 
-export default function CreateContent() {
+export default function CreateContent({article}:{
+  article?:ArticleSchema
+}) {
   const [form, setForm] = useState({
     title: "",
     contentJson: [{ type: "heading", props:{level:3}, content: ["Start Typing..."]}] as PartialBlock[],
     type: "",
     tags: "",
   });
+
+  useEffect(() => {
+    if (!article) return;
+
+    setForm({
+      title: article.title ?? "",
+      contentJson: article.contentJson ?? [{ type: "heading", props:{level:3}, content: ["Start Typing..."]}],
+      type: article.type ?? "",
+      tags: article.tags ?? "",
+    });
+  }, [article]);
 
   async function handleSubmit(publish: boolean) {
     let message;
@@ -33,8 +47,13 @@ export default function CreateContent() {
 
       const html=await convertBlockNoteToHTML(form.contentJson);
       const cleanHtml = DOMPurify.sanitize(html);
-      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article`, {
-        method: "POST",
+      const url= article
+      ?
+        `${process.env.NEXT_PUBLIC_API_URL}/article/${article.id}`
+      :
+       `${process.env.NEXT_PUBLIC_API_URL}/article`  //For Post
+      const res=await fetch(url, {
+        method: article ? "PUT": "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
@@ -46,7 +65,7 @@ export default function CreateContent() {
         }),
       });
 
-      if(res.status===201){
+      if(res.status===201 || res.status===200){
         const result=await res.json();
         message=result.message;
       }
