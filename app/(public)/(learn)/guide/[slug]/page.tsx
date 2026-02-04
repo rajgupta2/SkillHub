@@ -11,7 +11,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const parameters=await params;
-  const article = await getArticleBySlug(parameters.slug,"GUIDE");
+  const article = await getArticleBySlug(parameters.slug);
   return buildArticleMetadata(article);
 }
 

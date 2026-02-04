@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { getArticleByStudentZone } from "@/components/article/getArticle";
 import { buildArticleMetadata } from "@/components/article/seo";
 import ArticleRenderer from "@/components/article/ArticleRenderer";
 
