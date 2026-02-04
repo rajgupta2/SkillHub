@@ -11,14 +11,11 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps) {
   const parameters=await params;
-  const article = await getArticleBySlug(parameters.slug,"BLOG");
+  const article = await getArticleBySlug(parameters.slug);
   return buildArticleMetadata(article);
 }
 
 export default async function BlogPage({ params }: PageProps) {
   const parameters=await params;
-  const article = await getArticleBySlug(parameters.slug, "BLOG");
-  if (!article || !article.isPublished) notFound();
-
-  return <ArticleRenderer article={article} />;
+  return <ArticleRenderer slug={parameters.slug} isStudentZone={false}/>;
 }

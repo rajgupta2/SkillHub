@@ -19,7 +19,7 @@ function getPlainText(html: string, maxLength = 160) {
 function getCTA(type: ArticleSchema["type"]) {
   switch (type) {
     case "TUTORIAL":
-      return "Start tutorial";
+      return "Read tutorial";
     case "GUIDE":
       return "View guide";
     case "EXAM":
@@ -37,8 +37,9 @@ export default function ArticlesList({
   url: string;
   isStudentZone: boolean;
 }) {
-  const [articles, setArticles] = useState<ArticleSchema[]>([]);
+  const [articles, setArticles] = useState<ArticleSchema[]>();
   const [filter, setFilter] = useState<"ALL" | ArticleSchema["type"]>("ALL");
+  const [loading,setLoading]=useState(true);
 
   //  Fetch from backend API
   useEffect(() => {
@@ -58,10 +59,26 @@ export default function ArticlesList({
         setArticles(data.articles);
       } catch (err) {
         console.error("Failed to load articles", err);
+      }finally{
+        setLoading(false);
       }
     }
     loadArticles();
   }, []);
+
+  if(loading)
+   return (
+    <div className="flex items-center justify-center min-h-[85vh]">
+      Content is Loading...
+    </div>
+  );
+
+  if(!articles || articles.length === 0 )
+    return (
+          <p className="flex items-center justify-center min-h-[85vh] text-gray-600">
+            No articles/blogs found. Be the first to write one!
+          </p>
+    );
 
   const filteredArticles =
     filter === "ALL"
@@ -164,7 +181,7 @@ export default function ArticlesList({
                     :
                      `/student/articles/create?slug=${a.slug}&type=${a.type}`
                   :
-                  `${a.type}/${a.slug}`
+                  `${a.type.toLowerCase()}/${a.slug}`
                 }>
                   {getCTA(a.type)}
                 </Link>
@@ -172,12 +189,6 @@ export default function ArticlesList({
             </div>
           </motion.div>
         ))}
-
-        {articles.length === 0 && (
-          <p className="text-center text-gray-600 col-span-full mt-10">
-            No articles/blogs found. Be the first to write one!
-          </p>
-        )}
       </main>
     </div>
   );

@@ -9,34 +9,24 @@ import { PartialBlock } from "@blocknote/core";
 import { Save } from "lucide-react";
 import dynamic from "next/dynamic";
 import DOMPurify from "dompurify";
-
+import { getArticleByStudentZone } from "./ArticleRenderer";
 
 const Editor = dynamic(() => import("./Editor"), {
   ssr: false,
 });
 import { convertBlockNoteToHTML } from "./blocknoteToHtml";
 import { ArticleSchema } from "./schema";
+import { redirect } from "next/navigation";
 
 export default function CreateContent({article}:{
   article?:ArticleSchema
 }) {
   const [form, setForm] = useState({
-    title: "",
-    contentJson: [{ type: "heading", props:{level:3}, content: ["Start Typing..."]}] as PartialBlock[],
-    type: "",
-    tags: "",
+    title: article?.title ?? "",
+    contentJson: article?.contentJson ??  [{ type: "heading", props:{level:3}, content: ["Start Typing..."]}] as PartialBlock[],
+    type: article?.type ?? "",
+    tags: article?.tags ?? "",
   });
-
-  useEffect(() => {
-    if (!article) return;
-
-    setForm({
-      title: article.title ?? "",
-      contentJson: article.contentJson ?? [{ type: "heading", props:{level:3}, content: ["Start Typing..."]}],
-      type: article.type ?? "",
-      tags: article.tags ?? "",
-    });
-  }, [article]);
 
   async function handleSubmit(publish: boolean) {
     let message;
@@ -74,6 +64,7 @@ export default function CreateContent({article}:{
       message="Failed to save."
     }finally{
       alert(message);
+      redirect("/student/articles");
     }
   }
 
@@ -162,7 +153,7 @@ export default function CreateContent({article}:{
              <Save className="w-5 h-5"/> Save Draft
           </Button>
           <Button
-            onClick={() => handleSubmit(false)}
+            onClick={() => handleSubmit(true)}
             className="bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2"
           >
             <Upload className="w-5 h-5" /> Publish Article

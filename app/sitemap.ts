@@ -26,7 +26,7 @@ async function articleURL() {
     const articles=data.articles;
     const articleLinks=articles.map((a:ArticleSchema)=>{
       return {
-        url: `${baseUrl}/${a.type}/${a.slug}`,
+        url: `${baseUrl}/${a.type.toLowerCase()}/${a.slug}`,
         lastModified: new Date(a.updatedAt),
       }
     })

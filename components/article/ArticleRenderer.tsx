@@ -1,7 +1,71 @@
+"use client";
 import { ArticleSchema } from "@/components/article/schema.js";
 import { getArticleJsonLd } from "./seo";
 import { User,Calendar } from "lucide-react";
-export default function ArticleRenderer({ article}:{article:ArticleSchema}) {
+import { getArticleBySlug} from "./getArticle";
+import { useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+
+
+export async function getArticleByStudentZone(slug:string) {
+    const tokenRes = await fetch(`/api/find-token`, {method: "GET"});
+    const dataToken = await tokenRes.json();
+    const token=dataToken.token;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/article/${slug}`, {
+        credentials:"include",
+        headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    const data = await res.json();
+    console.log(data);
+    return data.article;
+}
+
+export default function ArticleRenderer({slug,isStudentZone}:{
+  slug:string;
+  isStudentZone:boolean;
+}){
+  const [article,setArticle]=useState<ArticleSchema>();
+  const [loading,setLoading]=useState(true);
+
+  useEffect(() => {
+    async function loadArticle() {
+      try {
+        const data = isStudentZone
+          ? await getArticleByStudentZone(slug)
+          : await getArticleBySlug(slug);
+
+          setArticle(data);
+        } catch (err) {
+          console.error("Failed to load article", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+    loadArticle();
+  }, [slug, isStudentZone]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[85vh]">
+        Content is Loading...
+      </div>
+    );
+  }
+
+  if (!article) {
+    return (
+      <div className="flex items-center justify-center min-h-[85vh] text-gray-700">
+        Content is Not Found.
+      </div>
+    );
+  }
+
+
   const jsonLd = getArticleJsonLd(article);
   return (
     <>
@@ -14,7 +78,7 @@ export default function ArticleRenderer({ article}:{article:ArticleSchema}) {
       />
 
       {/* Article UI */}
-      <article className="prose max-w-2xl mx-auto mt-8 px-6 lg:px-0">
+      <article className="prose max-w-2xl mx-auto my-8 px-6 lg:px-0">
         <h1 className="mb-4">{article.title}</h1>
 
         <div className="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-4">
