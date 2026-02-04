@@ -16,8 +16,6 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function GuidePage({ params }: PageProps) {
-  const article = await getArticleBySlug(params.slug, "GUIDE");
-  if (!article || !article.isPublished) notFound();
-
-  return <ArticleRenderer article={article} />;
+  const parameters=await params;
+  return <ArticleRenderer slug={parameters.slug} isStudentZone={false}/>;
 }
