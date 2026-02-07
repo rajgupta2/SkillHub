@@ -55,7 +55,7 @@ export default async function MaterialPage({
   }:
   {
     params: { params: string[] };
-}): Promise<Metadata> {
+}){
   const slugArray = await params;
   const parameters=await slugArray.params;
   const subjectSlug = parameters[0];  // first part
