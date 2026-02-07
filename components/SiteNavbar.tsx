@@ -23,6 +23,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
           { /* <Link href="/challenges">Challenges</Link>
           <Link href="/leaderboard">Leaderboard</Link> */}
           <Link href="/course">Tutorials</Link>
+          <Link href="/learn">Learning</Link>
           <Link href="/contact">Contact</Link>
 
           {isLoggedIn ? (
@@ -64,6 +65,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
               <Link href="/challenges" onClick={() => setOpen(false)}>Challenges</Link>
               <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
             <Link href="/course" onClick={() => setOpen(false)}>Tutorials</Link>
+            <Link href="/learn" onClick={() => setOpen(false)}>Learning</Link>
             <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
 
             {isLoggedIn ? (

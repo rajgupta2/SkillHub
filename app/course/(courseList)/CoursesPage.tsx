@@ -4,15 +4,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, BookOpen, Plus } from "lucide-react";
 import Link from "next/link";
-import { mergeCourses, fetchLocalCourses, fetchServerCourses } from "@/lib/mergeCourses";
+import { mergeCourses, fetchLocalCourses } from "@/lib/mergeCourses";
 import { UICourse } from "@/lib/courseSchema";
 import TutorialInfoModal from "./TutorialInfoModal";
-import { formateDate } from "@/components/formateDate";
 import { generateCourseSlug } from "@/components/slugify";
-export default function CoursesPage() {
+export default function CoursesPage({server_Courses}:{server_Courses:UICourse[]}) {
   const router = useRouter();
-  const [courses, setCourses] = useState<UICourse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [courses, setCourses] = useState<UICourse[]>(server_Courses);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
@@ -42,26 +40,13 @@ export default function CoursesPage() {
 
   useEffect(() => {
     async function load() {
-      const [server, local] = await Promise.all([
-        fetchServerCourses(),
-        fetchLocalCourses(),
-      ]);
-
+      const server=server_Courses;
+      const local=await fetchLocalCourses();
       setCourses(mergeCourses(server, local));
-      setLoading(false);
     }
 
     load();
   }, []);
-
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[60vh] text-gray-500">
-        Loading tutorials...
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto py-6 min-h-[70vh] px-6">
@@ -88,7 +73,7 @@ export default function CoursesPage() {
 
       {/* Courses Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course) => {
+        {courses.map((course,ind) => {
           const statusMap = {
             server: {
               label: "Server",
@@ -108,7 +93,7 @@ export default function CoursesPage() {
           const isServerCourse=course.source==="server";
           return (
             <Link
-              key={course.id}
+              key={ind}
               href={
                 !course.owner
                   ? `/course/${course.slug}`

@@ -11,7 +11,7 @@ import {
 import { deleteLocalCourse, getLocalCourseById } from "@/lib/course-idb";
 import { CourseDB } from "@/lib/db";
 import React from "react";
-import { useCourse } from "../CourseContext";
+import { useCourse } from "./CourseContext";
 import { generateCourseSlug } from "@/components/slugify";
 
 export default function CourseDetailPage({

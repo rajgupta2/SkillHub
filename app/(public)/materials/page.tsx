@@ -43,6 +43,35 @@ export const metadata:Metadata = {
   },
 };
 
-export default function Page(){
-  return <MaterialPage/>
+export interface Material {
+  id: number;
+  title: string;
+  subject: string;
+  type: string;
+  description: string;
+  uploadedBy: {
+    name: string;
+  };
+  createdAt: string;
+  files: {
+    id:number,
+    originalName:string,
+    url: string,
+    contentType:string
+    materialId: number;
+   }[];
+  studentId: string;
+  collegeId: number | null;
+}
+
+
+export default async function Page(){
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material?limit=150`);
+  if (!res.ok) {
+    return <div className="text-center text-gray-500 py-10">Failed to fetch materials.</div>;
+  }
+
+  const data = await res.json();
+  const materials=data.materials as Material[];
+  return <MaterialPage materials={materials}/>
 }

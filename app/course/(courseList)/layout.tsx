@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../globals.css";
+import "@/app/globals.css";
+import SiteNavbar from "@/components/SiteNavbar";
+import SiteFooter from "@/components/SiteFooter";
+import { GraduationCap } from "lucide-react";
 import { cookies } from "next/headers";
-import {wakeupBackendServer} from "../run";
-import CoursePage from "./CourseLayout";
+import {wakeupBackendServer} from "@/app/run";
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,21 +21,28 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: "SkillHub – Tutorials for Beginners & Interviews Preparation",
+  title: "SkillHub – Connect, Learn, and Grow with College Peers | Student Resources & Achievements",
   description:
-    "SkillHub tutorial is beginner and interview preparation friendly. The tutorial is also best for fast and last minute revision.",
+    "SkillHub is a modern platform to share PYQs, projects, tutorials, articles, blogs, and achievements and find high-quality study resources to grow your skills.",
   keywords: [
-    "SkillHub tutorials",
-    "skillhub student platform",
-    "Operating System tutorial",
-    "JavaScript tutorial",
-    "tech community"
+    "SkillHub",
+    "Learner platform",
+    "student resources",
+    "college resources",
+    "study materials",
+    "projects for students",
+    "Learning",
+    "Tutorials",
+    "Previous Year Question Papers",
+    "tech community",
+    "operating system tutorial",
+    "javascript tutorial"
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
-    title: "SkillHub – Tutorials for Beginners & Interviews Preparation",
+    title: "SkillHub – Empowering Learners Together",
     description:
-      "Join SkillHub to find last minute preparation tutorials and beginner friendly tutorials.",
+      "Join SkillHub to discover PYQs, projects, tutorials, blogs, and connect with peers.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
     siteName: "SkillHub",
     images: [
@@ -47,12 +58,13 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SkillHub – Tutorials for Beginners & Interviews Preparation",
+    title: "SkillHub – Connect, Learn, and Grow",
     description:
       "SkillHub is an online platform for learners to share knowledge, tutorials, PYQs, blogs  and collaborate on learning. Join SkillHub to share resources and grow together with your college community.",
     images: ["/og-image.png"],
   },
 };
+
 
 export default async function RootLayout({
   children,
@@ -71,9 +83,11 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CoursePage isLoggedIn={isLoggedIn}>
-          {children}
-        </CoursePage>
+        <SiteNavbar isLoggedIn={isLoggedIn} />
+          <div className="min-h-[75vh]">
+            {children}
+          </div>
+        <SiteFooter />
       </body>
     </html>
   );

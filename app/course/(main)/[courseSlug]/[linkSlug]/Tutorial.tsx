@@ -7,6 +7,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import type { BlockNoteEditor } from "@blocknote/core";
 import { Button } from "@/components/ui/button";
 import {
+  ArrowRight,
   Pencil,
   Save,
 } from "lucide-react";
@@ -14,75 +15,26 @@ import './styles.scss'
 import { useEffect, useState } from "react";
 import type {  PartialBlock } from "@blocknote/core";
 import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { useCourse } from "../../CourseContext";
+import { notFound, useParams, usePathname, useSearchParams } from "next/navigation";
+import { useCourse } from "../CourseContext";
 import React from "react";
 import { generateCourseSlug } from "@/components/slugify";
 import Link from "next/link";
 
 export default function Page(){
-  const [loading, setLoading] = useState(true);
-  const [content, setContent] = useState< PartialBlock[] | null>(null);
-  const param:{courseSlug:string,linkSlug:string}=useParams();
-  const courseSlug=param.courseSlug;
-  const linkSlug=param.linkSlug;
   const {course,setCourse}=useCourse();
-  const [nextLink,setNextLink]=useState<any>();
-  useEffect(() => {
-    (async () => {
-      if(!course) return;
-      const link = course.links.find((l:any) => generateCourseSlug(l.title) === linkSlug);
-      setContent(link?.content ?? [{ type: "heading", content: ["Start Typing..."]}]);
-      setLoading(false);
-      const nextLink=course.links.filter((l:any)=>l.order===(link!.order+1));
-      setNextLink(nextLink[0]);
-    })();
-  }, [course]);
-
-  if (loading) {
+  if(!course){
     return (
       <div className="flex items-center justify-center h-[60vh] text-gray-500">
-        Loading content...
+          Loading course...
       </div>
     );
   }
 
-  return (
-    <>
-      <Editor initialContent={content}/>
-      {
-        nextLink && (
-        <div className="flex justify-end">
-          <Link
-            href={`/course/${course?.slug}/${generateCourseSlug(nextLink?.title)}`}
-            className="
-              group inline-flex items-center gap-2 mx-6
-              rounded-lg px-4 py-2
-              bg-gradient-to-r from-blue-600 to-indigo-600
-              text-white
-              shadow-md hover:shadow-lg
-              transition-all duration-300
-              hover:from-blue-700 hover:to-indigo-700
-            "
-          >
-            Next Lesson
-            <span className="transition-transform duration-300 group-hover:translate-x-1">
-              →
-            </span>
-          </Link>
-        </div>
-        )
-      }
-    </>
-  );
+  return <PageEditor/>;
 }
 
-export function Editor({
-  initialContent
-  }:{
-  initialContent:any
-}) {
-  const [content, setContent] = useState< PartialBlock[]>(initialContent);
+export function PageEditor() {
   const [isEditable,setIsEditable]=useState(false);
   const param:{courseSlug:string,linkSlug:string}=useParams();
   const courseSlug=param.courseSlug;
@@ -115,7 +67,14 @@ export function Editor({
     }
     isOwner();
   },[course]);
-  const editor = useCreateBlockNote({initialContent});
+
+  let link = course?.links.find((l:any) => generateCourseSlug(l.title) === linkSlug);
+  const [content, setContent] = useState< PartialBlock[]>(link?.content ?? [{ type: "heading", content: ["Start Typing..."]}]);
+  const nextLinkCollection = course?.links.filter(
+    (l: any) => l.order === (link?.order ?? 0) + 1
+  );
+  const nextLink = (nextLinkCollection && nextLinkCollection.length > 0) ? nextLinkCollection[0] : null;
+  const editor = useCreateBlockNote({initialContent:content});
 
   async function updateLinkContent() {
     if (!course) return;
@@ -206,6 +165,30 @@ export function Editor({
     >
       <BlockNoteView editor={editor} theme="light" editable={isEditable} onChange={()=>setContent(editor.document)}/>
     </div>
+
+    {
+      nextLink && (
+      <div className="flex justify-end">
+        <Link
+          href={`/course/${course.slug}/${generateCourseSlug(nextLink.title)}`}
+          className="
+            group inline-flex items-center gap-2 mx-6
+            rounded-lg px-4 py-2
+            bg-gradient-to-r from-blue-600 to-indigo-600
+            text-white
+            shadow-md hover:shadow-lg
+            transition-all duration-300
+            hover:from-blue-700 hover:to-indigo-700
+          "
+        >
+          Next Lesson
+          <span className="transition-transform duration-300 group-hover:translate-x-1">
+            <ArrowRight/>
+          </span>
+        </Link>
+      </div>
+      )
+    }
 
   </div>
   );

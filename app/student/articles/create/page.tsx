@@ -3,7 +3,23 @@ import CreateContent from "@/components/article/create";
 import { ArticleSchema } from "@/components/article/schema";
 import { useSearchParams } from "next/navigation";
 import { useState,useEffect } from "react";
-import { getArticleByStudentZone } from "@/components/article/ArticleRenderer";
+
+export async function getArticleByStudentZone(slug:string) {
+  const tokenRes = await fetch(`/api/find-token`, {method: "GET"});
+  const dataToken = await tokenRes.json();
+  const token=dataToken.token;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/article/${slug}`, {
+      credentials:"include",
+      headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+      },
+  });
+
+  const data = await res.json();
+  console.log(data);
+  return data.article;
+}
 
 export default function Page(){
   const searchParams = useSearchParams();

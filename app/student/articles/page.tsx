@@ -1,6 +1,17 @@
-"use client";
+import { GET } from "@/app/api/find-token/route";
 import ArticlesList from "@/components/article/ArticleListRender";
 
-export default function ArticlesPage() {
-  return <ArticlesList url={`${process.env.NEXT_PUBLIC_API_URL}/student/article`} isStudentZone={true}/>;
+export default async function ArticlesPage() {
+  const tokenRes = await GET();
+  const dataToken = await tokenRes.json();
+  const token=dataToken.token;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/article`, {
+    credentials:"include",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  return <ArticlesList articles={data.articles} isStudentZone={true}/>;
 }

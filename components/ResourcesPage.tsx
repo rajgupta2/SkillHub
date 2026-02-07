@@ -48,7 +48,7 @@ const handleShare = async (url:string) => {
   }
 };
 
-export function ResourcesPage({materials,title,loading,homePage=false}:{materials:Material[],title:string,loading:boolean,homePage?:boolean}) {
+export function ResourcesPage({materials,title,homePage=false}:{materials:Material[],title:string,homePage?:boolean}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
 
@@ -118,9 +118,8 @@ export function ResourcesPage({materials,title,loading,homePage=false}:{material
 
       {/* Scrollable Materials Section */}
       <main className={`px-8 md:px-16 py-10 overflow-y-auto ${homePage ? "" : "max-h-[60vh]"} scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}>
-        {loading ? (
-          <div className="text-center text-gray-500 py-10">Loading materials...</div>
-        ) : filteredResources.length === 0 ? (
+        {
+        filteredResources.length === 0 ? (
           <div className="col-span-full text-center py-10 text-gray-500">
             <FileText className="w-12 h-12 mx-auto mb-3 text-gray-400" />
             <p>No materials found. Try searching something else.</p>

@@ -5,57 +5,11 @@ import { User,Calendar } from "lucide-react";
 import { getArticleBySlug} from "./getArticle";
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
+import { formateDate } from "../formateDate";
 
-
-export async function getArticleByStudentZone(slug:string) {
-    const tokenRes = await fetch(`/api/find-token`, {method: "GET"});
-    const dataToken = await tokenRes.json();
-    const token=dataToken.token;
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/article/${slug}`, {
-        credentials:"include",
-        headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        },
-    });
-
-    const data = await res.json();
-    console.log(data);
-    return data.article;
-}
-
-export default function ArticleRenderer({slug,isStudentZone}:{
-  slug:string;
-  isStudentZone:boolean;
+export default function ArticleRenderer({article}:{
+  article:ArticleSchema;
 }){
-  const [article,setArticle]=useState<ArticleSchema>();
-  const [loading,setLoading]=useState(true);
-
-  useEffect(() => {
-    async function loadArticle() {
-      try {
-        const data = isStudentZone
-          ? await getArticleByStudentZone(slug)
-          : await getArticleBySlug(slug);
-
-          setArticle(data);
-        } catch (err) {
-          console.error("Failed to load article", err);
-        } finally {
-          setLoading(false);
-        }
-      }
-
-    loadArticle();
-  }, [slug, isStudentZone]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[85vh]">
-        Content is Loading...
-      </div>
-    );
-  }
 
   if (!article) {
     return (
@@ -87,7 +41,7 @@ export default function ArticleRenderer({slug,isStudentZone}:{
           </span>
           <span className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
-            {new Date(article.createdAt).toLocaleDateString()}
+            {formateDate(article.updatedAt)}
           </span>
         </div>
 

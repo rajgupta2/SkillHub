@@ -9,12 +9,15 @@ import { formateDate } from "@/components/formateDate";
 import  DOMPurify from "dompurify";
 import { ArticleSchema} from "@/components/article/schema";
 
-function getPlainText(html: string, maxLength = 160) {
-  if (typeof window === "undefined") return "";
-  const div = document.createElement("div");
-  div.innerHTML = html;
-  return div.textContent?.slice(0, maxLength) + "...";
+export function getPlainText(html: string, maxLength = 160) {
+  const text = html
+    .replace(/<[^>]*>/g, " ")   // remove tags
+    .replace(/\s+/g, " ")      // clean spaces
+    .trim();
+
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
 }
+
 
 function getCTA(type: ArticleSchema["type"]) {
   switch (type) {
@@ -31,59 +34,25 @@ function getCTA(type: ArticleSchema["type"]) {
 
 
 export default function ArticlesList({
-  url,
+  articles,
   isStudentZone
 }:{
-  url: string;
+  articles: ArticleSchema[];
   isStudentZone: boolean;
 }) {
-  const [articles, setArticles] = useState<ArticleSchema[]>();
   const [filter, setFilter] = useState<"ALL" | ArticleSchema["type"]>("ALL");
-  const [loading,setLoading]=useState(true);
-
-  //  Fetch from backend API
-  useEffect(() => {
-    async function loadArticles() {
-      try {
-        const tokenRes = await fetch("/api/find-token", {method: "GET"});
-        const dataToken = await tokenRes.json();
-        const token=dataToken.token;
-        const res = await fetch(url, {
-          credentials:"include",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        setArticles(data.articles);
-      } catch (err) {
-        console.error("Failed to load articles", err);
-      }finally{
-        setLoading(false);
-      }
-    }
-    loadArticles();
-  }, []);
-
-  if(loading)
-   return (
-    <div className="flex items-center justify-center min-h-[85vh]">
-      Content is Loading...
-    </div>
-  );
-
-  if(!articles || articles.length === 0 )
-    return (
-          <p className="flex items-center justify-center min-h-[85vh] text-gray-600">
-            No articles/blogs found. Be the first to write one!
-          </p>
-    );
-
-  const filteredArticles =
-    filter === "ALL"
+  const filteredArticles=  filter === "ALL"
       ? articles
       : articles.filter((a) => a.type === filter);
+
+  if(!articles || articles.length === 0 ){
+    return (
+      <p className="flex items-center justify-center min-h-[85vh] text-gray-600">
+        No articles/blogs found. Be the first to write one!
+      </p>
+    );
+  }
+
 
   const filterTypes = ["ALL", "BLOG", "TUTORIAL", "EXAM", "GUIDE"] as const;
   return (
@@ -149,7 +118,7 @@ export default function ArticlesList({
               </h2>
 
               <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                {getPlainText(a.contentHtml)}
+               {getPlainText(a.contentHtml, 160)}
               </p>
 
               {/* Tags */}

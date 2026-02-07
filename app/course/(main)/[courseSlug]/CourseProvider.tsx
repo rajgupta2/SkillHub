@@ -19,22 +19,22 @@ import { CourseDB} from "@/lib/db";
 import { CourseContext, useCourse } from "./CourseContext";
 import { generateCourseSlug } from "@/components/slugify";
 
-export default function CoursePage({
+export default function CourseProvider({
   children,
-  isLoggedIn
+  isLoggedIn,
+  serverCourse
 }: {
   children: React.ReactNode;
   isLoggedIn:boolean;
+  serverCourse:CourseDB["courses"]["value"] | null;
 }){
-  const [course, setCourse] = useState<CourseDB["courses"]["value"] | null>(null);
+  const [course, setCourse] = useState<CourseDB["courses"]["value"] | null>(serverCourse);
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
   const courseSlug=segments[1];
   useEffect(() => {
     (async () => {
-      const res=await fetchServerCoursesBySlug(courseSlug);
-      let course;
-      if(res.status===200) course=await res.json();
+      let course=serverCourse;
       const data=await getLocalCourseById(courseSlug);
       if(data) course=data;
 
@@ -45,23 +45,14 @@ export default function CoursePage({
 
   return (
     <CourseContext.Provider value={{ course, setCourse }}>
-      <CourseLayout>
+      <CoursePage>
         {children}
-      </CourseLayout>
+      </CoursePage>
     </CourseContext.Provider>
   );
 }
 
-export async function fetchServerCoursesBySlug(courseSlug:string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  return res;
-}
-
-export function CourseLayout({
+export function CoursePage({
   children,
  }: Readonly<{
   children: React.ReactNode;
@@ -72,9 +63,8 @@ export function CourseLayout({
   const {course, setCourse} = useCourse();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [links,setLinks]=useState(course?.links || []);
-  const courseSlug=segments[1]; //act as courseId only for browser stored course.
+  const courseSlug=segments[1];         //act as courseId only for browser stored course.
   const linkSlug=segments.length===3 ? segments[2] : "";
-  const loading=!course;
   const [isLoggedIn,setIsLoggedIn]=useState(false);
   useEffect(()=>{
     if(course) setLinks(course?.links || []);
@@ -273,17 +263,9 @@ export function CourseLayout({
           </div>
         </header>
 
-        {
-          (loading)
-          ?
-            <div className="flex items-center justify-center h-[60vh] text-gray-500">
-              Loading course...
-            </div>
-          :
-            <main className="flex-1 overflow-y-auto min-h-[82vh] py-6">
-                  {children}
-            </main>
-        }
+        <main className="flex-1 overflow-y-auto min-h-[82vh] py-6">
+            {children}
+        </main>
 
         {/* Page Footer */}
         <footer className="bg-white border-t mt-auto text-center py-4 text-gray-500 text-sm">

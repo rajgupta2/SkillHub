@@ -52,6 +52,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Page(){
-    return <ArticlesList url={`${process.env.NEXT_PUBLIC_API_URL}/article`} isStudentZone={false}/>
+export default async function Page(){
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article`);
+  const data = await res.json();
+  return <ArticlesList articles={data.articles} isStudentZone={false}/>
 }

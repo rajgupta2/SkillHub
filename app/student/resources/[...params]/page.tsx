@@ -1,23 +1,5 @@
 import { Metadata } from "next";
-
-interface Material {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: { name: string };
-  createdAt: string;
-  files:{
-    id: number;
-    originalName: string;
-    url: string;
-    contentType: string;
-    materialId: number;
-  }[];
-  studentId: string | null;
-  collegeId: number | null;
-}
+import { Material } from "../page";
 
 export async function getMaterial(id: string): Promise<Material> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material/${id}`);
@@ -28,10 +10,12 @@ export async function getMaterial(id: string): Promise<Material> {
 export async function generateMetadata({
     params,
   }: {
-    params:any;
+    params: { params: string[] };
   }): Promise<Metadata> {
-  const parameters=await params;
-  const id=parameters.params[1];
+  const slugArray = await params;
+  const parameters=await slugArray.params;
+  const subjectSlug = parameters[0];  // first part
+  const id = parameters[1];           // second part
   const material = await getMaterial(id);
 
   const keywords = ["SkillHub", "student material", material.type, material.subject,material.title,material.description];
@@ -66,6 +50,19 @@ export async function generateMetadata({
 
 import SingleMaterialPage from "./SingleMaterial";
 
-export default async function MaterialPage() {
-  return <SingleMaterialPage />
+export default async function MaterialPage({
+    params,
+  }:
+  {
+    params: { params: string[] };
+}): Promise<Metadata> {
+  const slugArray = await params;
+  const parameters=await slugArray.params;
+  const subjectSlug = parameters[0];  // first part
+  const id = parameters[1];           // second part
+  const material = await getMaterial(id) as Material;
+  if(!material)
+    return <div className="p-10 text-center text-gray-600">Material not found.</div>
+
+  return <SingleMaterialPage material={material}/>
 }

@@ -7,7 +7,6 @@ async function getCollege(){
   const dataToken = await tokenRes.json();
   const token=dataToken.token;
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/college`, {
-    credentials:"include",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`,
@@ -92,6 +91,42 @@ export async function generateMetadata() {
   };
 }
 
+export interface Material {
+  id: number;
+  title: string;
+  subject: string;
+  type: string;
+  description: string;
+  uploadedBy: {
+    name: string;
+  };
+  createdAt: string;
+  files: {
+    id:number,
+    originalName:string,
+    url: string,
+    contentType:string
+    materialId: number;
+   }[];
+  studentId: string;
+  collegeId: number | null;
+}
+
 export default async function Page(){
-    return <Resources />
+  const tokenRes = await GET();
+  const dataToken = await tokenRes.json();
+  const token=dataToken.token;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/college-resources?limit=50`, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) {
+    return <div className="text-center text-gray-500 py-10">Failed to fetch materials.</div>;
+  }
+
+  const data = await res.json();
+  const materials=data.materials as Material[];
+  return <Resources materials={materials}/>
 }

@@ -3,7 +3,7 @@
 import { Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ResourcesPage } from "@/components/ResourcesPage";
-
+import { Material } from "./page";
 
 interface Peers {
   name: string;
@@ -13,66 +13,12 @@ interface Peers {
   }
 }
 
-interface Material {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-  };
-  createdAt: string;
-  files: {
-    id:number,
-    originalName:string,
-    url: string,
-    contentType:string
-    materialId: number;
-   }[];
-  studentId: string;
-  collegeId: number | null;
-}
-
-export default function Resources(){
-  const [materials, setMaterials] = useState<Material[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // ✅ Fetch materials from backend
-  useEffect(() => {
-    const fetchMaterials = async () => {
-      try {
-        const tokenRes = await fetch("/api/find-token", {method: "GET"});
-        const dataToken = await tokenRes.json();
-        const token=dataToken.token;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/college-resources?limit=50`, {
-          credentials:"include",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch materials");
-
-        const data = await res.json();
-        setMaterials(data.materials || []);
-      } catch (err) {
-        console.error("Error fetching materials:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMaterials();
-  }, []);
-
+export default function Resources({materials}:{materials:Material[]}){
   return (
     <>
       <ResourcesPage
           materials={materials}
           title="My College Resources"
-          loading={loading}
         />
       <FetchPeers/>
     </>
