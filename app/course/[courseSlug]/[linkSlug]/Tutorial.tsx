@@ -1,10 +1,4 @@
 "use client";
-
-import "@blocknote/core/fonts/inter.css";
-import "@blocknote/mantine/style.css";
-import { BlockNoteView } from "@blocknote/mantine";
-import { useCreateBlockNote } from "@blocknote/react";
-import type { BlockNoteEditor } from "@blocknote/core";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -13,28 +7,19 @@ import {
 } from "lucide-react";
 import './styles.scss'
 import { useEffect, useState } from "react";
-import type {  PartialBlock } from "@blocknote/core";
-import { getLocalCourseById, saveLocalCourse } from "@/lib/course-idb";
-import { notFound, useParams, usePathname, useSearchParams } from "next/navigation";
+import type { PartialBlock } from "@blocknote/core";
+import { saveLocalCourse } from "@/lib/course-idb";
+import { useParams } from "next/navigation";
 import { useCourse } from "../CourseContext";
-import React from "react";
 import { generateCourseSlug } from "@/components/slugify";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
-export default function Page(){
-  const {course,setCourse}=useCourse();
-  if(!course){
-    return (
-      <div className="flex items-center justify-center h-[60vh] text-gray-500">
-          Loading course...
-      </div>
-    );
-  }
+const Editor = dynamic(() => import("./Editor"), {
+  ssr: false,
+});
 
-  return <PageEditor/>;
-}
-
-export function PageEditor() {
+export default function Tutorial() {
   const [isEditable,setIsEditable]=useState(false);
   const param:{courseSlug:string,linkSlug:string}=useParams();
   const courseSlug=param.courseSlug;
@@ -74,8 +59,7 @@ export function PageEditor() {
     (l: any) => l.order === (link?.order ?? 0) + 1
   );
   const nextLink = (nextLinkCollection && nextLinkCollection.length > 0) ? nextLinkCollection[0] : null;
-  const editor = useCreateBlockNote({initialContent:content});
-
+  const [editorKey, setEditorKey] = useState(0);
   async function updateLinkContent() {
     if (!course) return;
 
@@ -121,6 +105,14 @@ export function PageEditor() {
     }
   }
 
+  useEffect(()=>{
+    let link = course?.links.find((l:any) => generateCourseSlug(l.title) === linkSlug);
+    if (link?.content) {
+      setContent(link.content);
+      setEditorKey((k) => k + 1);
+    }
+  },[course]);
+
   return (
   <div className=" mx-auto px-6">
     <div className="flex justify-end">
@@ -159,18 +151,21 @@ export function PageEditor() {
         </Button>
       )}
     </div>
-    <div
-      className={`editor-wrapper ${isEditable ? 'border' : ''} rounded-lg min-h-[60vh] cursor-text`}
-      onClick={() => editor.focus()}
-    >
-      <BlockNoteView editor={editor} theme="light" editable={isEditable} onChange={()=>setContent(editor.document)}/>
-    </div>
+
+    <Editor
+      key={editorKey}
+      initialContent={content}
+      isEditable={isEditable}
+      setContent={(content) =>
+        setContent(content )
+      }
+    />
 
     {
       nextLink && (
       <div className="flex justify-end">
         <Link
-          href={`/course/${course.slug}/${generateCourseSlug(nextLink.title)}`}
+          href={`/course/${course?.slug}/${generateCourseSlug(nextLink.title)}`}
           className="
             group inline-flex items-center gap-2 mx-6
             rounded-lg px-4 py-2

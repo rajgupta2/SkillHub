@@ -9,7 +9,6 @@ import { PartialBlock } from "@blocknote/core";
 import { Save } from "lucide-react";
 import dynamic from "next/dynamic";
 import DOMPurify from "dompurify";
-import { getArticleByStudentZone } from "./ArticleRenderer";
 
 const Editor = dynamic(() => import("./Editor"), {
   ssr: false,

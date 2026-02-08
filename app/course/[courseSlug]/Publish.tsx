@@ -14,11 +14,7 @@ import React from "react";
 import { useCourse } from "./CourseContext";
 import { generateCourseSlug } from "@/components/slugify";
 
-export default function CourseDetailPage({
-  params
-}: {
-  params: { courseSlug: string; };
-}) {
+export default function PublishPage() {
   const router = useRouter();
   const {course} = useCourse();
   const [publishing, setPublishing] = useState(false);

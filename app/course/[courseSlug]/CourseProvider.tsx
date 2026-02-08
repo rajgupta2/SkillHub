@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname,useSearchParams } from "next/navigation";
+import { notFound, usePathname,useSearchParams } from "next/navigation";
 import { useState,useEffect } from "react";
 import {
   Menu,
@@ -29,19 +29,37 @@ export default function CourseProvider({
   serverCourse:CourseDB["courses"]["value"] | null;
 }){
   const [course, setCourse] = useState<CourseDB["courses"]["value"] | null>(serverCourse);
+  const [loading,setLoading]=useState(true);
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
   const courseSlug=segments[1];
   useEffect(() => {
     (async () => {
-      let course=serverCourse;
-      const data=await getLocalCourseById(courseSlug);
-      if(data) course=data;
+      try{
+        let course=serverCourse;
+        const data=await getLocalCourseById(courseSlug);
+        if(data) course=data;
 
-      if(course) setCourse(course);
+        if(course) setCourse(course);
+      }finally{
+        setLoading(false);
+      }
     })();
     localStorage.setItem("isLoggedIn",isLoggedIn?"true":"false");
   }, [courseSlug]);
+
+  if(course===null && loading){
+    return (
+      <CourseContext.Provider value={{ course, setCourse }}>
+        <CoursePage>
+          {children}
+        </CoursePage>
+      </CourseContext.Provider>
+    );
+  }
+  if(course===null && loading===false){
+    return notFound();
+  }
 
   return (
     <CourseContext.Provider value={{ course, setCourse }}>

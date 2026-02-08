@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import { generateCourseSlug } from "@/components/slugify";
 import { CourseDB } from "@/lib/db";
-
+import Tutorial from "./Tutorial";
+import { cookies } from "next/headers";
+import CourseProvider from "../CourseProvider";
+import { convertBlockNoteToHTML } from "@/components/article/blocknoteToHtml";
+import type {  PartialBlock } from "@blocknote/core";
 
 export async function generateMetadata({
     params,
@@ -71,8 +75,23 @@ export async function generateMetadata({
   };
 }
 
-import Tutorial from "./Tutorial";
+export default async function Page({params}:{
+    params:{courseSlug:string;linkSlug:string;};
+}){
+  const cookieStore = await cookies();
+  const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
 
-export default async function TutorialPage() {
-  return <Tutorial/>
+  const parameters= await params;
+  const courseSlug = parameters.courseSlug;
+  const linkSlug  = parameters.linkSlug;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`);
+  let course:CourseDB["courses"]["value"] | null=null;
+  if(res.status===200) course=await res.json();
+
+  return (
+    <CourseProvider isLoggedIn={isLoggedIn} serverCourse={course}>
+      <Tutorial/>
+    </CourseProvider>
+  );
 }
