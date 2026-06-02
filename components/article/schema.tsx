@@ -12,7 +12,7 @@ export interface ArticleSchema {
   noIndex:          boolean;
 
   // Classification
-  type:            "BLOG" | "TUTORIAL" | "EXAM" | "GUIDE";
+  type:            "BLOG" | "ARTICLE" | "EXAM" | "GUIDE";
   isPublished:     boolean;
 
   // Relations

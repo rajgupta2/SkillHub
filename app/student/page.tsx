@@ -56,21 +56,21 @@ export default function StudentDashboard() {
         <p className="text-3xl font-bold text-yellow-600">{stats.xpPoints}</p>
         <p className="text-sm text-gray-500 mt-1">Keep engaging to level up</p>
       </div>
-
+        {
+          /*
       <div className="col-span-full bg-white rounded-xl shadow p-6 mt-4">
         <h2 className="text-xl font-bold mb-4 text-gray-700">Recent Activity</h2>
         <ul className="space-y-3 text-gray-600">
           <li> Soon.... this section will come, designing & working on it. </li>
-        {
-          /*
+
           <li>📘 Uploaded Assignment on Cloud Computing</li>
           <li>🏆 Achieved Rank #12 in District Leaderboard</li>
           <li>📁 Shared PYQ for Data Structures</li>
           <li>💬 Commented on JavaScript Study Material</li>
-          */
-        }
         </ul>
       </div>
+                */
+        }
     </main>
   );
 }

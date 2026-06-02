@@ -43,10 +43,6 @@ next-env.d.ts
 
 .vscode/
 package-lock.json
-app/(public)/challenges
-app/(public)/colleges
-app/(public)/leaderboard
-app/(public)/resources
 app/admin/
 app/colleges
 app/student/challenges

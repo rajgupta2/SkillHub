@@ -12,7 +12,7 @@ async function courseURL() {
   courses=Array.isArray(courses)?courses:[];
   const courseLinks = courses.flatMap((course: any) =>
     course.links.map((l: any) => ({
-      url: `${baseUrl}/course/${course.slug}/${generateCourseSlug(l.title)}`,
+      url: `${baseUrl}/tutorials/${course.slug}/${generateCourseSlug(l.title)}`,
       lastModified: new Date(course.updatedAt),
     }))
   );
@@ -26,7 +26,7 @@ async function articleURL() {
     const articles=data.articles;
     const articleLinks=articles.map((a:ArticleSchema)=>{
       return {
-        url: `${baseUrl}/${a.type.toLowerCase()}/${a.slug}`,
+        url: `${baseUrl}/community/${a.slug}`,
         lastModified: new Date(a.updatedAt),
       }
     })
@@ -42,7 +42,7 @@ async function materialLinks(){
   const materials=Array.isArray(data.materials)?data.materials:[];
 
   const materialLinks = materials.map((material: any) => ({
-    url: `${baseUrl}/materials/${generateCourseSlug(material.title)}/${material.id}`,
+    url: `${baseUrl}/resources/${generateCourseSlug(material.title)}/${material.id}`,
     lastModified: new Date(material.createdAt),
   }));
 
@@ -68,8 +68,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap>{
 
     // Public pages
     { url: `${baseUrl}/about`, lastModified: new Date(), priority: 0.9 },
-    { url: `${baseUrl}/learn`, lastModified: new Date(), priority: 0.9 },
-    { url: `${baseUrl}/materials`, lastModified: new Date(), priority: 0.9 },
+    { url: `${baseUrl}/community`, lastModified: new Date(), priority: 0.9 },
+    { url: `${baseUrl}/resources`, lastModified: new Date(), priority: 0.9 },
     { url: `${baseUrl}/course`, lastModified: new Date(), priority: 0.9 },
 
     { url: `${baseUrl}/contact`, lastModified: new Date(), priority: 0.8 },

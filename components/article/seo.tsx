@@ -60,7 +60,7 @@ function getSchemaType(type: ArticleSchema["type"]) {
   switch (type) {
     case "BLOG":
       return "BlogPosting";
-    case "TUTORIAL":
+    case "ARTICLE":
       return "HowTo";
     case "GUIDE":
       return "Article";

@@ -151,7 +151,7 @@ export default function FilesPreview({
 
       <div className="absolute top-16 right-4">
         <button
-          onClick={()=>{handleShare(`${window.location.origin}/materials/${title}/${material.id}`,material.title)}}
+          onClick={()=>{handleShare(`${window.location.origin}/resources/${title}/${material.id}`,material.title)}}
           className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
                     rounded-md hover:bg-blue-700 transition shadow-sm mt-2 md:mt-0
                     w-fit text-sm"
@@ -182,11 +182,7 @@ export default function FilesPreview({
             </p>
             <Link
               href={
-                pathname.includes("/student/resources")
-                ?
-                  `/student/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${file.url}`
-                :
-                  `/materials/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${file.url}`
+                  `/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}}`
               }
               className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">
               <Eye className="w-4 h-4" /> Open
