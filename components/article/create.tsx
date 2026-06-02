@@ -68,18 +68,14 @@ export default function CreateContent({article}:{
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-12 px-8 md:px-16">
+    <div className="min-h-screen bg-white border-t-2  py-8 px-8 md:px-16">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold text-blue-700"
+        className="text-xl font-bold text-blue-700"
       >
           Create Content
       </motion.h1>
-
-      <p className="text-slate-500 mt-1">
-          Share your knowledge with the Skillhub community
-      </p>
 
       <div className="flex flex-col md:flex-row gap-4 mt-4 ">
         {/* TITLE */}

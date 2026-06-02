@@ -40,7 +40,7 @@ export default function SuggestionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-16 px-6">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pt-6 px-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -48,8 +48,8 @@ export default function SuggestionsPage() {
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <Lightbulb className="mx-auto text-yellow-500 w-14 h-14 mb-4" />
-        <h1 className="text-4xl font-bold text-blue-700 mb-3">
+        <h1 className="text-3xl font-bold text-blue-700">
+          <Lightbulb className=" text-yellow-500 w-10 h-10 mb-4 inline" />
           Got a New Idea or Feature Suggestion?
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">

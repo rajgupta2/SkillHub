@@ -4,7 +4,7 @@ export type UICourse = {
   id: string; // mongoId OR localCourseId
   title: string;
   description?: string;
-  slug?:string;
+  slug:string;
 
   links: {
     linkId: string;
@@ -13,12 +13,12 @@ export type UICourse = {
     content?: PartialBlock[];
   }[];
 
-  source: "server" | "local-draft" | "local-edited";
+  status: "published" | "draft";
 
-  owner?: {
+  owner: {
     name: string;
     email: string;
   };
-
+  createdAt:string;
   updatedAt: string;
 };

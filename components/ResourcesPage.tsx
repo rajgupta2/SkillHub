@@ -37,7 +37,7 @@ const handleShare = async (url:string) => {
       await navigator.share({
         title: "Check this out",
         text: "View this resource",
-        url:`${window.location.origin}/materials`,
+        url:`${window.location.origin}/resources`,
       });
     } catch (e) {
       console.log("Share cancelled");
@@ -48,7 +48,7 @@ const handleShare = async (url:string) => {
   }
 };
 
-export function ResourcesPage({materials,title,homePage=false}:{materials:Material[],title:string,homePage?:boolean}) {
+export function ResourcesPage({materials}:{materials:Material[]}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
 
@@ -67,12 +67,27 @@ export function ResourcesPage({materials,title,homePage=false}:{materials:Materi
   return (
     <div className="flex flex-col  bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 mt-8 px-4 md:px-10">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-blue-600" /> {title}
-        </h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 px-4 md:px-10">
+      {/* Filter Section */}
+      <div className="flex flex-col justify-center items-center gap-4 flex-wrap px-4 md:px-10">
+        <div className="flex gap-3 flex-wrap justify-center">
+          { filterTypes.map((type) => (
+            <Button
+              key={type}
+              onClick={() => setFilter(type)}
+              className={`${
+                filter === type
+                  ? "bg-blue-600 text-white"
+                  : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+              } px-6 py-2 rounded-full transition`}
+            >
+              {type}
+            </Button>
+          ))}
+        </div>
+      </div>
         {/* Search + Share Container */}
-        <div className="w-full md:w-auto flex flex-row items-center gap-3">
+        <div className="w-full md:w-auto flex flex-row items-center justify-center gap-3">
           <div className="relative w-90 mt-4 md:mt-0">
             <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
             <input
@@ -97,35 +112,18 @@ export function ResourcesPage({materials,title,homePage=false}:{materials:Materi
         </div>
       </div>
 
-      {/* Filter Section */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-4 flex-wrap px-4 md:px-10">
-        <div className="flex gap-3 flex-wrap justify-center">
-          { filterTypes.map((type) => (
-            <Button
-              key={type}
-              onClick={() => setFilter(type)}
-              className={`${
-                filter === type
-                  ? "bg-blue-600 text-white"
-                  : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-              } px-6 py-2 rounded-full transition`}
-            >
-              {type}
-            </Button>
-          ))}
-        </div>
-      </div>
+
 
       {/* Scrollable Materials Section */}
-      <main className={`px-8 md:px-16 py-10 overflow-y-auto ${homePage ? "" : "max-h-[60vh]"} scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}>
+      <main className={`px-8 md:px-16 py-10 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}>
         {
         filteredResources.length === 0 ? (
           <div className="col-span-full text-center py-10 text-gray-500">
             <FileText className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-            <p>No materials found. Try searching something else.</p>
+            <p>No resources found. Try searching something else.</p>
           </div>
         ) : (
-          <div className={`grid grid-cols-1 sm:grid-cols-2 ${homePage ? "lg:grid-cols-4 gap-6" : "lg:grid-cols-3 gap-8"} `}>
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6`}>
             {
               filteredResources.map((resource) => (
                 <motion.div
@@ -161,14 +159,8 @@ export function ResourcesPage({materials,title,homePage=false}:{materials:Materi
                       📅 {formateDate(resource.createdAt)}
                     </p>
                     <div className="flex justify-end mt-auto">
-                      <Link
-                      href={
-                            pathname.includes("/student/resources")
-                            ?
-                              `/student/resources/${generateCourseSlug(resource.title)}/${resource.id}`
-                            :
-                              `/materials/${generateCourseSlug(resource.title)}/${resource.id}`
-                            }
+                     <Link
+                      href={`/resources/${generateCourseSlug(resource.title)}/${resource.id}`}
                       >
                         <Button className=" bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer">
                           <Eye className="w-4 h-4" /> View

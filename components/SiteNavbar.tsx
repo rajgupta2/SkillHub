@@ -1,11 +1,79 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
-
+import { Menu, X, GraduationCap, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { DropdownMenu } from "radix-ui";
 export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  function Profile(){
+    return (
+      <div className="relative group">
+        {/* Profile Button */}
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+          Profile <ChevronDown className="h-4 w-4 inline" />
+        </button>
+        {/* Dropdown */}
+        <div className="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <Link
+            href="/student"
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            Dashboard
+          </Link>
 
+          <Link
+            href="/student/account"
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            Account Settings
+          </Link>
+
+          <Link
+            href="/student/college"
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            My College
+          </Link>
+
+          <Link
+            href="/student/contribute"
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            Contribute
+          </Link>
+
+          <Link
+            href="/student/uploads"
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            My uploads
+          </Link>
+
+          <Link
+            href="/student/suggestion"
+            className="block px-4 py-2 hover:bg-gray-100"
+          >
+            Suggestions
+          </Link>
+
+          <hr />
+
+          <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+            onClick={async (e) => {
+              e.preventDefault();
+              await fetch("/api/logout", { method: "POST" });
+              router.push("/auth");
+              router.refresh();
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    )
+  }
   return (
     <nav className="bg-white shadow top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
@@ -18,22 +86,16 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
           <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
-          <Link href="/materials">Resources</Link>
+          <Link href="/resources">Resources</Link>
           { /* <Link href="/challenges">Challenges</Link>
           <Link href="/leaderboard">Leaderboard</Link> */}
-          <Link href="/course">Tutorials</Link>
-          <Link href="/learn">Learning</Link>
-          <Link href="/contact">Contact</Link>
+          <Link href="/tutorials">Tutorials</Link>
+          <Link href="/community">Community</Link>
 
-          {isLoggedIn ? (
-            <Link
-              href="/student"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              Dashboard
-            </Link>
-          ) : (
+          {isLoggedIn
+          ?
+            <Profile/>
+          : (
             <Link
               href="/auth"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -57,26 +119,18 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
         <div className="md:hidden bg-white border-t border-gray-100 shadow-inner">
           <div className="flex flex-col p-4 gap-3 text-gray-700 font-medium">
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
-            <Link href="/about" onClick={() => setOpen(false)}>About</Link>
-            <Link href="/materials" onClick={() => setOpen(false)}>Resources</Link>
-
+            <Link href="/resources" onClick={() => setOpen(false)}>Resources</Link>
             { /*
               <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>
               <Link href="/challenges" onClick={() => setOpen(false)}>Challenges</Link>
               <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
-            <Link href="/course" onClick={() => setOpen(false)}>Tutorials</Link>
-            <Link href="/learn" onClick={() => setOpen(false)}>Learning</Link>
-            <Link href="/contact" onClick={() => setOpen(false)}>Contact</Link>
+            <Link href="/tutorials" onClick={() => setOpen(false)}>Tutorials</Link>
+            <Link href="/community" onClick={() => setOpen(false)}>Community</Link>
 
-            {isLoggedIn ? (
-              <Link
-                href="/student"
-                onClick={() => setOpen(false)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-center"
-              >
-                Dashboard
-              </Link>
-            ) : (
+            {isLoggedIn
+             ?
+            <Profile/>
+            : (
               <Link
                 href="/auth"
                 onClick={() => setOpen(false)}

@@ -300,10 +300,13 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
       }
 
       const redirectUrl = searchParams.get("redirect");
-      if (redirectUrl && isSafeRedirect(redirectUrl))
-       return router.replace(redirectUrl);
-      if(data.user?.role.toLowerCase() ==="student")
-       return router.replace("/student");
+      router.replace(
+        redirectUrl && isSafeRedirect(redirectUrl)
+          ? redirectUrl
+          : "/student"
+      );
+
+      router.refresh();
     } catch (err: any) {
       setMessage(err.message);
     } finally {

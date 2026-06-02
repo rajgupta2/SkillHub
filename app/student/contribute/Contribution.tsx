@@ -295,18 +295,17 @@ export default function ContributePage() {
 
   return (
    <>
-    <div className="p-6 min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-3">
-          <FilePlus className="w-7 h-7 text-blue-600" /> Contribute
-        </h1>
-        <p className="text-sm text-gray-600 mt-1 max-w-2xl">
-          Share notes, assignments or past-year papers to help your college peers. You can upload multiple files at once.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
+    <div className="p-6 bg-gray-50 ">
+      <div className=" mx-auto max-w-3xl ">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="md:text-3xl font-bold text-gray-800 flex items-center gap-3">
+            <FilePlus className="w-6 h-6 text-blue-600" /> Contribute
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Share notes, assignments or past-year papers to help your college peers. You can upload multiple files at once.
+          </p>
+        </div>
         {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
@@ -437,75 +436,7 @@ export default function ContributePage() {
             </div>
           </div>
         </motion.form>
-
-        {/* Recent Contributions */}
-        <motion.aside
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.05 }}
-          className="bg-white rounded-xl shadow p-6 border border-gray-100 max-h-[70vh] overflow-y-auto"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-blue-600" /> Recent Contributions
-            </h3>
-            <span className="text-sm text-gray-500">{contributions.length} items</span>
-          </div>
-
-          <ul className="space-y-3">
-            {
-              contributions.map((c) => {
-                return (
-                  <li
-                  key={c.id}
-                  className="flex items-start justify-between bg-gray-50 p-3 rounded-lg"
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-gray-800">{c.title}</span>
-                      <span className="text-xs text-gray-500 px-2 py-0.5 rounded-full bg-white/50">
-                        {c.type}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-gray-500 mt-1">
-                      {c.subject} • {c.title}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      By {c.uploadedBy?.name} • {formateDate(c.createdAt)}
-                    </p>
-
-                    {c.description && (
-                      <p className="text-sm text-gray-600 mt-2">{c.description}</p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col items-end gap-2">
-                      <Button
-                        onClick={()=>{handleView(c)}}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-sm flex items-center gap-2 cursor-pointer"
-                      >
-                        <Eye className="w-3 h-3" /> View
-                      </Button>
-                    {
-                    /*
-                    <button
-                      onClick={() => handleRemoveContribution(c.id)}
-                      title="Remove (client-side)"
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <Trash className="w-4 h-4" />
-                    </button>
-                    */
-                   }
-                  </div>
-                </li>
-                )
-            })}
-          </ul>
-
-        </motion.aside>
-      </div>
+       </div>
     </div>
   </>
   );
