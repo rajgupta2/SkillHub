@@ -79,14 +79,25 @@ export default async function Page({params}:{
 }){
   const cookieStore = await cookies();
   const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
-
   const parameters= await params;
   const courseSlug = parameters.courseSlug;
+  const token = cookieStore.get("token")?.value;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`);
-  let course=(res.status===200) ? await res.json() : null;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/draft/courses/${courseSlug}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+  });
 
-  if(!course)
+  if(res.status===401){
+    return (
+      <p>You are unauthorized to access the tutorials.</p>
+    )
+  }
+  let course=await res.json();
+
   return (
     <CourseProvider isLoggedIn={isLoggedIn} serverCourse={course}>
         <PublishPage/>

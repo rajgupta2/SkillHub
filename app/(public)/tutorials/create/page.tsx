@@ -34,7 +34,6 @@ export default function CreateCoursePage() {
 
     if (data.published) {
       alert("Course Published Successfully.");
-      router.back();
     }else{
       alert("Something went wrong while publishing. Please try again.");
     }
@@ -58,12 +57,12 @@ export default function CreateCoursePage() {
         order:ind
     }));
 
-    saveCourse({
+   await saveCourse({
       title:courseName,
       description:courseDescription,
       links
     });
-    router.push(`/tutorials`);
+    router.replace("/tutorials");
   }
 
   return (

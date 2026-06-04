@@ -20,6 +20,7 @@ import { redirect } from "next/navigation";
 export default function CreateContent({article}:{
   article?:ArticleSchema
 }) {
+
   const [form, setForm] = useState({
     title: article?.title ?? "",
     contentJson: article?.contentJson ??  [{ type: "heading", props:{level:3}, content: ["Start Typing..."]}] as PartialBlock[],
@@ -63,7 +64,7 @@ export default function CreateContent({article}:{
       message="Failed to save."
     }finally{
       alert(message);
-      redirect("/student/articles");
+      redirect("/community");
     }
   }
 

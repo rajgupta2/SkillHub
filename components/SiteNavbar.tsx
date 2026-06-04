@@ -69,7 +69,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
   function Profile(){
     const [profileOpen, setProfileOpen] = useState(false);
     return (
-      <div className="relative group">
+      <div className="relative group z-100">
         {/* Profile Button */}
         <button
           onClick={() => setProfileOpen(!profileOpen)}
@@ -123,6 +123,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
           <Link href="/leaderboard">Leaderboard</Link> */}
           <Link href="/tutorials">Tutorials</Link>
           <Link href="/community">Community</Link>
+          <Link href="/jobs">Jobs</Link>
 
           {isLoggedIn
           ?
@@ -158,6 +159,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
               <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
             <Link href="/tutorials" onClick={() => setOpen(false)}>Tutorials</Link>
             <Link href="/community" onClick={() => setOpen(false)}>Community</Link>
+            <Link href="/jobs" onClick={() => setOpen(false)}>Jobs</Link>
 
             {isLoggedIn
              ?

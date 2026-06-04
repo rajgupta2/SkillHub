@@ -10,7 +10,7 @@ export default function CoursesPage({courses}:{courses:UICourse[]}) {
   return (
     <div className="max-w-7xl mx-auto py-6 min-h-[70vh] px-6">
       {/* Header */}
-      <div className="flex items-end justify-end">
+      <div className="flex items-end justify-end mb-4">
         <Link
           href="/tutorials/create"
           className="flex items-center gap-2 px-4 py-2 rounded-lg

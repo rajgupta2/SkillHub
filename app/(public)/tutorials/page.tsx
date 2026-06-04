@@ -44,8 +44,24 @@ export const metadata: Metadata = {
   },
 };
 
-
+import { cookies } from "next/headers";
 export default async function Page(){
- const serverCourses = await fetchServerCourses();
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  const res1 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses`);
+
+  const res2 = token && (
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/draft/courses`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+      })
+  );
+  const publicCourse = await res1.json();
+  const draftCourse = res2 ? await res2.json() : [];
+  const serverCourses = Array.isArray(draftCourse) ? [...publicCourse,...draftCourse] : publicCourse;
  return <TutorialsPage courses={serverCourses}/>
 }

@@ -84,8 +84,24 @@ export default async function Page({params}:{
   const parameters= await params;
   const courseSlug = parameters.courseSlug;
   const linkSlug  = parameters.linkSlug;
+  const token = cookieStore.get("token")?.value;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`);
+  const pathUrl= isLoggedIn ? `draft/courses/${courseSlug}` : `courses/${courseSlug}`;
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${pathUrl}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+  });
+
+  if(res.status===401 || res.status===404){
+    const msg=await res.json();
+    return (
+      <p>{msg}</p>
+    )
+  }
+
   let course:UICourse=await res.json();;
 
   return (

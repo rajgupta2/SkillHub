@@ -102,6 +102,14 @@ export default function ArticlesList({
                 {a.type}
               </span>
 
+              {
+                !a.isPublished && (
+                  <span className="inline-block mb-3 text-xs font-medium bg-gray-400 text-white px-3 py-1 rounded-full">
+                    Draft
+                  </span>
+                )
+              }
+
               <h2 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition">
                 {a.title}
               </h2>

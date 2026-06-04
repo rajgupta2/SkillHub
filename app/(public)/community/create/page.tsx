@@ -17,31 +17,27 @@ export async function getArticleByStudentZone(slug:string) {
   });
 
   const data = await res.json();
-  console.log(data);
-  return data.article;
+  return {article:data.article,statusCode:res.status};
 }
 
 export default function Page(){
   const searchParams = useSearchParams();
   const slug=searchParams.get('slug');
   const type=searchParams.get('type');
-  const [article, setArticle] = useState<ArticleSchema>();
+  const [data, setData] = useState<{article:ArticleSchema,statusCode:Number}>();
   const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
 
   useEffect(() => {
     if (!slug || !type) return;
     const fetchArticle = async () => {
       const data = await getArticleByStudentZone(slug);
-      setArticle(data);
+      setData(data);
+      setMounted(true);
     };
 
     fetchArticle();
-  }, [slug, type]);
+  }, [slug]);
 
   if (!mounted) {
     return <p>Loading...</p>;
@@ -51,9 +47,9 @@ export default function Page(){
     return <CreateContent/>;
   }
 
-  if (!article) {
-    return <p>Loading article...</p>;
+  if (data?.statusCode===401) {
+    return <p>You are unauthorized to access the content.</p>;
   }
 
-  return <CreateContent article={article}/>
+  return <CreateContent article={data?.article}/>
 }
