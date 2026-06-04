@@ -4,72 +4,104 @@ import { useEffect, useState } from "react";
 import { Menu, X, GraduationCap, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { DropdownMenu } from "radix-ui";
+
 export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  function ProfileLinks(){
+  return (
+    <>
+      <Link
+        href="/student"
+        className="block px-4 py-2 hover:bg-gray-100"
+      >
+        Dashboard
+      </Link>
+
+      <Link
+        href="/student/account"
+        className="block px-4 py-2 hover:bg-gray-100"
+      >
+        Account Settings
+      </Link>
+
+      <Link
+        href="/student/college"
+        className="block px-4 py-2 hover:bg-gray-100"
+      >
+        My College
+      </Link>
+
+      <Link
+        href="/student/contribute"
+        className="block px-4 py-2 hover:bg-gray-100"
+      >
+        Contribute
+      </Link>
+
+      <Link
+        href="/student/uploads"
+        className="block px-4 py-2 hover:bg-gray-100"
+      >
+        My uploads
+      </Link>
+
+      <Link
+        href="/student/suggestion"
+        className="block px-4 py-2 hover:bg-gray-100"
+      >
+        Suggestions
+      </Link>
+
+      <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+        onClick={async (e) => {
+          e.preventDefault();
+          await fetch("/api/logout", { method: "POST" });
+          router.push("/auth");
+          router.refresh();
+        }}
+        >
+          Logout
+        </button>
+      </>
+    )
+  }
   function Profile(){
+    const [profileOpen, setProfileOpen] = useState(false);
     return (
       <div className="relative group">
         {/* Profile Button */}
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+        <button
+          onClick={() => setProfileOpen(!profileOpen)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
           Profile <ChevronDown className="h-4 w-4 inline" />
         </button>
-        {/* Dropdown */}
-        <div className="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-          <Link
-            href="/student"
-            className="block px-4 py-2 hover:bg-gray-100"
-          >
-            Dashboard
-          </Link>
 
-          <Link
-            href="/student/account"
-            className="block px-4 py-2 hover:bg-gray-100"
+          {/* mobile menu */}
+          <div
+            className={`
+              md:hidden
+              ${profileOpen ? "block" : "hidden"}
+            `}
           >
-            Account Settings
-          </Link>
+            <ProfileLinks/>
+          </div>
 
-          <Link
-            href="/student/college"
-            className="block px-4 py-2 hover:bg-gray-100"
+          {/* desktop dropdown */}
+          <div
+            className="
+              hidden
+              md:group-hover:block
+              md:absolute
+              md:right-0
+              md:w-56
+              md:bg-white
+              md:border
+              md:rounded-lg
+              md:shadow-lg
+            "
           >
-            My College
-          </Link>
-
-          <Link
-            href="/student/contribute"
-            className="block px-4 py-2 hover:bg-gray-100"
-          >
-            Contribute
-          </Link>
-
-          <Link
-            href="/student/uploads"
-            className="block px-4 py-2 hover:bg-gray-100"
-          >
-            My uploads
-          </Link>
-
-          <Link
-            href="/student/suggestion"
-            className="block px-4 py-2 hover:bg-gray-100"
-          >
-            Suggestions
-          </Link>
-
-          <hr />
-
-          <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
-            onClick={async (e) => {
-              e.preventDefault();
-              await fetch("/api/logout", { method: "POST" });
-              router.push("/auth");
-              router.refresh();
-            }}
-          >
-            Logout
-          </button>
+              <ProfileLinks/>
         </div>
       </div>
     )

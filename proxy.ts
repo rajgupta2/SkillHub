@@ -39,5 +39,5 @@ export default function middleware(req: NextRequest) {
 
 // Apply middleware to all user directories
 export const config = {
-  matcher: ["/student/:path*","/community/create/:path*"],
+  matcher: ["/student/:path*","/community/create/:path*","/tutorials/create"],
 };

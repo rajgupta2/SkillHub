@@ -73,7 +73,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
-  //wakeupBackendServer();
+  wakeupBackendServer();
 
   return (
     <html lang="en">

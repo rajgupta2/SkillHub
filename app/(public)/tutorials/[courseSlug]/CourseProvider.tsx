@@ -174,7 +174,7 @@ export function CoursePage({
       {/* Sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          className="fixed  bg-black/40 z-40 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -231,7 +231,8 @@ export function CoursePage({
                 <Link
                   href={`/tutorials/${courseSlug}/${generateCourseSlug(link.title)}?isEditable=true`}
                   className="
-                    hidden md:group-hover:flex
+                    flex md:hidden
+                    group-hover:flex
                     items-center
                     justify-between
                     w-8 h-8
@@ -247,7 +248,8 @@ export function CoursePage({
                 isCourseOwner &&
                 <div
                   className="
-                    hidden md:group-hover:flex
+                    flex md:hidden
+                    group-hover:flex
                     items-center
                     justify-between
                     w-8 h-8
@@ -280,7 +282,7 @@ export function CoursePage({
 
       <div className="flex-1">
        {/* Content Area */}
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col min-h-screen max-w-screen">
         {/* Topbar */}
         <header className="sticky top-0 z-30 bg-white border-b px-6 py-4 md:hidden">
           <button

@@ -115,13 +115,12 @@ export default function CreateContent({article}:{
             onChange={(e) =>
               setForm({ ...form, type: e.target.value })
             }
-            className="w-120 rounded-lg border px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+            className="w-120 max-w-[90vw] rounded-lg border px-2 py-2 text-sm focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select content type</option>
             <option value="BLOG">Blog</option>
-            <option value="TUTORIAL">Tutorial</option>
-            <option value="EXAM">Exam</option>
-            <option value="GUIDE">Guide</option>
+            <option value="ARTICLE">Article</option>
+            <option value="INTERVIEW">Interview</option>
           </select>
         </div>
 

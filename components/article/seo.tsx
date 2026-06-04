@@ -62,9 +62,7 @@ function getSchemaType(type: ArticleSchema["type"]) {
       return "BlogPosting";
     case "ARTICLE":
       return "HowTo";
-    case "GUIDE":
-      return "Article";
-    case "EXAM":
+    case "INTERVIEW":
       return "Article";
     default:
       return "Article";

@@ -23,12 +23,10 @@ function getCTA(type: ArticleSchema["type"]) {
   switch (type) {
     case "ARTICLE":
       return "Read article";
-    case "GUIDE":
-      return "View guide";
-    case "EXAM":
-      return "Practice now";
-    default:
-      return "Read article";
+    case "INTERVIEW":
+      return "Read now";
+    case "BLOG":
+      return "Read blog";
   }
 }
 
@@ -48,13 +46,13 @@ export default function ArticlesList({
   if(!articles || articles.length === 0 ){
     return (
       <p className="flex items-center justify-center min-h-[60vh] text-gray-600">
-        No post found. <Link href={`/community/create`}>Try to write one!</Link>
+        No post found. <Link href={`/community/create`} className="text-blue-500">Try to write one!</Link>
       </p>
     );
   }
 
 
-  const filterTypes = ["ALL", "BLOG", "ARTICLE", "EXAM", "GUIDE"] as const;
+  const filterTypes = ["ALL", "BLOG", "ARTICLE", "INTERVIEW"] as const;
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
 
