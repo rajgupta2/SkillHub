@@ -136,7 +136,7 @@ export default function ArticlesList({
                 {a.author.name}
                 <span className="mx-2">•</span>
                 <Calendar className="w-4 h-4 mr-1" />
-                {formateDate(a.createdAt)}
+                {formateDate(a.updatedAt)}
               </div>
 
               <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white">

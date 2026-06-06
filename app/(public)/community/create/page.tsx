@@ -39,12 +39,12 @@ export default function Page(){
     fetchArticle();
   }, [slug]);
 
-  if (!mounted) {
-    return <p>Loading...</p>;
-  }
-
   if (!slug || !type) {
     return <CreateContent/>;
+  }
+
+  if (!mounted) {
+    return <p>Loading...</p>;
   }
 
   if (data?.statusCode===401) {
