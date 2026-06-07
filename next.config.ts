@@ -4,6 +4,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/materials",
+        destination: "/resources",
+        permanent: true, // 308 redirect
+      },
+      {
         source: "/materials/:slug/:id",
         destination: "/resources/:slug/:id",
         permanent: true, // 301 redirect
