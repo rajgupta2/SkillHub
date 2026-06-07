@@ -6,7 +6,7 @@ import SiteFooter from "@/components/SiteFooter";
 import { GraduationCap } from "lucide-react";
 import { cookies } from "next/headers";
 import {wakeupBackendServer} from "./run";
-
+import { Analytics } from "@vercel/analytics/next";
 
 
 const geistSans = Geist({
@@ -88,6 +88,7 @@ export default async function RootLayout({
             {children}
           </div>
         <SiteFooter />
+        <Analytics/>
       </body>
     </html>
   );
