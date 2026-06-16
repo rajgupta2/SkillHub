@@ -182,7 +182,7 @@ export default function FilesPreview({
             </p>
             <Link
               href={
-                  `/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}}`
+                  `/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}`
               }
               className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">
               <Eye className="w-4 h-4" /> Open

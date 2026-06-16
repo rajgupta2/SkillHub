@@ -8,6 +8,9 @@ import {
   Upload,
 } from "lucide-react";
 import { JobSchema } from "./FormPage";
+import { convertBlockNoteToHTML } from "@/components/article/blocknoteToHtml";
+import DOMPurify from "dompurify";
+import { Job } from "@/components/jobs/jobsSchema";
 
 function prettyJson(value: any) {
   try {
@@ -30,7 +33,6 @@ export default function JsonPage({
         title: "MERN Stack Developer",
         slug: "mern-stack-developer",
         companyName: "Example Company",
-        companyLogo: "https://logo.clearbit.com/google.com",
         location: "Noida, India",
         isRemote: true,
         jobType: "FULL_TIME",
@@ -62,13 +64,24 @@ export default function JsonPage({
       if (!Array.isArray(arr)) throw new Error("Bulk JSON must be an array");
       if (arr.length === 0) throw new Error("Bulk JSON array is empty");
 
+      const newArr = await Promise.all(
+        arr.map(async (job) => {
+          const html = await convertBlockNoteToHTML(job.descriptionJson);
+          const cleanHtml = DOMPurify.sanitize(html);
+          return {
+            ...job,
+            descriptionHtml: cleanHtml,
+            expiryDate: job.expiryDate ? new Date(job.expiryDate) : null,
+          };
+        })
+      );
       // Validate each item
-      for (const job of arr) JobSchema.parse(job);
+      for (const job of newArr) JobSchema.parse(job);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(arr),
+        body: JSON.stringify(newArr)
       });
 
       const data = await res.json();

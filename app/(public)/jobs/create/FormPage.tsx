@@ -51,7 +51,7 @@ export const JobSchema = z.object({
   isRemote: z.boolean().optional(),
 
   // IMPORTANT: UI will send string. Backend will convert to Date.
-  expiryDate: z.string().optional().nullable(),
+  expiryDate: z.date().nullable(),
 
   // BlockNote
   descriptionJson: z.any(),
@@ -81,7 +81,7 @@ setMsg:(msg:string | null)=>void;
   );
 
   // yyyy-mm-dd
-  const [expiryDate, setExpiryDate] = useState<string>("");
+  const [expiryDate, setExpiryDate] = useState<any>();
 
   // BlockNote JSON (temporary textarea)
   const [descriptionJson, setdescriptionJson] = useState<PartialBlock[]>([{ type: "heading", props:{level:4}, content: ["Description about the job..."]}]);
