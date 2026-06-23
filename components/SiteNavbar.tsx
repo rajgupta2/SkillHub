@@ -8,9 +8,9 @@ import { DropdownMenu } from "radix-ui";
 export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  function ProfileLinks(){
+  function ProfileLinks({close}:{close:()=>void}){
   return (
-    <>
+    <div onClick={close}>
       <Link
         href="/student"
         className="block px-4 py-2 hover:bg-gray-100"
@@ -63,10 +63,10 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
         >
           Logout
         </button>
-      </>
+      </div>
     )
   }
-  function Profile(){
+  function Profile({closeMobileNav}:{closeMobileNav: () => void;}){
     const [profileOpen, setProfileOpen] = useState(false);
     return (
       <div className="relative group z-100">
@@ -77,32 +77,22 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
           Profile <ChevronDown className="h-4 w-4 inline" />
         </button>
 
-          {/* mobile menu */}
           <div
             className={`
-              md:hidden
-              ${profileOpen ? "block" : "hidden"}
-            `}
-          >
-            <ProfileLinks/>
-          </div>
-
-          {/* desktop dropdown */}
-          <div
-            className="
-              hidden
-              md:group-hover:block
               md:absolute
               md:right-0
-              md:w-56
-              md:bg-white
               md:border
               md:rounded-lg
               md:shadow-lg
-            "
+              w-56
+              bg-white
+
+
+              ${profileOpen ? "block" : "hidden"}
+            `}
           >
-              <ProfileLinks/>
-        </div>
+            <ProfileLinks close={()=>{setProfileOpen(!profileOpen); closeMobileNav();}}/>
+          </div>
       </div>
     )
   }
@@ -123,11 +113,11 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
           <Link href="/leaderboard">Leaderboard</Link> */}
           <Link href="/tutorials">Tutorials</Link>
           <Link href="/community">Community</Link>
-          <Link href="/jobs">Jobs</Link>
+          {/*<Link href="/jobs">Jobs</Link>*/}
 
           {isLoggedIn
           ?
-            <Profile/>
+            <Profile closeMobileNav={()=>{}}/>
           : (
             <Link
               href="/auth"
@@ -159,11 +149,11 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
               <Link href="/leaderboard" onClick={() => setOpen(false)}>Leaderboard</Link> */}
             <Link href="/tutorials" onClick={() => setOpen(false)}>Tutorials</Link>
             <Link href="/community" onClick={() => setOpen(false)}>Community</Link>
-            <Link href="/jobs" onClick={() => setOpen(false)}>Jobs</Link>
+            {/*<Link href="/jobs" onClick={() => setOpen(false)}>Jobs</Link>*/}
 
             {isLoggedIn
              ?
-            <Profile/>
+            <Profile closeMobileNav={()=>{setOpen(false)}}/>
             : (
               <Link
                 href="/auth"
