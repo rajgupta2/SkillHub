@@ -24,7 +24,7 @@ export default async function TutorialPage({ params }: PageProps) {
 
   const res =
     !token ?
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/slug/${parameters.slug}`)
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article/${parameters.slug}`)
       :
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/article/${parameters.slug}`, {
           method: "GET",

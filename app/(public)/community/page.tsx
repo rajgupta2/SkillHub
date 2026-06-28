@@ -54,21 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page(){
-const cookieStore = await cookies();
-const token = cookieStore.get("token")?.value;
-
-const res =
-  !token ?
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article`)
-    :
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/article`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-    });
-    ;
+  const res =await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article`);
   const data = await res.json();
   return <ArticlesList articles={data.articles} isStudentZone={false}/>
 }

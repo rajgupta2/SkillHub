@@ -124,10 +124,16 @@ setMsg:(msg:string | null)=>void;
         descriptionHtml:cleanHtml
       }];
       JobSchema.parse(payload);
+      const tokenRes = await fetch("/api/find-token", {method: "GET"});
+      const dataToken = await tokenRes.json();
+      const token=dataToken.token;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jobs`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.message || "Failed to create job");

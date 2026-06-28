@@ -78,9 +78,15 @@ export default function JsonPage({
       // Validate each item
       for (const job of newArr) JobSchema.parse(job);
 
+      const tokenRes = await fetch("/api/find-token", {method: "GET"});
+      const dataToken = await tokenRes.json();
+      const token=dataToken.token;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify(newArr)
       });
 
