@@ -38,7 +38,6 @@ async function materialLinks(){
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material?limit=150`);
   if (!res.ok) return [];
   let data = await res.json();
-  console.log(data.materials);
   const materials=Array.isArray(data.materials)?data.materials:[];
 
   const materialLinks = materials.map((material: any) => ({

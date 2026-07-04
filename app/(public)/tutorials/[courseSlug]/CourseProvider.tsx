@@ -170,7 +170,7 @@ export function CoursePage({
   }
 
   return (
-    <div className="flex bg-gray-50">
+    <div className="flex">
       {/* Sidebar */}
       {sidebarOpen && (
         <div
@@ -179,11 +179,12 @@ export function CoursePage({
         />
       )}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-40 w-70 h-screen bg-gradient-to-b pt-4
-        from-blue-800 to-blue-600 text-white transition-transform duration-300
+        className={`fixed md:sticky top-0 left-0 z-40 w-screen md:w-80 h-screen overflow-hidden bg-gradient-to-b
+-        from-blue-800 to-blue-600 transition-transform duration-300
+          pt-4 border shadow rounded-r-2xl text-white
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
-        <div className="pl-4 border-b pb-4 mb-2">
+        <div className="pl-4 border-b-2 pb-4 mb-2">
           <span>
           {course?.title} Tutorials
           {/*close button */}
@@ -207,18 +208,15 @@ export function CoursePage({
                 key={link.order}
                 className={`group flex items-center justify-between rounded-lg transition ${
                   isActive
-                    ? "bg-blue-600 text-white font-semibold"
-                    : "hover:bg-blue-600 text-gray-100"
+                    ? "bg-blue-600 font-semibold"
+                    : "hover:bg-blue-600 hover:font-semibold"
                 }`}
               >
               <Link
                 key={link.linkId}
+                title={link.title}
                 href={`/tutorials/${course!.slug}/${generateCourseSlug(link.title)}`}
-                className={` px-3 py-2 rounded-lg transition truncate ${
-                  isActive
-                    ? "bg-blue-600 text-white font-semibold"
-                    : "hover:bg-blue-600 text-gray-100"
-                }`}
+                className={` px-3 py-2 rounded-lg transition truncate`}
               >
                 {/* Left: Title */}
                 {link.title}

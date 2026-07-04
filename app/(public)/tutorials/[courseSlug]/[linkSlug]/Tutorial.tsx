@@ -149,7 +149,7 @@ export default function Tutorial() {
 
     {
       nextLink && (
-      <div className="flex justify-end">
+      <div className={`flex justify-end ${isEditable && "mt-4"}`}>
         <Link
           href={`/course/${course?.slug}/${generateCourseSlug(nextLink.title)}`}
           className="

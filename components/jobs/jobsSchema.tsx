@@ -6,6 +6,7 @@ export type Job = {
   title: string;
   slug: string;
   companyName: string;
+  companyLogo?:string;
   location: string;
   jobType: JobType;
   experienceLevel: ExperienceLevel;

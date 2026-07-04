@@ -18,7 +18,7 @@ export default function Editor({
 
   return (
     <div
-      className={`editor-wrapper ${isEditable ? 'border' : ''} rounded-lg min-h-[60vh] cursor-text`}
+      className={`editor-wrapper ${isEditable ? 'border shadow-2xl' : ''} rounded-lg min-h-[60vh] cursor-text z-50`}
       onClick={() => editor.focus()}
     >
       <BlockNoteView editor={editor} theme="light" editable={isEditable} onChange={()=>setContent(editor.document)}/>

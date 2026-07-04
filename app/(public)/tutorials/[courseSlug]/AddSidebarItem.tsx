@@ -13,7 +13,7 @@ export function AddSidebarItem({set_Links}:{  set_Links:(linkName:string)=>void 
         <button
           title="Add new link"
           className="flex items-center justify-end gap-2 mb-4 w-full px-3 py-2 rounded-lg
-           hover:bg-blue-700 text-white transition-all duration-300"
+           hover:bg-blue-700 transition-all duration-300"
           onClick={() => setShowInput(true)}
 
         >
@@ -41,7 +41,7 @@ export function AddSidebarItem({set_Links}:{  set_Links:(linkName:string)=>void 
                 }
               }}
               placeholder="Enter link name..."
-              className="flex-1 bg-transparent text-white placeholder-blue-200
+              className="flex-1 bg-transparent
               focus:outline-none text-sm"
             />
           <button
