@@ -108,6 +108,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
           <Link href="/">Home</Link>
+          <Link href="/about">About</Link>
           <Link href="/resources">Resources</Link>
           { /* <Link href="/challenges">Challenges</Link>
           <Link href="/leaderboard">Leaderboard</Link> */}
@@ -142,6 +143,7 @@ export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
         <div className="md:hidden bg-white border-t border-gray-100 shadow-inner">
           <div className="flex flex-col p-4 gap-3 text-gray-700 font-medium">
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
+            <Link href="/about" onClick={() => setOpen(false)}>About</Link>
             <Link href="/resources" onClick={() => setOpen(false)}>Resources</Link>
             { /*
               <Link href="/#features" onClick={() => setOpen(false)}>Features</Link>
