@@ -18,14 +18,14 @@ export default function middleware(req: NextRequest) {
     // Student routes protection
     if (req.nextUrl.pathname.startsWith("/student")) {
       if (role !== "Student") {
-        return NextResponse.redirect(new URL("/not-authorized", req.url));
+        return NextResponse.redirect(new URL("/unauthorized ", req.url));
       }
     }
 
     // Admin routes protection
     if (req.nextUrl.pathname.startsWith("/admin")) {
       if (role !== "Admin") {
-        return NextResponse.redirect(new URL("/not-authorized", req.url));
+        return NextResponse.redirect(new URL("/unauthorized ", req.url));
       }
     }
 
