@@ -151,7 +151,7 @@ export default function Tutorial() {
       nextLink && (
       <div className={`flex justify-end ${isEditable && "mt-4"}`}>
         <Link
-          href={`/course/${course?.slug}/${generateCourseSlug(nextLink.title)}`}
+          href={`/tutorials/${course?.slug}/${generateCourseSlug(nextLink.title)}`}
           className="
             group inline-flex items-center gap-2 mx-6
             rounded-lg px-4 py-2
