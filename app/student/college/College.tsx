@@ -3,7 +3,7 @@
 import { Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ResourcesPage } from "@/components/ResourcesPage";
-import { Material } from "./page";
+import { Material } from "@/components/FilesPreview";
 import LeaderboardPage from "./Leaderboard";
 
 interface Peers {

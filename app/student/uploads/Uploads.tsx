@@ -11,63 +11,14 @@ import { ArticleSchema } from "@/components/article/schema";
 import { getPlainText } from "@/components/article/ArticleListRender";
 import { User,Calendar } from "lucide-react";
 import FilesPreview from "@/components/FilesPreview";
-//used for preview files in recent contribution section
-interface Contribution {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-    email: string;
-  };
-  createdAt: string;
-  files: {
-    id:number;
-    originalName:string;
-    url: string;
-    contentType:string;
-    materialId: number;
-   }[];
-  studentId: string | null;
-  collegeId: number | null;
-}
-
-//used for preview files in form
-type UploadFile = {
-  file: File;
-  id: string;
-  progress: number; // 0 - 100
-  error?: string | null;
-  previewUrl?: string | null; // for images
-  uploaded?: boolean;
-};
-
+import { Material as Contribution } from "@/components/FilesPreview";
 
 export default function UploadPage({
   articles,
-  isStudentZone
 }:{
   articles: ArticleSchema[];
-  isStudentZone: boolean;
 }) {
-  // Form state
-  const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
-  const [type, setType] = useState("Notes");
-  const [description, setDescription] = useState("");
-
-  // Upload state
-  const [files, setFiles] = useState<UploadFile[]>([]);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  // UI feedback
-  const [error, setError] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [contributions, setContributions] = useState<Contribution[]>([]);
-
   const fetchContributions = async () => {
       try {
         const tokenRes = await fetch("/api/find-token", {method: "GET"});
@@ -89,11 +40,9 @@ export default function UploadPage({
       }
   };
 
-
   useEffect(() => {
     fetchContributions();
   }, []);
-
 
   // Remove contribution from list (client only)
   const handleRemoveContribution = (id: number) => {
@@ -122,7 +71,8 @@ export default function UploadPage({
              My Community Post
           </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-4">
-                {articles.map((a, index) => (
+                {
+                  articles.map((a, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 30 }}
@@ -130,9 +80,7 @@ export default function UploadPage({
                       transition={{ delay: index * 0.1 }}
                       className="rounded-2xl overflow-hidden shadow-lg bg-white border border-blue-100 hover:shadow-xl transition group"
                     >
-                      {/* Content */}
                       <div className="p-6">
-                        {/* Type badge */}
                         <span className="inline-block mb-3 text-xs font-medium bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
                           {a.type}
                         </span>
@@ -177,9 +125,10 @@ export default function UploadPage({
                           </Link>
                         </Button>
                       </div>
-                                </motion.div>
-        ))}
-        </div>
+                    </motion.div>
+                ))
+                }
+            </div>
         </div>
 
         <div>

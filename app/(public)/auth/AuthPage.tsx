@@ -271,7 +271,6 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
 
     // 🧩 Handle Login
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
     setLoading(true);
     setMessage("");
 
@@ -285,7 +284,6 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Login failed");
-      setMessage("Login successful!");
 
       // Redirect or update app state
       if (data.user?.token) {
@@ -299,19 +297,16 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
           }),
         });
       }
+      setMessage("Login successful!");
 
       const redirectUrl = searchParams.get("redirect");
-      router.replace(
-        redirectUrl && isSafeRedirect(redirectUrl)
-          ? redirectUrl
-          : "/student"
-      );
-
-      router.refresh();
+      const destination = redirectUrl && isSafeRedirect(redirectUrl) ? redirectUrl : "/student";
+      router.replace(destination);
     } catch (err: any) {
       setMessage(err.message);
     } finally {
       setLoading(false);
+      router.refresh();
     }
   };
 
@@ -321,59 +316,58 @@ export const LoginForm=({toggleMode}:{ toggleMode:(mode:"login" | "register" | "
         Login to SkillHub
       </h2>
 
-      <form className="space-y-5" onSubmit={handleLogin}>
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Email</label>
-          <div className="flex items-center border border-gray-300 rounded-lg px-3">
-            <Mail className="text-blue-600 w-5 h-5" />
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 outline-none"
-              placeholder="Enter your email"
-            />
-          </div>
+      <div>
+        <label className="block text-gray-700 font-medium mb-1">Email</label>
+        <div className="flex items-center border border-gray-300 rounded-lg px-3">
+          <Mail className="text-blue-600 w-5 h-5" />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-3 py-2 outline-none"
+            placeholder="Enter your email"
+          />
         </div>
+      </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium mb-1">Password</label>
-          <div className="flex items-center border border-gray-300 rounded-lg px-3">
-            <Lock className="text-blue-600 w-5 h-5" />
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 outline-none"
-              placeholder="Enter your password"
-            />
-          </div>
+      <div>
+        <label className="block text-gray-700 font-medium mb-1">Password</label>
+        <div className="flex items-center border border-gray-300 rounded-lg px-3">
+          <Lock className="text-blue-600 w-5 h-5" />
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3 py-2 outline-none"
+            placeholder="Enter your password"
+          />
         </div>
+      </div>
 
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-4 rounded-lg"
-          disabled={loading}
+      <Button
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 mt-4 rounded-lg"
+        disabled={loading}
+        onClick={handleLogin}
+      >
+        {loading ? "Logging in..." : "Login"}
+      </Button>
+
+      {message && (
+        <p className="text-center mt-3 text-sm text-red-500">{message}</p>
+      )}
+
+      <p className="text-center text-gray-600 mt-4">
+        Don&apos;t have an account?{" "}
+        <button
+          onClick={()=>{toggleMode("register")}}
+          type="button"
+          className="text-blue-600 font-semibold hover:underline"
         >
-          {loading ? "Logging in..." : "Login"}
-        </Button>
-
-        {message && (
-          <p className="text-center mt-3 text-sm text-red-500">{message}</p>
-        )}
-
-        <p className="text-center text-gray-600 mt-4">
-          Don’t have an account?{" "}
-          <button
-            onClick={()=>{toggleMode("register")}}
-            type="button"
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            Register
-          </button>
-        </p>
-      </form>
+          Register
+        </button>
+      </p>
     </motion.div>
   )
 }

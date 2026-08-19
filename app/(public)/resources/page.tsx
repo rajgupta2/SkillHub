@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import MaterialPage from "./Materials";
+import { Material } from "@/components/FilesPreview";
 
 export const metadata:Metadata = {
   title: "SkillHub – Student Materials, Projects, PYQs & Notes",
@@ -42,28 +43,6 @@ export const metadata:Metadata = {
     images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`],
   },
 };
-
-export interface Material {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-  };
-  createdAt: string;
-  files: {
-    id:number,
-    originalName:string,
-    url: string,
-    contentType:string
-    materialId: number;
-   }[];
-  studentId: string;
-  collegeId: number | null;
-}
-
 
 export default async function Page(){
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material?limit=150`);
