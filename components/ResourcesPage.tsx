@@ -65,11 +65,10 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
   const filterTypes = ["All", "Notes", "Assignment", "Project","PYQ"];
   const pathname=usePathname();
   return (
-    <div className="flex flex-col  bg-gradient-to-b from-blue-50 to-white">
+    <div className="pt-8 bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mt-8 px-4 md:px-10">
-      {/* Filter Section */}
-      <div className="flex flex-col justify-center items-center gap-4 flex-wrap px-4 md:px-10">
+      <div className="flex flex-col md:flex-row md:justify-between gap-4 px-4 md:px-10">
+       {/* Filter Section */}
         <div className="flex gap-3 flex-wrap justify-center">
           { filterTypes.map((type) => (
             <Button
@@ -85,8 +84,7 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
             </Button>
           ))}
         </div>
-      </div>
-        {/* Search + Share Container */}
+          {/* Search + Share Container */}
         <div className="w-full md:w-auto flex flex-row items-center justify-center gap-3">
           <div className="relative w-90 mt-4 md:mt-0">
             <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
@@ -111,8 +109,6 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
           </button>
         </div>
       </div>
-
-
 
       {/* Scrollable Materials Section */}
       <main className={`px-8 md:px-16 py-10 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}>

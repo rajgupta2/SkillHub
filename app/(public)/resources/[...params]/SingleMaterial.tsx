@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import FilesPreview from "@/components/FilesPreview";
 import { SingleFilePreview } from "@/components/FilesPreview";
 import { generateCourseSlug } from "@/components/slugify";
-import { Material } from "../page";
+import { Material } from "@/components/FilesPreview";
 
 export default function SingleMaterialPage({material}:{material:Material}) {
   const { params } = useParams<{ params: string[] }>();
@@ -17,12 +17,9 @@ export default function SingleMaterialPage({material}:{material:Material}) {
   const searchParams=useSearchParams();
   const fileurl=searchParams.get("fileurl") || "";
 
-  if(material?.files?.length===1){
-    return <SingleFilePreview presignedUrl={material.files[0].url} onClose={() => router.back()} />;
+  if(material?.files?.length===1 || isFile){
+    return <SingleFilePreview file={material.files[0]} materialTitle={material.title} onClose={() => router.back()}  />;
   }
-
-  if(isFile)
-   return <SingleFilePreview presignedUrl={fileurl!} onClose={() => router.back()} />;
 
   return <FilesPreview material={material} onClose={() => router.back()}/>;
 }

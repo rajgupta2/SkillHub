@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { FileIcon, Eye, Loader2, X, Share2 } from "lucide-react";
+import { FileIcon, Eye, Loader2, X, Share2, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { formateDate } from "@/components/formateDate";
 import Link from "next/link";
@@ -26,8 +26,15 @@ const handleShare = async (url:string,title:string) => {
   }
 };
 
-
-interface Material {
+interface S3File {
+    id: number;
+    originalName: string;
+    s3Key:string;
+    url: string;
+    contentType: string;
+    materialId: number;
+}
+export interface Material {
   id: number;
   title: string;
   subject: string;
@@ -37,13 +44,7 @@ interface Material {
     name: string;
   };
   createdAt: string;
-  files: {
-    id: number;
-    originalName: string;
-    url: string;
-    contentType: string;
-    materialId: number;
-  }[];
+  files:S3File[];
   studentId: string | null;
   collegeId: number | null;
 }
@@ -96,28 +97,38 @@ const getPreviewElement = (url:string,height?:string) => {
 
 };
 export function SingleFilePreview({
-  presignedUrl,
+  file,
+  materialTitle,
   onClose,
 }: {
-  presignedUrl: string;
+  file:S3File;
+  materialTitle:string;
   onClose: () => void;
 }){
   return (
     <div className=" mx-8 mt-6 border rounded-xl shadow p-4 bg-white overflow-hidden">
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between mb-3">
         <h3 className="text-lg font-semibold">File Preview</h3>
-        <button
-          onClick={onClose}
-          className="bg-gray-200 p-2 rounded-full hover:bg-gray-300"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        <div className="flex gap-4">
+          <div className="bg-gray-200 rounded-md px-2 pt-2">
+            <GetDownload
+              s3Key={file.s3Key}
+              fileNameToSave={`${materialTitle}_${file.originalName}`}
+            />
+          </div>
+          <button
+            onClick={onClose}
+            className="bg-gray-200 p-2 rounded-full hover:bg-gray-300"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
       </div>
-       <div className="overflow-hidden">
-        {getPreviewElement(presignedUrl,"h-[700px]")}
+      <div className="overflow-hidden">
+        {getPreviewElement(file.url, "h-[700px]")}
       </div>
     </div>
-  )
+  );
 }
 
 export default function FilesPreview({
@@ -146,12 +157,18 @@ export default function FilesPreview({
         {material.subject} • {material.type}
       </p>
       <p className="text-gray-400 text-sm mt-1">
-        Uploaded by {material.uploadedBy.name} • {formateDate(material.createdAt)}
+        Uploaded by {material.uploadedBy.name} •{" "}
+        {formateDate(material.createdAt)}
       </p>
 
       <div className="absolute top-16 right-4">
         <button
-          onClick={()=>{handleShare(`${window.location.origin}/resources/${title}/${material.id}`,material.title)}}
+          onClick={() => {
+            handleShare(
+              `${window.location.origin}/resources/${title}/${material.id}`,
+              material.title,
+            );
+          }}
           className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
                     rounded-md hover:bg-blue-700 transition shadow-sm mt-2 md:mt-0
                     w-fit text-sm"
@@ -172,24 +189,52 @@ export default function FilesPreview({
             //onClick={() => window.open(previewUrls[file.id], "_blank")}
           >
             <div className="mb-4 relative">
-              {
-                getPreviewElement(file.url,"h-48")
-              }
+              {getPreviewElement(file.url, "h-48")}
             </div>
 
             <p className="font-semibold text-gray-800 truncate">
               {file.originalName}
             </p>
-            <Link
-              href={
-                  `/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}`
-              }
-              className="mt-3 text-blue-600 flex items-center gap-2 text-sm cursor-pointer">
-              <Eye className="w-4 h-4" /> Open
-            </Link>
+            <div className="flex gap-4 text-blue-600 mt-3">
+              <Link
+                href={`/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}`}
+                className="flex items-center gap-2 text-sm cursor-pointer"
+              >
+                <Eye className="w-4 h-4" /> Open
+              </Link>
+              <GetDownload
+                s3Key={file.s3Key}
+                fileNameToSave={`${material.title}_${file.originalName}`}
+              />
+            </div>
           </motion.div>
         ))}
       </div>
     </div>
   );
 }
+
+interface GetDownloadProps {
+  s3Key: string;
+  fileNameToSave: string;
+}
+
+const GetDownload = ({ s3Key, fileNameToSave }: GetDownloadProps) => {
+  const handleDownload = () => {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/download?s3Key=${encodeURIComponent(
+      s3Key,
+    )}&fileName=${encodeURIComponent(fileNameToSave)}`;
+
+    window.location.href = url;
+  };
+
+  return (
+    <div
+      onClick={handleDownload}
+      className="flex gap-2 items-center text-sm cursor-pointer"
+    >
+      <Download className="w-4 h-4" />
+      Download
+    </div>
+  );
+};
