@@ -19,7 +19,6 @@ import { CourseContext, useCourse } from "./CourseContext";
 import { generateCourseSlug } from "@/components/slugify";
 import { UICourse } from "@/lib/courseSchema";
 import slugify from "slugify";
-import { title } from "process";
 
 export default function CourseProvider({
   children,
@@ -140,25 +139,25 @@ export function CoursePage({
   async function deleteLinkFromCourse(linkId: string) {
   try{
 
-    // 2️⃣ Remove out the link to delete
+    // Remove out the link to delete
     const updatedLinks = links.filter(
       (link: any) => link.linkId !== linkId
     );
 
-    // 3️⃣ Re-order links (VERY IMPORTANT)
+    // Re-order links (VERY IMPORTANT)
     const reorderedLinks = updatedLinks.map((link, index:number) => ({
       ...link,
       order: index,
     }));
 
-    // 4️⃣ Update course
+    //  Update course
     const updatedCourse = {
       ...course,
       links: reorderedLinks,
       status: course!.status
     };
 
-    // 5️⃣ Save back
+    //  Save back
     updateCourse(updatedCourse as UICourse);
     setCourse(updatedCourse as UICourse);
 
@@ -174,35 +173,30 @@ export function CoursePage({
       {/* Sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed  bg-black/40 z-40 md:hidden"
+          className="fixed  bg-black/40 z-20 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-40 w-screen md:w-80 h-screen overflow-hidden bg-gradient-to-b
+        className={`fixed md:sticky top-0 left-0 z-20 w-screen md:w-80 h-screen overflow-hidden bg-gradient-to-b
 -        from-blue-800 to-blue-600 transition-transform duration-300
           pt-4 border shadow rounded-r-2xl text-white
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
-        <div className="pl-4 border-b-2 pb-4 mb-2">
-          <span>
-          {course?.title} Tutorials
-          {/*close button */}
+        <div className="flex pl-4 border-b-2 justify-between pb-4 mb-2">
+          <p>{course?.title} Tutorials</p>
           <button
             onClick={() => setSidebarOpen(false)}
             className="text-white md:hidden px-4 items-end justify-end"
           >
             <X className="w-6 h-6 pt-2" />
           </button>
-          </span>
         </div>
-
 
         {/* Sidebar Links */}
         <nav className=" max-h-[90vh] overflow-y-auto overflow-x-auto px-4">
-          {
-            links.map((link:any) => {
-            const isActive = linkSlug===generateCourseSlug(link.title);
+          {links.map((link: any) => {
+            const isActive = linkSlug === generateCourseSlug(link.title);
             return (
               <div
                 key={link.order}
@@ -212,40 +206,22 @@ export function CoursePage({
                     : "hover:bg-blue-600 hover:font-semibold"
                 }`}
               >
-              <Link
-                key={link.linkId}
-                title={link.title}
-                href={`/tutorials/${course!.slug}/${generateCourseSlug(link.title)}`}
-                className={` px-3 py-2 rounded-lg transition truncate`}
-              >
-                {/* Left: Title */}
-                {link.title}
-              </Link>
-
-            <div className="flex items-center justify-end gap-1">
-              {/* Right: edit box */}
-              {
-                isCourseOwner &&
                 <Link
-                  href={`/tutorials/${courseSlug}/${generateCourseSlug(link.title)}?isEditable=true`}
-                  className="
-                    flex md:hidden
-                    group-hover:flex
-                    items-center
-                    justify-between
-                    w-8 h-8
-                    transition
-                  "
+                  key={link.linkId}
+                  title={link.title}
+                  href={`/tutorials/${course!.slug}/${generateCourseSlug(link.title)}`}
+                  className={` px-3 py-2 rounded-lg transition truncate`}
                 >
-                  <Edit className="w-4 h-4 text-white-500" />
+                  {/* Left: Title */}
+                  {link.title}
                 </Link>
-              }
 
-              {/* Right: Delete box */}
-              {
-                isCourseOwner &&
-                <div
-                  className="
+                <div className="flex items-center justify-end gap-1">
+                  {/* Right: edit box */}
+                  {isCourseOwner && (
+                    <Link
+                      href={`/tutorials/${courseSlug}/${generateCourseSlug(link.title)}?isEditable=true`}
+                      className="
                     flex md:hidden
                     group-hover:flex
                     items-center
@@ -253,48 +229,62 @@ export function CoursePage({
                     w-8 h-8
                     transition
                   "
-                  onClick={async (e) => {
-                    e.preventDefault(); // prevent navigation
-                    e.stopPropagation();
-                    const wantToDelete=confirm(`Are You want to delete the page of ${link?.title}`);
-                    wantToDelete && (await deleteLinkFromCourse(link.linkId));
-                  }}
-                >
-                  <Delete className="w-5 h-5 text-white-500" />
+                    >
+                      <Edit className="w-4 h-4 text-white-500" />
+                    </Link>
+                  )}
+
+                  {/* Right: Delete box */}
+                  {isCourseOwner && (
+                    <div
+                      className="
+                    flex md:hidden
+                    group-hover:flex
+                    items-center
+                    justify-between
+                    w-8 h-8
+                    transition
+                  "
+                      onClick={async (e) => {
+                        e.preventDefault(); // prevent navigation
+                        e.stopPropagation();
+                        const wantToDelete = confirm(
+                          `Are You want to delete the page of ${link?.title}`,
+                        );
+                        wantToDelete &&
+                          (await deleteLinkFromCourse(link.linkId));
+                      }}
+                    >
+                      <Delete className="w-5 h-5 text-white-500" />
+                    </div>
+                  )}
                 </div>
-              }
-              </div>
               </div>
             );
           })}
-          {
-            isCourseOwner&& <AddSidebarItem
-              set_Links={async (linkName)=>{
-              await addLinkToCourse(linkName);
-            }}
-          />
-          }
-
+          {isCourseOwner && (
+            <AddSidebarItem
+              set_Links={async (linkName) => {
+                await addLinkToCourse(linkName);
+              }}
+            />
+          )}
         </nav>
       </aside>
 
       <div className="flex-1">
-       {/* Content Area */}
-      <div className="flex flex-col min-h-screen max-w-screen">
-        {/* Topbar */}
-        <header className="sticky top-0 z-30 bg-white border-b px-6 py-4 md:hidden">
-          <button
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="w-6 h-6" />
-          </button>
-        </header>
+        {/* Content Area */}
+        <div className="flex flex-col min-h-screen max-w-screen">
+          {/* Topbar */}
+          <header className="sticky top-0 z-10 bg-white border-b px-6 py-4 md:hidden">
+            <button onClick={() => setSidebarOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
+          </header>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto py-6">
-          {children}
-        </main>
-      </div>
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto py-6">{children}</main>
+        </div>
       </div>
     </div>
   );
