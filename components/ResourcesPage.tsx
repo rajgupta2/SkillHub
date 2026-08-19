@@ -8,27 +8,7 @@ import { formateDate } from "./formateDate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateCourseSlug } from "./slugify";
-
-interface Material {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-  };
-  createdAt: string;
-  files: {
-    id:number,
-    originalName:string,
-    url: string,
-    contentType:string
-    materialId: number;
-   }[];
-  studentId: string;
-  collegeId: number | null;
-}
+import { Material } from "./FilesPreview";
 
 const handleShare = async (url:string) => {
 

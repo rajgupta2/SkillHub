@@ -42,6 +42,7 @@ export interface Material {
   description: string;
   uploadedBy: {
     name: string;
+    email?: string;
   };
   createdAt: string;
   files:S3File[];
@@ -202,10 +203,13 @@ export default function FilesPreview({
               >
                 <Eye className="w-4 h-4" /> Open
               </Link>
-              <GetDownload
-                s3Key={file.s3Key}
-                fileNameToSave={`${material.title}_${file.originalName}`}
-              />
+              {
+                (file.s3Key) &&
+                <GetDownload
+                  s3Key={file.s3Key}
+                  fileNameToSave={`${material.title}_${file.originalName}`}
+                />
+              }
             </div>
           </motion.div>
         ))}

@@ -4,33 +4,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { FilePlus, BookOpen, Upload as UploadIcon, Trash, CheckCircle, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import Link from "next/link"
-import FilePreview from "@/components/FilesPreview";
-import { log } from "console";
-import { formateDate } from "@/components/formateDate";
-
-//used for preview files in recent contribution section
-interface Contribution {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-    email: string;
-  };
-  createdAt: string;
-  files: {
-    id:number;
-    originalName:string;
-    url: string;
-    contentType:string;
-    materialId: number;
-   }[];
-  studentId: string | null;
-  collegeId: number | null;
-}
 
 //used for preview files in form
 type UploadFile = {
@@ -69,36 +42,7 @@ export default function ContributePage() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [contributions, setContributions] = useState<Contribution[]>([]);
 
-  const fetchContributions = async () => {
-      try {
-        const tokenRes = await fetch("/api/find-token", {method: "GET"});
-        const dataToken = await tokenRes.json();
-        const token=dataToken.token;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recent-contribution?limit=5`, {
-          credentials:"include",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        setContributions(data.materials);
-      } catch (error) {
-        console.error(error);
-      }
-  };
-
-
-  useEffect(() => {
-    fetchContributions();
-  }, []);
-
-
-    // Helpers
   const resetForm = () => {
     setTitle("");
     setSubject("");
@@ -262,7 +206,6 @@ export default function ContributePage() {
         setError(data.message || "Something went wrong");
       }
       setSuccessMsg("Materials uploaded successfully!");
-      await fetchContributions();
       //Removing preview image in form
       files.forEach((f) => f.previewUrl && URL.revokeObjectURL(f.previewUrl));
       setFiles([]);
@@ -275,23 +218,6 @@ export default function ContributePage() {
      setIsUploading(false);
     }
   };
-
-  // Remove contribution from list (client only)
-  const handleRemoveContribution = (id: number) => {
-    setContributions((prev) => prev.filter((c) => c.id !== id));
-  };
-
-  //Preview Contribution File
-  const [previewContribution, setpreviewContribution] = useState<Contribution| null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleView = (contribution: Contribution) => {
-    setpreviewContribution(contribution);
-    setModalOpen(true);
-  };
-
-  if(previewContribution && modalOpen)
-    return  ( <FilePreview material={previewContribution} onClose={() => setModalOpen(false)} /> )
 
   return (
    <>

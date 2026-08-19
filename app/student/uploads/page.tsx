@@ -14,5 +14,5 @@ export default async function MyUploads() {
     },
   });
   const data = await res.json();
-  return <UploadPage articles={data.articles} isStudentZone={true}/>
+  return <UploadPage articles={data.articles}/>
 }

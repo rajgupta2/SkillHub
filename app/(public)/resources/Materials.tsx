@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ResourcesPage } from "@/components/ResourcesPage";
-import { Material } from "./page";
+import { Material } from "@/components/FilesPreview";
 import ContributePopup from "./Alert";
 import { useState,useEffect } from "react";
 

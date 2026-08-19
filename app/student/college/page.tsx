@@ -91,26 +91,7 @@ export async function generateMetadata() {
   };
 }
 
-export interface Material {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-  };
-  createdAt: string;
-  files: {
-    id:number,
-    originalName:string,
-    url: string,
-    contentType:string
-    materialId: number;
-   }[];
-  studentId: string;
-  collegeId: number | null;
-}
+import { Material } from "@/components/FilesPreview";
 
 export default async function Page(){
   const tokenRes = await GET();
