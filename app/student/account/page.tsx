@@ -13,8 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import ProfileHead from "./ProfileHead";
 
-// ✅ Define types from your backend response
-interface UserProfile {
+// Define types from your backend response
+export interface UserProfile {
   name: string,
   email: string,
   role: string,
@@ -31,7 +31,7 @@ interface UserProfile {
   materials_count: number,
   rank:number
 }
-interface College{
+export interface College{
   id:number,
   name:string,
   city:string,
@@ -39,12 +39,12 @@ interface College{
   state:string
 }
 
-interface Course{
+export interface Course{
   id:number,
   name:string
 }
 
-// ✅ Profile page component
+// Profile page component
 export default function StudentProfilePage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [colleges, setColleges] = useState<College[]>([]);
@@ -55,7 +55,7 @@ export default function StudentProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // ✅ Fetch profile from backend using token
+  // Fetch profile from backend using token
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -97,7 +97,7 @@ export default function StudentProfilePage() {
   }, [isEditing]);
 
 
-  // ✅ Handle field edits
+  // Handle field edits
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!profile) return;
     setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -196,13 +196,13 @@ export default function StudentProfilePage() {
                 value={profile.course_id ?? ""}
                 disabled={!isEditing}
                 onChange={(e) => {
-                   // 👉 User wants to add custom course
+                   // User wants to add custom course
                   if (e.target.value === "__other__") {
                     setShowCustomCourse(true);
                     setProfile({ ...profile, course: "", course_id: null });
                     return;
                   }
-                  // 👉 User selected existing course
+                  // User selected existing course
                   const selectedCourse = courses.find(
                     (c) => String(c.id) ===e.target.value
                   );
@@ -232,7 +232,7 @@ export default function StudentProfilePage() {
                   setProfile({
                     ...profile,
                     course: e.target.value,
-                    course_id: null, // 👈 ALWAYS null for custom
+                    course_id: null, // ALWAYS null for custom
                   })
                 }
                 name="course"
@@ -291,7 +291,7 @@ export default function StudentProfilePage() {
                 value={profile.college_id ?? ""}
                 disabled={!isEditing}
                 onChange={(e) => {
-                  // 👉 User wants to add custom college
+                  // User wants to add custom college
                   if (e.target.value === "__other__") {
                     setShowCustomCollege(true);
                     setProfile({
@@ -304,7 +304,7 @@ export default function StudentProfilePage() {
                     });
                     return;
                   }
-                  // 👉 User selected existing college
+                  // User selected existing college
                   const selectedCollege = colleges.find(
                     (c) => String(c.id) === e.target.value
                   );
