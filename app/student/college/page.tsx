@@ -92,6 +92,7 @@ export async function generateMetadata() {
 }
 
 import { Material } from "@/components/FilesPreview";
+import Link from "next/link";
 
 export default async function Page(){
   const tokenRes = await GET();
@@ -103,8 +104,15 @@ export default async function Page(){
       "Authorization": `Bearer ${token}`,
     },
   });
-  if (!res.ok) {
-    return <div className="text-center text-gray-500 py-10">Failed to fetch materials.</div>;
+  if (res.status===500) {
+    return <div className="text-center text-gray-500 py-10">Internal Server Error.</div>;
+  }else if(res.status===404){
+     // college is missing
+     return (
+      <div className="justify-center items-center text-gray-500 py-10 h-100">
+        <p>Please fill your college deatils in the <Link href="/student/account">account</Link> page to view this page .</p>
+      </div>
+     )
   }
 
   const data = await res.json();
