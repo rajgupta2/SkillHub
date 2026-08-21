@@ -17,7 +17,6 @@ export default function Editor({
   return (
     <div
       className="editor-wrapper  border rounded-lg min-h-[60vh] cursor-text py-4 mt-4 z-50"
-      onClick={() => editor.focus()}
     >
       <BlockNoteView editor={editor} theme="light"  onChange={()=>setContent(editor.document)}/>
     </div>

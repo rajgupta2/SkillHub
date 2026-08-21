@@ -220,16 +220,16 @@ export default function ContributePage() {
   };
 
   return (
-   <>
     <div className="p-6 bg-gray-50 ">
-      <div className=" mx-auto max-w-3xl ">
+      <div className=" mx-auto max-w-xl">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 className="md:text-3xl font-bold text-gray-800 flex items-center gap-3">
             <FilePlus className="w-6 h-6 text-blue-600" /> Contribute
           </h1>
           <p className="text-sm text-gray-600 mt-1">
-            Share notes, assignments or past-year papers to help your college peers. You can upload multiple files at once.
+            Share notes, assignments or past-year papers to help your college
+            peers. You can upload multiple files at once.
           </p>
         </div>
         {/* Form */}
@@ -238,9 +238,9 @@ export default function ContributePage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="bg-white rounded-xl shadow p-6 border border-gray-100"
+          className="flex flex-col gap-4 bg-white rounded-xl shadow p-6 border border-gray-100"
         >
-          <div className="grid gap-4 overflow-y-auto">
+          <div>
             <label className="text-sm text-gray-600">
               Title <span className="text-red-400">*</span>
             </label>
@@ -250,120 +250,143 @@ export default function ContributePage() {
               placeholder="E.g. Operating Systems - PYQ 2023"
               className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm text-gray-600">Subject <span className="text-red-400">*</span></label>
-                <input
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  placeholder="E.g. Operating Systems"
-                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-                />
-              </div>
+          <div>
+            <label className="text-sm text-gray-600">
+              Subject <span className="text-red-400">*</span>
+            </label>
+            <input
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              placeholder="E.g. Operating Systems"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+          </div>
 
-              <div>
-                <label className="text-sm text-gray-600">Type</label>
-                <select
-                  value={type}
-                  onChange={(e) => setType(e.target.value)}
-                  className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          <div>
+            <label className="text-sm text-gray-600">Type</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            >
+              <option>Notes</option>
+              <option>Assignment</option>
+              <option>PYQ</option>
+              <option>Project</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-600">
+              Files (max {MAX_FILES}, each ≤ {MAX_FILE_SIZE / (1024 * 1024)}{" "}
+              MB)
+            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg"
+              onChange={handleFilesSelect}
+              className="w-full border rounded-lg px-2 py-2 focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Selected files preview */}
+          {files.length > 0 && (
+            <div className="w-full mt-1 space-y-2 ">
+              {files.map((f) => (
+                <div
+                  key={f.id}
+                  className="flex items-center justify-between bg-gray-50 p-2 rounded overflow-auto"
                 >
-                  <option>Notes</option>
-                  <option>Assignment</option>
-                  <option>PYQ</option>
-                  <option>Project</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm text-gray-600">Files (max {MAX_FILES}, each ≤ {MAX_FILE_SIZE / (1024 * 1024)} MB)</label>
-              <div className="mt-2 flex items-center gap-3">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg"
-                  onChange={handleFilesSelect}
-                />
-                <div className="text-sm text-gray-500">or drag & drop (coming soon)</div>
-              </div>
-
-              {/* Selected files preview */}
-              {files.length > 0 && (
-                <div className="mt-3 space-y-2">
-                  {files.map((f) => (
-                    <div key={f.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
-                      <div className="flex items-center gap-3">
-                        {f.previewUrl ? (
-                          <img src={f.previewUrl} alt="preview" className="w-10 h-10 object-cover rounded" />
-                        ) : (
-                          <div className="w-10 h-10 flex items-center justify-center bg-white/20 rounded text-sm text-gray-700">DOC</div>
-                        )}
-                        <div>
-                          <div className="text-sm font-medium text-gray-800">{f.file.name}</div>
-                          <div className="text-xs text-gray-500">{Math.round(f.file.size / 1024)} KB</div>
-                        </div>
+                  <div className="flex items-center gap-3">
+                    {f.previewUrl ? (
+                      <img
+                        src={f.previewUrl}
+                        alt="preview"
+                        className="w-10 h-10 object-cover rounded"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 flex items-center justify-center bg-white/20 rounded text-sm text-gray-700">
+                        DOC
                       </div>
-
-                      <div className="flex items-center gap-3">
-                        {/* Progress bar */}
-                        <div className="w-40">
-                          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div
-                              className="h-2 bg-blue-600 rounded-full transition-all"
-                              style={{ width: `${f.progress}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => removePendingFile(f.id)}
-                          className="text-red-500 hover:text-red-700"
-                          disabled={isUploading}
-                        >
-                          <Trash className="w-4 h-4" />
-                        </button>
+                    )}
+                    <div>
+                      <div className="text-sm font-medium text-gray-800 overflow-hidden">
+                        {f.file.name}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {Math.round(f.file.size / 1024)} KB
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    {/* Progress bar */}
+                    <div className="w-30">
+                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-2 bg-blue-600 rounded-full transition-all"
+                          style={{ width: `${f.progress}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => removePendingFile(f.id)}
+                      className="text-red-500 hover:text-red-700"
+                      disabled={isUploading}
+                    >
+                      <Trash className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
+          )}
 
-            <div>
-              <label className="text-sm text-gray-600">Short description</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                placeholder="Describe what this material covers (optional)"
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-              />
+          <div>
+            <label className="text-sm text-gray-600">Short description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              placeholder="Describe what this material covers (optional)"
+              className="w-full resize-none border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            ></textarea>
+          </div>
+
+          {error && <div className="text-sm text-red-600">{error}</div>}
+          {successMsg && (
+            <div className="text-sm text-green-700 flex items-center gap-2">
+              <CheckCircle className="w-5 h-5 text-green-600" /> {successMsg}
             </div>
+          )}
 
-            {error && <div className="text-sm text-red-600">{error}</div>}
-            {successMsg && (
-              <div className="text-sm text-green-700 flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600" /> {successMsg}
-              </div>
-            )}
+          <div className="flex gap-3 mt-2">
+            <Button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+              disabled={isUploading}
+            >
+              <FilePlus className="w-4 h-4" />{" "}
+              {isUploading ? "Uploading..." : "Contribute"}
+            </Button>
 
-            <div className="flex gap-3 mt-2">
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2" disabled={isUploading}>
-                <FilePlus className="w-4 h-4" /> {isUploading ? "Uploading..." : "Contribute"}
-              </Button>
-
-              <Button type="button" className="bg-gray-100 text-gray-800 hover:bg-gray-200" onClick={resetForm} disabled={isUploading}>
-                Reset
-              </Button>
-            </div>
+            <Button
+              type="button"
+              className="bg-gray-100 text-gray-800 hover:bg-gray-200"
+              onClick={resetForm}
+              disabled={isUploading}
+            >
+              Reset
+            </Button>
           </div>
         </motion.form>
-       </div>
+      </div>
     </div>
-  </>
   );
 }

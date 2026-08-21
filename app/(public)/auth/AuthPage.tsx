@@ -518,15 +518,14 @@ export const LoginForm = ({
     return url.startsWith("/") && !url.startsWith("//");
   }
 
-  // 🧩 Handle Login
+  // Handle Login
   const handleLogin = async (e: React.FormEvent) => {
-    setLoading(true);
     setMessage("");
     if(!email || !password){
       setMessage("Please fill all details");
       return;
     }
-
+    setLoading(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
