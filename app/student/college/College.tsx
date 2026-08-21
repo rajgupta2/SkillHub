@@ -25,7 +25,7 @@ export default function College({
   return (
     <div>
       {/* Tabs */}
-      <div className="flex border-b mx-16">
+      <div className="flex border-b">
         <button
           onClick={() => setActiveTab("resources")}
           className={`px-4 py-2  ${
