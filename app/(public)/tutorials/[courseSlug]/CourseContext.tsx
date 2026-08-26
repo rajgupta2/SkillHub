@@ -1,6 +1,6 @@
 "use client";
 
-import { UICourse } from "@/lib/courseSchema";
+import { UICourse } from "@/types/types";
 import { createContext, useContext } from "react";
 
 export type CourseContextType = {

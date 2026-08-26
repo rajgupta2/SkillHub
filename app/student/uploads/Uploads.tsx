@@ -1,17 +1,15 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { FilePlus, BookOpen, Upload as UploadIcon, Trash, CheckCircle, Eye, PenSquare, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Trash, Eye, PenSquare, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link"
-import { formateDate } from "@/components/formateDate";
-import ArticlesList from "@/components/article/ArticleListRender";
-import { ArticleSchema } from "@/components/article/schema";
-import { getPlainText } from "@/components/article/ArticleListRender";
-import { User,Calendar } from "lucide-react";
+import { formateDate } from "@/lib/formateDate";
+import { getPlainText } from "@/lib/slugify";
+import { User, Calendar } from "lucide-react";
 import FilesPreview from "@/components/FilesPreview";
-import { Material as Contribution } from "@/components/FilesPreview";
+import { Material as Contribution, ArticleSchema } from "@/types/types";
 
 export default function UploadPage({
   articles,
@@ -171,27 +169,24 @@ export default function UploadPage({
                       className="flex items-start justify-between bg-gray-50 p-3 rounded-lg"
                     >
                       <div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <span className="text-sm font-semibold text-gray-800">
                             {c.title}
                           </span>
-                          <span className="text-xs text-gray-500 px-2 py-0.5 rounded-full bg-white/50">
-                            {c.type}
+                          <span className="text-xs font-semibold text-gray-800 py-0.5 rounded-full bg-white/50">
+                            {`(${c.type})`}
                           </span>
                         </div>
 
-                        <p className="text-xs text-gray-500 mt-1">
-                          {c.subject} • {c.title}
+                        <p className="text-sm text-gray-500 mt-1">
+                          Subject: {c.subject}
                         </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          By {c.uploadedBy?.name} • {formateDate(c.createdAt)}
-                        </p>
-
-                        {c.description && (
-                          <p className="text-sm text-gray-600 mt-2">
-                            {c.description}
-                          </p>
-                        )}
+                        <div className="flex items-center text-gray-500 text-sm">
+                          <User className="w-4 h-4 mr-1" />
+                          {c.uploadedBy?.name}
+                          <Calendar className="w-4 h-4 ml-2 mr-1 " />
+                          {formateDate(c.createdAt)}
+                        </div>
                       </div>
 
                       <div className="flex items-end gap-2">
@@ -206,7 +201,7 @@ export default function UploadPage({
                         <Button
                           onClick={() => handleRemoveContribution(c.id)}
                           title="Remove (client-side)"
-                          className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm items-center gap-2 cursor-pointer"
+                          className=" hidden bg-red-600 hover:bg-red-700 px-3 py-1 text-sm items-center gap-2 cursor-pointer"
                         >
                           <Trash className="w-4 h-4" />
                         </Button>

@@ -1,5 +1,3 @@
-import { UICourse } from "@/lib/courseSchema";
-import { fetchServerCourses } from "@/lib/mergeCourses";
 import TutorialsPage from "./TutorialsPage";
 import { Metadata } from "next";
 

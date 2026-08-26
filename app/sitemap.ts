@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
-import { generateCourseSlug } from "@/components/slugify";
-import { ArticleSchema } from "@/components/article/schema";
+import { generateLinkSlug } from "@/lib/slugify";
+import { ArticleSchema } from "@/types/types";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
@@ -11,7 +11,7 @@ async function courseURL() {
   courses=Array.isArray(courses)?courses:[];
   const courseLinks = courses.flatMap((course: any) =>
     course.links.map((l: any) => ({
-      url: `${baseUrl}/tutorials/${course.slug}/${generateCourseSlug(l.title)}`,
+      url: `${baseUrl}/tutorials/${course.slug}/${l.slug}`,
       lastModified: new Date(course.updatedAt),
     }))
   );
@@ -39,7 +39,7 @@ async function materialLinks(){
   const materials=Array.isArray(data.materials)?data.materials:[];
 
   const materialLinks = materials.map((material: any) => ({
-    url: `${baseUrl}/resources/${generateCourseSlug(material.title)}/${material.id}`,
+    url: `${baseUrl}/resources/${generateLinkSlug(material.title)}/${material.id}`,
     lastModified: new Date(material.createdAt),
   }));
 

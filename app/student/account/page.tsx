@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProfileHead from "./ProfileHead";
+import { College, Course } from "@/types/types";
 
 // Define types from your backend response
 export interface UserProfile {
@@ -30,18 +31,6 @@ export interface UserProfile {
   endYear: number | null,
   materials_count: number,
   rank:number
-}
-export interface College{
-  id:number,
-  name:string,
-  city:string,
-  district:string,
-  state:string
-}
-
-export interface Course{
-  id:number,
-  name:string
 }
 
 // Profile page component

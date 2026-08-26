@@ -3,17 +3,8 @@
 import { Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ResourcesPage } from "@/components/ResourcesPage";
-import { Material } from "@/components/FilesPreview";
+import { Material, Peers } from "@/types/types";
 import LeaderboardPage from "./Leaderboard";
-
-interface Peers {
-  name: string;
-  profile: { course: { name: string };
-  startYear: number;
-  endYear: number
-  }
-}
-
 
 export default function College({
   materials,
@@ -69,7 +60,6 @@ export default function College({
     </div>
   );
 }
-
 
 export const FetchPeers=()=>{
   const [peers, setPeers] = useState<Peers[]>([]);

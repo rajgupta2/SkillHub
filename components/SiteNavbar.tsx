@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu, X, GraduationCap, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { DropdownMenu } from "radix-ui";
 
 export  default function SiteNavbar({isLoggedIn}:{isLoggedIn:boolean}) {
   const [open, setOpen] = useState(false);

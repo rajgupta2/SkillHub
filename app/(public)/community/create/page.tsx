@@ -1,6 +1,6 @@
 "use client";
-import CreateContent from "@/components/article/create";
-import { ArticleSchema } from "@/components/article/schema";
+import CreateContent from "./create";
+import { ArticleSchema } from "@/types/types";
 import { useSearchParams } from "next/navigation";
 import { useState,useEffect } from "react";
 

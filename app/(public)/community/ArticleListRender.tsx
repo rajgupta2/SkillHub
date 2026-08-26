@@ -4,20 +4,10 @@ import { motion } from "framer-motion";
 import { PenSquare, Calendar, User, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { formateDate } from "@/components/formateDate";
-import  DOMPurify from "dompurify";
-import { ArticleSchema} from "@/components/article/schema";
-
-export function getPlainText(html: string, maxLength = 160) {
-  const text = html
-    .replace(/<[^>]*>/g, " ")   // remove tags
-    .replace(/\s+/g, " ")      // clean spaces
-    .trim();
-
-  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-}
-
+import { useState } from "react";
+import { formateDate } from "@/lib/formateDate";
+import { ArticleSchema} from "@/types/types";
+import { getPlainText } from "@/lib/slugify";
 
 function getCTA(type: ArticleSchema["type"]) {
   switch (type) {
@@ -33,10 +23,8 @@ function getCTA(type: ArticleSchema["type"]) {
 
 export default function ArticlesList({
   articles,
-  isStudentZone
 }:{
   articles: ArticleSchema[];
-  isStudentZone: boolean;
 }) {
   const [filter, setFilter] = useState<"ALL" | ArticleSchema["type"]>("ALL");
   const filteredArticles=  filter === "ALL"

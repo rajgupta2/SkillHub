@@ -1,14 +1,13 @@
 "use client";
-import { ArticleSchema } from "@/components/article/schema.js";
+import { ArticleSchema } from "@/types/types";
 import { getArticleJsonLd } from "./seo";
 import { User,Calendar } from "lucide-react";
-import { getArticleBySlug} from "./getArticle";
-import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
-import { formateDate } from "../formateDate";
-import { Button } from "../ui/button";
+import { formateDate } from "@/lib/formateDate";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Edit } from "lucide-react";
+
 export default function ArticleRenderer({article,statusCode,isContentOwner=false}:{
   article:ArticleSchema;
   statusCode:Number;

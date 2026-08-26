@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SiteNavbar from "@/components/SiteNavbar";
 import SiteFooter from "@/components/SiteFooter";
-import { GraduationCap } from "lucide-react";
 import { cookies } from "next/headers";
 import {wakeupBackendServer} from "./run";
 import { Analytics } from "@vercel/analytics/next";

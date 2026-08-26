@@ -1,5 +1,4 @@
 import { GET } from "@/app/api/find-token/route";
-import ArticlesList from "@/components/article/ArticleListRender";
 import UploadPage from "./Uploads";
 
 export default async function MyUploads() {

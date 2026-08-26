@@ -2,19 +2,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { BookOpen, Users, Trophy, Building2, Lightbulb } from "lucide-react";
-import {  Upload, Layers } from "lucide-react";
 import Image from "next/image";
-
-// Added "use client" directive so this file is treated as a client component.
-// This ensures framer-motion (which requires client-side rendering) can be safely used.
-
+import { features, reviews, skillHubWork } from "./data";
+import FAQPage from "./faq/FAQ";
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen  bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
-         {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-24 px-6 md:px-20 flex flex-col md:flex-row items-center justify-between gap-10">
         {/* Left Content */}
         <motion.div
@@ -24,10 +19,12 @@ export default function HomePage() {
           className="md:w-1/2"
         >
           <h1 className="text-5xl font-bold mb-6 leading-tight">
-            Empowering Every <span className="text-yellow-300">Student</span> to Learn, Share & Grow
+            Empowering Every <span className="text-yellow-300">Student</span> to
+            Learn, Share & Grow
           </h1>
           <p className="text-lg opacity-90 mb-8">
-            SkillHub brings students, colleges, and resources together on one collaborative platform — where learning never stops.
+            SkillHub brings students, colleges, and resources together on one
+            collaborative platform — where learning never stops.
           </p>
           <Button
             asChild
@@ -44,13 +41,13 @@ export default function HomePage() {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="md:w-1/2 flex justify-center"
         >
-            <Image
-              src="/student-studying-online.png"
-              alt="Learning Illustration"
-              width={650}
-              height={300}
-              className="rounded-2xl drop-shadow-2xl"
-            />
+          <Image
+            src="/student-studying-online.png"
+            alt="Learning Illustration"
+            width={650}
+            height={300}
+            className="rounded-2xl drop-shadow-2xl"
+          />
         </motion.div>
       </section>
 
@@ -65,26 +62,7 @@ export default function HomePage() {
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          {[
-            {
-              icon: <Building2 className="text-blue-600 w-10 h-10 mb-4" />,
-              title: "Get Your College Space",
-              desc: "Register yourself. Get your college space and access your learning hub.",
-              color: "border-blue-600",
-            },
-            {
-              icon: <Upload className="w-10 h-10 text-yellow-500 mx-auto mb-4" />,
-              title: "Upload & Share",
-              desc: "Upload assignments, notes, and previous year papers to help peers.",
-              color: "border-yellow-400",
-            },
-            {
-              icon: <Lightbulb className="text-green-500 w-10 h-10 mb-4" />,
-              title: "Compete & Grow",
-              desc: "Earn XP, climb leaderboards, and gain recognition district-wide.",
-              color: "border-green-500",
-            },
-          ].map((step, i) => (
+          {skillHubWork.map((step, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -94,9 +72,7 @@ export default function HomePage() {
               className={`bg-gray-50 rounded-xl shadow-lg p-8 border-t-4 ${step.color} hover:shadow-xl transition`}
             >
               <div className="flex justify-center">{step.icon}</div>
-              <h3 className="text-2xl font-semibold mb-2">
-                {step.title}
-              </h3>
+              <h3 className="text-2xl font-semibold mb-2">{step.title}</h3>
               <p className="text-gray-600">{step.desc}</p>
             </motion.div>
           ))}
@@ -104,43 +80,20 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6 md:px-20 bg-gradient-to-r from-blue-50 to-white text-center">
+      <section
+        id="features"
+        className="py-20 px-6 md:px-20 bg-gradient-to-r from-blue-50 to-white text-center"
+      >
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl font-bold text-gray-800 mb-12"
         >
-          Features You’ll Love
+          Features You&apos;ll Love
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          {[
-            {
-              icon: <BookOpen className="w-10 h-10 text-blue-600 mx-auto mb-4" />,
-              title: "Study Materials",
-              desc: "Access curated study notes, PYQs, and assignments from your peers.",
-            },
-            {
-              icon: <Upload className="w-10 h-10 text-yellow-500 mx-auto mb-4" />,
-              title: "Easy Upload",
-              desc: "Seamlessly upload and organize learning materials in your college hub.",
-            },
-            {
-              icon: <Users className="w-10 h-10 text-green-600 mx-auto mb-4" />,
-              title: "College Network",
-              desc: "Connect with peers and faculty from your college’s SkillHub community.",
-            },
-            {
-              icon: <Trophy className="w-10 h-10 text-red-500 mx-auto mb-4" />,
-              title: "Leaderboards",
-              desc: "Compete with colleges and students regionally to earn recognition.",
-            },
-            {
-              icon: <Layers className="w-10 h-10 text-indigo-600 mx-auto mb-4" />,
-              title: "Centralized Access",
-              desc: "One place for every college resource, accessible anytime.",
-            },
-          ].map((feature, i) => (
+          {features.map((feature, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -159,36 +112,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Final CTA */}
       <section className="py-20 px-6 md:px-20 bg-white text-center">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl font-bold mb-4"
+        >
+          Start Your SkillHub Journey{" "}
+          <span className="line-through text-xl">Later</span> <span className="text-blue-700">Now</span>
+        </motion.h2>
+        <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
+          Upload materials, learn from peers, and rise on the leaderboard
+          &minus; build your academic community today.
+        </p>
+        <Button
+          asChild
+          className="bg-yellow-400 text-black hover:bg-yellow-500 px-8 py-3 text-lg rounded-lg shadow-lg"
+        >
+          <Link href="/auth">Join Now</Link>
+        </Button>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="pb-20 px-6 md:px-20 bg-white text-center">
         <motion.h2
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-4xl font-bold text-gray-800 mb-12"
+          className="text-4xl font-bold text-gray-800 mb-12 underline underline-offset-8"
         >
-          What Students Say
+          What Students Say?
         </motion.h2>
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[
-            {
-              text: "SkillHub helped us organize all our study resources in one place!",
-              name: "Aditi Sharma",
-              college: "B.Tech 2nd Year",
-              color: "border-blue-600",
-            },
-            {
-              text: "I love the leaderboard — it keeps me motivated to upload and learn.",
-              name: "Rajesh Patel",
-              college: "B.Tech 3rd Year",
-              color: "border-yellow-400",
-            },
-            {
-              text: "Finally, a platform where students can actually collaborate effectively.",
-              name: "Sneha Verma",
-              college: "CS Student",
-              color: "border-green-500",
-            },
-          ].map((t, i) => (
+          {reviews.map((t, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
@@ -205,26 +161,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="text-center py-20 bg-gradient-to-r from-blue-700 to-blue-500 text-white">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold mb-4"
-        >
-          Start Your SkillHub Journey
-        </motion.h2>
-        <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-          Upload materials, learn from peers, and rise on the leaderboard —
-          build your academic community today.
-        </p>
-        <Button
-          asChild
-          className="bg-yellow-400 text-black hover:bg-yellow-500 px-8 py-3 text-lg rounded-lg shadow-lg"
-        >
-          <Link href="/auth">Join Now</Link>
-        </Button>
-      </section>
+      {/* FAQ Section */}
+      <FAQPage />
     </div>
   );
 }

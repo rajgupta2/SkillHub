@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { Material } from "@/components/FilesPreview";
+import { Material } from "@/types/types";
 
 export async function getMaterial(id: string): Promise<Material> {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material/${id}`);

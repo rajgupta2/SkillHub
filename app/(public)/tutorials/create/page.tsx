@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PlusCircle, BookOpen } from "lucide-react";
-import slugify from "slugify";
-import { UICourse } from "@/lib/courseSchema";
-
-
+import { generateLinkSlug } from "@/lib/slugify";
 
 export default function CreateCoursePage() {
   const router = useRouter();
@@ -51,11 +48,12 @@ export default function CreateCoursePage() {
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean)
-      .map((title,ind) => ({
-        linkId: slugify(title),
+      .map((title, ind) => ({
+        linkId: generateLinkSlug(title),
         title,
-        order:ind
-    }));
+        order: ind,
+        slug: generateLinkSlug(title),
+      }));
 
    await saveCourse({
       title:courseName,

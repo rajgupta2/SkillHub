@@ -1,10 +1,10 @@
 "use client";
 
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, Tags} from "lucide-react";
+import { Upload} from "lucide-react";
 import { PartialBlock } from "@blocknote/core";
 import { Save } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -14,7 +14,7 @@ const Editor = dynamic(() => import("./Editor"), {
   ssr: false,
 });
 import { convertBlockNoteToHTML } from "./blocknoteToHtml";
-import { ArticleSchema } from "./schema";
+import { ArticleSchema } from "@/types/types";
 import { redirect } from "next/navigation";
 
 export default function CreateContent({article}:{

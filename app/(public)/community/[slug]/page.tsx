@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation";
-import { getArticleBySlug } from "@/components/article/getArticle";
-import { buildArticleMetadata } from "@/components/article/seo";
-import ArticleRenderer from "@/components/article/ArticleRenderer";
+import { getArticleBySlug } from "./getArticle";
+import { buildArticleMetadata } from "./seo";
+import ArticleRenderer from "./ArticleRenderer";
 import { cookies } from "next/headers";
 
 type PageProps = {

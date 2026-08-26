@@ -246,7 +246,7 @@ export default function ContactPage() {
       </section>
 
       {/* CTA */}
-      <section className="text-center py-20 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
+      <section className="text-center py-20 ">
         <h2 className="text-3xl font-bold mb-4">We&apos;d Love to Collaborate</h2>
         <p className="text-lg opacity-90 mb-6 max-w-2xl mx-auto">
           Whether you&apos;re a college looking to join or a student with ideas —

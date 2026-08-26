@@ -13,7 +13,7 @@ export default function FAQPage() {
   const faqs = [
     {
       q: "What is SkillHub?",
-      a: "SkillHub is a digital platform that connects students and colleges through shared study materials, challenges, and performance tracking. Each college gets its own digital portal with access to resources and leaderboards.",
+      a: "SkillHub is a digital platform that connects students through shared study materials, tutorials, challenges, and performance tracking. For each college, there is an own digital portal with access to resources and leaderboards.",
     },
     // {
     //   q: "How can I register my college?",
@@ -21,19 +21,19 @@ export default function FAQPage() {
     // },
     {
       q: "Is SkillHub free for students?",
-      a: "Yes! SkillHub is completely free for students to join, upload materials, participate in challenges, and track their growth.",
+      a: "Yes! SkillHub is completely free for students to join, upload materials, share tutorials, and participate in community.",
+    },
+    // {
+    //   q: "How can institutes track student performance?",
+    //   a: "Colleges get access to analytics dashboards that display engagement metrics, uploads, and leaderboard rankings for their students.",
+    // },
+    {
+      q: "Can I collaborate or partner with SkillHub?",
+      a: "Yes! We welcome collaboration with creators, educators, and organizations. Reach out to us through the Contact page.",
     },
     {
       q: "How do I earn XP points?",
-      a: "You earn XP by uploading verified study materials, completing challenges, and participating in events organized through SkillHub.",
-    },
-    {
-      q: "How can institutes track student performance?",
-      a: "Colleges get access to analytics dashboards that display engagement metrics, uploads, and leaderboard rankings for their students.",
-    },
-    {
-      q: "Can I collaborate or partner with SkillHub?",
-      a: "Yes! We welcome collaboration with institutions, educators, and organizations. Reach out to us through the Contact page.",
+      a: "You earn XP by uploading study materials, sharing articles, blogs, and tutorials, and participating in events organized through SkillHub.",
     },
   ];
 
@@ -46,38 +46,38 @@ export default function FAQPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-
-      {/* Header */}
-      <section className="text-center py-20 bg-gradient-to-r from-blue-700 to-blue-500 text-white">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-5xl font-bold mb-4"
-        >
-          Help & FAQs
-        </motion.h1>
-        <p className="text-lg opacity-90 max-w-2xl mx-auto">
-          Find answers to common questions and learn how to make the most of SkillHub.
-        </p>
-      </section>
-
-      {/* Search Bar */}
-      <div className="flex justify-center mt-10 px-6">
-        <div className="flex items-center bg-white shadow rounded-lg w-full md:w-1/2 p-3">
-          <Search className="text-gray-500 w-5 h-5 mr-2" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search FAQs..."
-            className="w-full outline-none text-gray-700"
-          />
-        </div>
-      </div>
-
+    <div className="py-20 bg-gradient-to-b from-blue-100 to-blue-50">
       {/* FAQ List */}
-      <main className="flex-1 py-16 px-6 md:px-20">
+      <main className="pb-20 px-6 md:px-20">
+        {/* Header */}
+        <section className="text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl font-bold mb-4"
+          >
+            Frequently Asked Questions
+          </motion.h1>
+          <p className="text-lg opacity-90 max-w-2xl mx-auto">
+            Find answers to common questions and learn how to make the most of
+            SkillHub.
+          </p>
+        </section>
+
+        {/* Search Bar */}
+        <div className="flex justify-center my-10">
+          <div className="flex items-center bg-white shadow rounded-lg w-full md:w-1/2 p-3">
+            <Search className="text-gray-500 w-5 h-5 mr-2" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search FAQs..."
+              className="w-full outline-none text-gray-700"
+            />
+          </div>
+        </div>
+
         {filteredFaqs.length > 0 ? (
           <div className="max-w-3xl mx-auto space-y-6">
             {filteredFaqs.map((faq, index) => (
@@ -126,9 +126,8 @@ export default function FAQPage() {
       </main>
 
       {/* Help Contact Section */}
-      <section className="text-center py-20 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
-        <HelpCircle className="w-12 h-12 mx-auto mb-4 text-yellow-300" />
-        <h2 className="text-3xl font-bold mb-4">Still Have Questions?</h2>
+      <section className="text-center py-12 ">
+        <h2 className="text-4xl font-bold mb-4">Still Have Questions?</h2>
         <p className="text-lg opacity-90 mb-6 max-w-2xl mx-auto">
           Our support team is here to help. Reach out anytime for assistance.
         </p>

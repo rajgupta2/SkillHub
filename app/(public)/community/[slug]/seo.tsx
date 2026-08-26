@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArticleSchema } from "./schema";
+import { ArticleSchema } from "@/types/types";
 
 export function buildArticleMetadata(article: ArticleSchema): Metadata {
   if (!article) return {};

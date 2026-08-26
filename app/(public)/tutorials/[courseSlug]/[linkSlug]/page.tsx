@@ -1,11 +1,8 @@
 import { Metadata } from "next";
-import { generateCourseSlug } from "@/components/slugify";
 import Tutorial from "./Tutorial";
 import { cookies } from "next/headers";
 import CourseProvider from "../CourseProvider";
-import { convertBlockNoteToHTML } from "@/components/article/blocknoteToHtml";
-import type {  PartialBlock } from "@blocknote/core";
-import { UICourse } from "@/lib/courseSchema";
+import { UICourse } from "@/types/types";
 
 export async function generateMetadata({
     params,
@@ -19,7 +16,7 @@ export async function generateMetadata({
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`);
   let course:UICourse | null=null;
   if(res.status===200) course=await res.json();
-  const tutorial= course?.links.find((l:any)=>generateCourseSlug(l.title)===linkSlug);
+  const tutorial= course?.links.find((l:any)=>l.slug===linkSlug);
 
   if (!course || !tutorial) {
     return {

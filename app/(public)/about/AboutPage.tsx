@@ -211,7 +211,7 @@ export default function AboutPage() {
         */
       }
       {/* CTA Section */}
-      <section className="text-center py-20 bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+      <section className="text-center py-20">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

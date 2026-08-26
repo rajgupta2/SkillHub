@@ -1,6 +1,8 @@
 "use server"
 import { GET } from "@/app/api/find-token/route";
 import College from "./College";
+import Link from "next/link";
+import { Material } from "@/types/types";
 
 async function getCollege(){
   const tokenRes = await GET();
@@ -90,9 +92,6 @@ export async function generateMetadata() {
     },
   };
 }
-
-import { Material } from "@/components/FilesPreview";
-import Link from "next/link";
 
 export default async function Page(){
   const tokenRes = await GET();

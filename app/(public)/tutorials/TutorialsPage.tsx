@@ -2,8 +2,7 @@
 
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { UICourse } from "@/lib/courseSchema";
-import { generateCourseSlug } from "@/components/slugify";
+import { UICourse } from "@/types/types";
 
 export default function CoursesPage({courses}:{courses:UICourse[]}) {
 
@@ -32,7 +31,7 @@ export default function CoursesPage({courses}:{courses:UICourse[]}) {
               href={
                 course.status === "draft"
                   ? `/tutorials/${course.slug}`
-                  : `/tutorials/${course.slug}/${generateCourseSlug(course.links[0].title)}`
+                  : `/tutorials/${course.slug}/${course.links[0].slug}`
               }
               className="group relative flex flex-col items-center justify-center
               rounded-2xl border border-blue-600

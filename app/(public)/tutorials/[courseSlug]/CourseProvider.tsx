@@ -1,24 +1,19 @@
 "use client";
 
-import { notFound, usePathname,useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState,useEffect } from "react";
 import {
   Menu,
   X,
-  GraduationCap,
-  Plus,
   Delete,
   Edit,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AddSidebarItem } from "./AddSidebarItem";
-import type {  PartialBlock } from "@blocknote/core";
 import { CourseContext, useCourse } from "./CourseContext";
-import { generateCourseSlug } from "@/components/slugify";
-import { UICourse } from "@/lib/courseSchema";
-import slugify from "slugify";
+import { generateLinkSlug } from "@/lib/slugify";
+import { UICourse } from "@/types/types";
 
 export default function CourseProvider({
   children,
@@ -116,11 +111,12 @@ export function CoursePage({
   }
   async function addLinkToCourse(linkName: string) {
     try{
-      const link={
-        linkId: generateCourseSlug(linkName),
+      const link = {
+        linkId: generateLinkSlug(linkName),
         title: linkName,
         order: course!.links.length,
-      }
+        slug: generateLinkSlug(linkName),
+      };
       if (!course || !links) return;
       const updatedCourse = {
         ...course,
@@ -196,7 +192,7 @@ export function CoursePage({
         {/* Sidebar Links */}
         <nav className=" max-h-[90vh] overflow-y-auto overflow-x-auto px-4">
           {links.map((link: any) => {
-            const isActive = linkSlug === generateCourseSlug(link.title);
+            const isActive = linkSlug === link.slug;
             return (
               <div
                 key={link.order}
@@ -209,7 +205,7 @@ export function CoursePage({
                 <Link
                   key={link.linkId}
                   title={link.title}
-                  href={`/tutorials/${course!.slug}/${generateCourseSlug(link.title)}`}
+                  href={`/tutorials/${course!.slug}/${link.slug}`}
                   className={` px-3 py-2 rounded-lg transition truncate`}
                 >
                   {/* Left: Title */}
@@ -220,7 +216,7 @@ export function CoursePage({
                   {/* Right: edit box */}
                   {isCourseOwner && (
                     <Link
-                      href={`/tutorials/${courseSlug}/${generateCourseSlug(link.title)}?isEditable=true`}
+                      href={`/tutorials/${courseSlug}/${link.slug}?isEditable=true`}
                       className="
                     flex md:hidden
                     group-hover:flex

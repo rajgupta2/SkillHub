@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import MaterialPage from "./Materials";
-import { Material } from "@/components/FilesPreview";
+import { Material } from "@/types/types";
 
 export const metadata:Metadata = {
   title: "SkillHub – Student Materials, Projects, PYQs & Notes",

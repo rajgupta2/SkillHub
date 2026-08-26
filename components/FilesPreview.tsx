@@ -1,12 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { FileIcon, Eye, Loader2, X, Share2, Download } from "lucide-react";
 import { motion } from "framer-motion";
-import { formateDate } from "@/components/formateDate";
+import { formateDate } from "@/lib/formateDate";
 import Link from "next/link";
-import { generateCourseSlug } from "./slugify";
-
+import { generateLinkSlug } from "@/lib/slugify";
+import { Material, S3File } from "@/types/types";
 
 const handleShare = async (url:string,title:string) => {
 
@@ -26,29 +25,6 @@ const handleShare = async (url:string,title:string) => {
   }
 };
 
-interface S3File {
-    id: number;
-    originalName: string;
-    s3Key:string;
-    url: string;
-    contentType: string;
-    materialId: number;
-}
-export interface Material {
-  id: number;
-  title: string;
-  subject: string;
-  type: string;
-  description: string;
-  uploadedBy: {
-    name: string;
-    email?: string;
-  };
-  createdAt: string;
-  files:S3File[];
-  studentId: string | null;
-  collegeId: number | null;
-}
 const getPreviewElement = (url:string,height?:string) => {
   //const url = previewUrls[file.id]; //for presigned url
   if (!url) return null;
@@ -140,7 +116,7 @@ export default function FilesPreview({
   onClose: () => void;
 }) {
 
-  const title=generateCourseSlug(material.title);
+  const title=generateLinkSlug(material.title);
   const pathname=usePathname();
   return (
     <div className="p-6 relative">
@@ -198,7 +174,7 @@ export default function FilesPreview({
             </p>
             <div className="flex gap-4 text-blue-600 mt-3">
               <Link
-                href={`/resources/${generateCourseSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}`}
+                href={`/resources/${generateLinkSlug(material.title)}/${material.id}/file?fileurl=${encodeURIComponent(file.url)}`}
                 className="flex items-center gap-2 text-sm cursor-pointer"
               >
                 <Eye className="w-4 h-4" /> Open

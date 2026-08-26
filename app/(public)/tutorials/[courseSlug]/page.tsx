@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 import PublishPage from "./Publish";
 import CourseProvider from "./CourseProvider";
-import { generateCourseSlug } from "@/components/slugify";
 import type { Metadata } from "next";
-import { UICourse } from "@/lib/courseSchema";
+import { UICourse } from "@/types/types";
 
 export async function generateMetadata({
     params,
@@ -44,7 +43,7 @@ export async function generateMetadata({
     "SkillHub",
   ].filter(Boolean);
 
-  const linkSlug=generateCourseSlug(course.links[0].title);
+  const linkSlug=course.links[0].slug;
 
   return {
     title: `${course.title}`,

@@ -5,14 +5,12 @@ import {
   Mail,
   Lock,
   User,
-  GraduationCap,
-  Building2,
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
-import { UserProfile,College,Course } from "@/app/student/account/page";
+import { College, Course } from "@/types/types";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register" | "otp">("register");

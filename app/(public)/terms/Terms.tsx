@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-20 bg-gradient-to-r from-blue-700 to-blue-500 text-center text-white">
+      <section className="py-16 text-center">
         <ShieldCheck className="w-16 h-16 mx-auto mb-4 text-yellow-400" />
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -22,7 +22,7 @@ export default function TermsPage() {
       </section>
 
       {/* Main Content */}
-      <main className="flex-1 py-16 px-6 md:px-20">
+      <main className="flex-1 pb-16 px-6 md:px-20">
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10 border border-blue-100 leading-relaxed text-gray-700">
           {/* Terms of Service */}
           <section className="mb-12">

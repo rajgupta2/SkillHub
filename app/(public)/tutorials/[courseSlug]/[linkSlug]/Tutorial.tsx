@@ -10,11 +10,10 @@ import { useEffect, useState } from "react";
 import type { PartialBlock } from "@blocknote/core";
 import { useParams } from "next/navigation";
 import { useCourse } from "../CourseContext";
-import { generateCourseSlug } from "@/components/slugify";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { UICourse } from "@/lib/courseSchema";
+import { UICourse } from "@/types/types";
 import { useRouter } from "next/navigation";
 const Editor = dynamic(() => import("./Editor"), {
   ssr: false,
@@ -62,7 +61,7 @@ export default function Tutorial() {
     isOwner();
   },[course]);
 
-  let link = course?.links.find((l:any) => generateCourseSlug(l.title) === linkSlug);
+  let link = course?.links.find((l:any) => l.slug === linkSlug);
   const [content, setContent] = useState< PartialBlock[]>(link?.content ?? [{ type: "heading", content: ["Start Typing..."]}]);
   const nextLinkCollection = course?.links.filter(
     (l: any) => l.order === (link?.order ?? 0) + 1
@@ -92,7 +91,7 @@ export default function Tutorial() {
 
   async function updateLinkContent() {
     const updatedLinks = course!.links.map(link => {
-      const slug = generateCourseSlug(link.title);
+      const slug = link.slug;
 
       if (slug === linkSlug) {
         link.content=content;
@@ -113,7 +112,7 @@ export default function Tutorial() {
   }
 
   useEffect(()=>{
-    let link = course!.links.find((l:any) => generateCourseSlug(l.title) === linkSlug);
+    let link = course!.links.find((l:any) => l.slug === linkSlug);
     if (link?.content) {
       setContent(link.content);
       setEditorKey((k) => k + 1);
@@ -151,7 +150,7 @@ export default function Tutorial() {
       nextLink && (
       <div className={`flex justify-end ${isEditable && "mt-4"}`}>
         <Link
-          href={`/tutorials/${course?.slug}/${generateCourseSlug(nextLink.title)}`}
+          href={`/tutorials/${course?.slug}/${nextLink.slug}`}
           className="
             group inline-flex items-center gap-2 mx-6
             rounded-lg px-4 py-2

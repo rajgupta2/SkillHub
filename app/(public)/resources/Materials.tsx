@@ -1,9 +1,6 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ResourcesPage } from "@/components/ResourcesPage";
-import { Material } from "@/components/FilesPreview";
+import { Material } from "@/types/types";
 import ContributePopup from "./Alert";
 import { useState,useEffect } from "react";
 

@@ -1,16 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter,useSearchParams } from "next/navigation";
-import {
-  BookOpen,
-  ChevronRight,
-  Plus,
-  Layers,
-} from "lucide-react";
-import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCourse } from "./CourseContext";
-import { generateCourseSlug } from "@/components/slugify";
 
 export default function PublishPage() {
   const router = useRouter();
@@ -115,7 +107,7 @@ export default function PublishPage() {
           <button
             className="rounded-xl border px-8 py-4 font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
             onClick={() => router.push(
-            `/tutorials/${course?.slug}/${generateCourseSlug(course?.links[0].title || "")}`
+            `/tutorials/${course?.slug}/${course?.links[0].slug || ""}`
             )}
           >
             Continue Editing

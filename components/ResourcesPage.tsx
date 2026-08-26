@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FileText, Eye, Download, Filter, Search, Building2, Users, Share2 } from "lucide-react";
+import { FileText, Eye, Download, Filter, Search, Building2, Users, Share2, Calendar } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { formateDate } from "./formateDate";
+import { formateDate } from "@/lib/formateDate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { generateCourseSlug } from "./slugify";
-import { Material } from "./FilesPreview";
+import { generateLinkSlug } from "@/lib/slugify";
+import { Material } from "@/types/types";
 
 const handleShare = async (url:string) => {
 
@@ -32,7 +32,7 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
 
-    // ✅ Filter + Search logic
+    // Filter + Search logic
   const filteredResources = materials.filter((r) => {
     const matchesFilter = filter === "All" || r.type === filter;
     const matchesSearch =
@@ -48,9 +48,9 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
     <div className="pt-8 bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between gap-4 px-4 md:px-10">
-       {/* Filter Section */}
+        {/* Filter Section */}
         <div className="flex gap-3 flex-wrap justify-center">
-          { filterTypes.map((type) => (
+          {filterTypes.map((type) => (
             <Button
               key={type}
               onClick={() => setFilter(type)}
@@ -64,7 +64,7 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
             </Button>
           ))}
         </div>
-          {/* Search + Share Container */}
+        {/* Search + Share Container */}
         <div className="w-full md:w-auto flex flex-row items-center justify-center gap-3">
           <div className="relative w-90 mt-4 md:mt-0">
             <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
@@ -79,7 +79,9 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
 
           {/* Share button – small & inline on mobile */}
           <button
-            onClick={()=>{handleShare(window.location.href)}}
+            onClick={() => {
+              handleShare(window.location.href);
+            }}
             className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
                       rounded-md hover:bg-blue-700 transition shadow-sm md:mt-0
                       w-fit text-sm mt-4"
@@ -91,61 +93,65 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
       </div>
 
       {/* Scrollable Materials Section */}
-      <main className={`px-8 md:px-16 py-10 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}>
-        {
-        filteredResources.length === 0 ? (
+      <main
+        className={`px-8 md:px-16 py-10 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-blue-100`}
+      >
+        {filteredResources.length === 0 ? (
           <div className="col-span-full text-center py-10 text-gray-500">
             <FileText className="w-12 h-12 mx-auto mb-3 text-gray-400" />
             <p>No resources found. Try searching something else.</p>
           </div>
         ) : (
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6`}>
-            {
-              filteredResources.map((resource) => (
-                <motion.div
-                    key={resource.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className=" flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg p-6 border border-blue-100"
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6`}
+          >
+            {filteredResources.map((resource) => (
+              <motion.div
+                key={resource.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className=" flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg p-6 border border-blue-100"
+              >
+                <div className="flex items-center justify-between">
+                  <FileText className="w-8 h-8 text-blue-600" />
+                  <span
+                    className={`text-sm px-3 py-1 rounded-full ${
+                      resource.type === "Notes"
+                        ? "bg-green-100 text-green-700"
+                        : resource.type === "Assignment"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-purple-100 text-purple-700"
+                    }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <FileText className="w-8 h-8 text-blue-600" />
-                      <span
-                        className={`text-sm px-3 py-1 rounded-full ${
-                          resource.type === "Notes"
-                            ? "bg-green-100 text-green-700"
-                            : resource.type === "Assignment"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-purple-100 text-purple-700"
-                        }`}
-                      >
-                        {resource.type}
-                      </span>
-                    </div>
+                    {resource.type}
+                  </span>
+                </div>
 
-                    <h3 className="text-xl font-semibold mt-4 text-gray-800">
-                      {resource.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm mt-1">{resource.subject}</p>
-                    <p className="text-gray-600 text-sm mt-3">
-                      Uploaded by <span className="font-medium">{resource.uploadedBy.name}</span>
-                    </p>
-                    <p className="text-gray-400 text-xs mt-1">
-                      📅 {formateDate(resource.createdAt)}
-                    </p>
-                    <div className="flex justify-end mt-auto">
-                     <Link
-                      href={`/resources/${generateCourseSlug(resource.title)}/${resource.id}`}
-                      >
-                        <Button className=" bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer">
-                          <Eye className="w-4 h-4" /> View
-                        </Button>
-                      </Link>
-                    </div>
-                  </motion.div>
-              )
-            )}
+                <h3 className="text-xl font-semibold mt-4 text-gray-800">
+                  {resource.title}
+                </h3>
+                <p className="text-gray-500 text-sm mt-1">{resource.subject}</p>
+                <p className="text-gray-600 text-sm mt-3">
+                  Uploaded by{" "}
+                  <span className="font-medium">
+                    {resource.uploadedBy.name}
+                  </span>
+                </p>
+                <span className="flex text-gray-400 text-xs mt-1">
+                  <Calendar className="w-4 h-4 mr-2" /> {formateDate(resource.createdAt)}
+                </span>
+                <div className="flex justify-end mt-auto">
+                  <Link
+                    href={`/resources/${generateLinkSlug(resource.title)}/${resource.id}`}
+                  >
+                    <Button className=" bg-blue-600 text-white hover:bg-blue-700 flex items-center gap-2 cursor-pointer">
+                      <Eye className="w-4 h-4" /> View
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
           </div>
         )}
       </main>

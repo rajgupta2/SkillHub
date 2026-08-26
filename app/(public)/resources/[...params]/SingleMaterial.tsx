@@ -1,11 +1,7 @@
 "use client";
-
-import { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import FilesPreview from "@/components/FilesPreview";
-import { SingleFilePreview } from "@/components/FilesPreview";
-import { generateCourseSlug } from "@/components/slugify";
-import { Material } from "@/components/FilesPreview";
+import FilesPreview,{ SingleFilePreview } from "@/components/FilesPreview";
+import { Material } from "@/types/types";
 
 export default function SingleMaterialPage({material}:{material:Material}) {
   const { params } = useParams<{ params: string[] }>();

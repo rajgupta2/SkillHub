@@ -1,7 +1,6 @@
 
 import { Metadata } from "next";
-import ArticlesList from "@/components/article/ArticleListRender";
-import { cookies } from "next/headers";
+import ArticlesList from "./ArticleListRender";
 
 export async function generateMetadata(): Promise<Metadata> {
 
@@ -56,5 +55,5 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page(){
   const res =await fetch(`${process.env.NEXT_PUBLIC_API_URL}/article`);
   const data = await res.json();
-  return <ArticlesList articles={data.articles} isStudentZone={false}/>
+  return <ArticlesList articles={data.articles}/>
 }

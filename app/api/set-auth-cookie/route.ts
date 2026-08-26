@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const { token, name, role } = await req.json();
-
   const res = NextResponse.json({ success: true });
-
   const isProd = process.env.NODE_ENV === "production";
 
   // Token cookie
