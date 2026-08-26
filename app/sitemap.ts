@@ -2,10 +2,9 @@ import { MetadataRoute } from "next";
 import { generateCourseSlug } from "@/components/slugify";
 import { ArticleSchema } from "@/components/article/schema";
 
-const baseUrl = "https://skillhub-student.vercel.app";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 async function courseURL() {
-  const baseUrl = "https://skillhub-student.vercel.app";
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses`);
   if (!res.ok) return [];
   let courses = await res.json();
@@ -34,7 +33,6 @@ async function articleURL() {
 }
 
 async function materialLinks(){
-  const baseUrl = "https://skillhub-student.vercel.app";
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/material?limit=150`);
   if (!res.ok) return [];
   let data = await res.json();
@@ -49,7 +47,6 @@ async function materialLinks(){
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap>{
-  const baseUrl = "https://skillhub-student.vercel.app";
   const courseLinks = await courseURL();
   const materialLink=await materialLinks();
   const articleLinks=await articleURL();
@@ -69,13 +66,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap>{
     { url: `${baseUrl}/about`, lastModified: new Date(), priority: 0.9 },
     { url: `${baseUrl}/community`, lastModified: new Date(), priority: 0.9 },
     { url: `${baseUrl}/resources`, lastModified: new Date(), priority: 0.9 },
-    { url: `${baseUrl}/course`, lastModified: new Date(), priority: 0.9 },
+    { url: `${baseUrl}/tutorials`, lastModified: new Date(), priority: 0.9 },
 
     { url: `${baseUrl}/contact`, lastModified: new Date(), priority: 0.8 },
     { url: `${baseUrl}/faq`, lastModified: new Date(), priority: 0.8 },
 
 
     // Auth pages
-    { url: `${baseUrl}/auth/`, lastModified: new Date(), priority: 0.6 },
+    { url: `${baseUrl}/auth/`, lastModified: new Date(), priority: 0.8 },
   ];
 }
