@@ -5,13 +5,6 @@ export const metadata:Metadata = {
   title: "Account Access – Login or Register | SkillHub",
   description:
     "Login or create your SkillHub account to access study materials, achievements, events, and resources.",
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    noarchive: true,
-    nosnippet: true,
-  },
   openGraph: {
     title: "Account Access – SkillHub",
     description:

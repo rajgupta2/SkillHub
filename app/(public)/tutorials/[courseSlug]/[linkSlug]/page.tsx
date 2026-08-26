@@ -25,15 +25,6 @@ export async function generateMetadata({
     return {
       title: "SkillHub Tutorial",
       description: "This tutorial is not published or no longer available on server.",
-      robots: {
-        index: false,
-        follow: false,
-        nocache: true,
-        googleBot: {
-          index: false,
-          follow: false,
-        },
-      },
     };
   }
 

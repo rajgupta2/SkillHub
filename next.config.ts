@@ -6,18 +6,18 @@ const nextConfig: NextConfig = {
       {
         source: "/materials",
         destination: "/resources",
-        permanent: true, // 308 redirect
+        permanent: true, // redirect
       },
       {
         source: "/materials/:slug/:id",
         destination: "/resources/:slug/:id",
-        permanent: true, // 301 redirect
+        permanent: true, // redirect
       },
       {
-        source: "/courses/:slug/:id",
+        source: "/course/:slug/:id",
         destination: "/tutorials/:slug/:id",
-        permanent: true, // 301 redirect
-      }
+        permanent: true, // redirect
+      },
     ];
   },
 };
