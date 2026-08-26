@@ -14,6 +14,16 @@ const nextConfig: NextConfig = {
         permanent: true, // redirect
       },
       {
+        source: "/course",
+        destination: "/tutorials",
+        permanent: true, // redirect
+      },
+      {
+        source: "/course/:slug",
+        destination: "/tutorials/:slug",
+        permanent: true, // redirect
+      },
+      {
         source: "/course/:slug/:id",
         destination: "/tutorials/:slug/:id",
         permanent: true, // redirect
