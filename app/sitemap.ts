@@ -1,21 +1,29 @@
 import { MetadataRoute } from "next";
 import { generateLinkSlug } from "@/lib/slugify";
-import { ArticleSchema } from "@/types/types";
+import { ArticleSchema, UICourse, Tutorial } from "@/types/types";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 async function courseURL() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses`);
   if (!res.ok) return [];
-  let courses = await res.json();
-  courses=Array.isArray(courses)?courses:[];
-  const courseLinks = courses.flatMap((course: any) =>
-    course.links.map((l: any) => ({
-      url: `${baseUrl}/tutorials/${course.slug}/${l.slug}`,
-      lastModified: new Date(course.updatedAt),
-    }))
-  );
-  return courseLinks;
+
+  const courses = await res.json();
+  const courseURL: any = [];
+
+  courses.forEach(async (c:UICourse) => {
+    const res2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${c.slug}`);
+    if (!res2.ok) return;
+    const tutorials=await res2.json();
+    tutorials.links.forEach( (t : Tutorial) => {
+      const link={
+        url: `${baseUrl}/tutorials/${c.slug}/${t.slug}`,
+        lastModified: new Date(t.updatedAt),
+      }
+      courseURL.push(link);
+    });
+  });
+  return courseURL;
 }
 
 async function articleURL() {
