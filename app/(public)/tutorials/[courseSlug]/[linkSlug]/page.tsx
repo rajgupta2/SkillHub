@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import CourseProvider from "../CourseProvider";
 import { Tutorial as TutorialType, UICourse } from "@/types/types";
 import { notFound } from "next/navigation";
+import Unauthorized from "@/app/(public)/unauthorized/page";
 
 export async function generateMetadata({
     params,
@@ -32,6 +33,7 @@ export async function generateMetadata({
      `${process.env.NEXT_PUBLIC_API_URL}/tutorial/${courseSlug}/${linkSlug}`,
    );
   }
+  if(res.status!==200) return {};
   const data=await res.json();
   const tutorial: TutorialType = data.tutorial;
 
@@ -105,7 +107,15 @@ export default async function Page({params}:{
 
   return (
     <CourseProvider serverCourse={course}>
-      <Tutorial t={data.tutorial} statusCode={res.status} isTutorialOwner={data.isTutorialOwner}/>
+      {res.status === 401 ? (
+        <Unauthorized/>
+      ) : (
+        <Tutorial
+          t={data.tutorial}
+          statusCode={res.status}
+          isTutorialOwner={data.isTutorialOwner}
+        />
+      )}
     </CourseProvider>
   );
 }

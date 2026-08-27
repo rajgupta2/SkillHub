@@ -135,16 +135,17 @@ export default function Tutorial({
           </Button>
         )}
 
-        <Button
-          onClick={() => {
-            deleteTutorial();
-          }}
-          className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
-          title="Delete"
-        >
-          <Trash />
-        </Button>
-
+        {isTutorialOwner && (
+          <Button
+            onClick={() => {
+              deleteTutorial();
+            }}
+            className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+            title="Delete"
+          >
+            <Trash />
+          </Button>
+        )}
       </div>
 
       <Editor
