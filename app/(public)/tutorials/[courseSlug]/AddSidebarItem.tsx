@@ -9,7 +9,7 @@ export function AddSidebarItem({set_Links}:{  set_Links:(linkName:string)=>void 
   return (
     <div className="w-full">
       {/* PLUS BUTTON */}
-      {!showInput && (
+      {showInput===false && (
         <button
           title="Add new link"
           className="flex items-center justify-end gap-2 mb-4 w-full px-3 py-2 rounded-lg

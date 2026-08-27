@@ -1,41 +1,30 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useState,useEffect } from "react";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import {
   Menu,
   X,
-  Delete,
-  Edit,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AddSidebarItem } from "./AddSidebarItem";
 import { CourseContext, useCourse } from "./CourseContext";
-import { generateLinkSlug } from "@/lib/slugify";
 import { UICourse } from "@/types/types";
 
 export default function CourseProvider({
   children,
-  isLoggedIn,
   serverCourse
 }: {
   children: React.ReactNode;
-  isLoggedIn:boolean;
   serverCourse:UICourse;
 }){
   const [course, setCourse] = useState<UICourse>(serverCourse);
-  const pathname = usePathname();
-  const segments = pathname.split("/").filter(Boolean);
-  const courseSlug=segments[1];
-  useEffect(() => {
-    localStorage.setItem("isLoggedIn",isLoggedIn?"true":"false");
-  }, [courseSlug]);
-
-  const router=useRouter();
-  if(!course){
+  const router = useRouter();
+  if (!course) {
     router.push("/tutorials");
   }
+
   return (
     <CourseContext.Provider value={{ course, setCourse }}>
       <CoursePage>
@@ -50,117 +39,45 @@ export function CoursePage({
  }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const segments = pathname.split("/").filter(Boolean);
   const {course, setCourse} = useCourse();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [links,setLinks]=useState(course?.links || []);
-  const courseSlug=segments[1];         //act as courseId only for browser stored course!.
-  const linkSlug=segments.length===3 ? segments[2] : "";
-  const [isLoggedIn,setIsLoggedIn]=useState(false);
-  useEffect(()=>{
-    if(course) setLinks(course?.links || []);
-    setIsLoggedIn(localStorage.getItem("isLoggedIn")==="true" ?true :false);
-  },[course])
-
-  const [isCourseOwner,setCourseOwner]=useState<boolean>(false);
-  useEffect(()=>{
-    async function isOwner(){
-      if(isCourseOwner) return;
-      const isLoggedIn=localStorage.getItem("isLoggedIn");
-      if(isLoggedIn!== "true") return;
-
-      const tokenRes = await fetch("/api/find-token", {method: "GET"});
-      const dataToken = await tokenRes.json();
-      const token=dataToken.token;
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/iscourseowner/${course!.slug}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-      const data = await res.json();
-      setCourseOwner(data.isOwner);
-    }
-    isOwner();
-  },[course]);
-
-  async function updateCourse(updatedCourse:UICourse){
-      const tokenRes = await fetch("/api/find-token", {method: "GET"});
-      const dataToken = await tokenRes.json();
-      const token=dataToken.token;
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/courses/${course!._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-          body: JSON.stringify({links:updatedCourse!.links}),
-        }
-      );
-      if (!res.ok) {
-          throw new Error("Failed to update course content");
-      }
+  if(!course){
+    return <p>Course does not found.</p>
   }
+  const courseSlug=course.slug;
+  const param:{courseSlug:string,linkSlug:string}=useParams();
+  const linkSlug=param.linkSlug;
+
+  async function updateCourse(cSlug:string){
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${cSlug}`);
+    const course = await res.json();
+    setCourse(course);
+  }
+
   async function addLinkToCourse(linkName: string) {
     try{
-      const link = {
-        linkId: generateLinkSlug(linkName),
-        title: linkName,
-        order: course!.links.length,
-        slug: generateLinkSlug(linkName),
-      };
-      if (!course || !links) return;
-      const updatedCourse = {
-        ...course,
-        links: [...links, link],
-        status: course!.status
-      };
+      const tokenRes = await fetch("/api/find-token", { method: "GET" });
+      const dataToken = await tokenRes.json();
+      const token = dataToken.token;
+      if (!token) return alert("Please login to make an update.");
 
-      updateCourse(updatedCourse as UICourse);
-      setCourse(updatedCourse as UICourse);
-      return {created:true,link};
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/tutorial/${courseSlug}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title:linkName, status:"draft" }),
+        },
+      );
+      const data=await res.json();
+      if(res.status===500) return alert(data.error);
+      if(res.status===201) await updateCourse(courseSlug);
+      return { created: res.status===201 };
     }catch(error){
       return {created:false,error};
-    }
-  }
-
-  async function deleteLinkFromCourse(linkId: string) {
-  try{
-
-    // Remove out the link to delete
-    const updatedLinks = links.filter(
-      (link: any) => link.linkId !== linkId
-    );
-
-    // Re-order links (VERY IMPORTANT)
-    const reorderedLinks = updatedLinks.map((link, index:number) => ({
-      ...link,
-      order: index,
-    }));
-
-    //  Update course
-    const updatedCourse = {
-      ...course,
-      links: reorderedLinks,
-      status: course!.status
-    };
-
-    //  Save back
-    updateCourse(updatedCourse as UICourse);
-    setCourse(updatedCourse as UICourse);
-
-    return { deleted: true,link:reorderedLinks};
-  } catch (error) {
-      console.error("Delete failed:", error);
-      return { deleted: false, error: "Something went wrong" };
     }
   }
 
@@ -174,13 +91,13 @@ export function CoursePage({
         />
       )}
       <aside
-        className={`fixed md:sticky top-0 left-0 z-20 w-screen md:w-80 h-screen overflow-hidden bg-gradient-to-b
--        from-blue-800 to-blue-600 transition-transform duration-300
+        className={`fixed md:sticky top-0 left-0 z-20 w-screen md:w-80 h-screen overflow-auto bg-gradient-to-b
+        from-blue-800 to-blue-600 transition-transform duration-300
           pt-4 border shadow rounded-r-2xl text-white
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         <div className="flex pl-4 border-b-2 justify-between pb-4 mb-2">
-          <p>{course?.title} Tutorials</p>
+          <p>{course.title} Tutorials</p>
           <button
             onClick={() => setSidebarOpen(false)}
             className="text-white md:hidden px-4 items-end justify-end"
@@ -190,81 +107,29 @@ export function CoursePage({
         </div>
 
         {/* Sidebar Links */}
-        <nav className=" max-h-[90vh] overflow-y-auto overflow-x-auto px-4">
-          {links.map((link: any) => {
+        <nav className="flex flex-col max-h-screen px-4">
+          {course.links.map((link: any) => {
             const isActive = linkSlug === link.slug;
             return (
-              <div
-                key={link.order}
-                className={`group flex items-center justify-between rounded-lg transition ${
-                  isActive
-                    ? "bg-blue-600 font-semibold"
-                    : "hover:bg-blue-600 hover:font-semibold"
-                }`}
-              >
                 <Link
-                  key={link.linkId}
+                  key={link._id}
                   title={link.title}
-                  href={`/tutorials/${course!.slug}/${link.slug}`}
-                  className={` px-3 py-2 rounded-lg transition truncate`}
+                  href={`/tutorials/${course.slug}/${link.slug}`}
+                  className={`px-3 py-2 rounded-lg transition truncate ${
+                    isActive
+                      ? "bg-blue-600 font-semibold"
+                      : "hover:bg-blue-600 hover:font-semibold"
+                  }`}
                 >
-                  {/* Left: Title */}
                   {link.title}
                 </Link>
-
-                <div className="flex items-center justify-end gap-1">
-                  {/* Right: edit box */}
-                  {isCourseOwner && (
-                    <Link
-                      href={`/tutorials/${courseSlug}/${link.slug}?isEditable=true`}
-                      className="
-                    flex md:hidden
-                    group-hover:flex
-                    items-center
-                    justify-between
-                    w-8 h-8
-                    transition
-                  "
-                    >
-                      <Edit className="w-4 h-4 text-white-500" />
-                    </Link>
-                  )}
-
-                  {/* Right: Delete box */}
-                  {isCourseOwner && (
-                    <div
-                      className="
-                    flex md:hidden
-                    group-hover:flex
-                    items-center
-                    justify-between
-                    w-8 h-8
-                    transition
-                  "
-                      onClick={async (e) => {
-                        e.preventDefault(); // prevent navigation
-                        e.stopPropagation();
-                        const wantToDelete = confirm(
-                          `Are You want to delete the page of ${link?.title}`,
-                        );
-                        wantToDelete &&
-                          (await deleteLinkFromCourse(link.linkId));
-                      }}
-                    >
-                      <Delete className="w-5 h-5 text-white-500" />
-                    </div>
-                  )}
-                </div>
-              </div>
             );
           })}
-          {isCourseOwner && (
-            <AddSidebarItem
-              set_Links={async (linkName) => {
-                await addLinkToCourse(linkName);
-              }}
-            />
-          )}
+          <AddSidebarItem
+            set_Links={async (linkName) => {
+              await addLinkToCourse(linkName);
+            }}
+          />
         </nav>
       </aside>
 

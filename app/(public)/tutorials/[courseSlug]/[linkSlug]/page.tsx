@@ -2,7 +2,8 @@ import { Metadata } from "next";
 import Tutorial from "./Tutorial";
 import { cookies } from "next/headers";
 import CourseProvider from "../CourseProvider";
-import { UICourse } from "@/types/types";
+import { Tutorial as TutorialType, UICourse } from "@/types/types";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
     params,
@@ -12,22 +13,30 @@ export async function generateMetadata({
   const parameters=await params;
   const courseSlug=parameters.courseSlug
   const linkSlug=parameters.linkSlug;
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`);
-  let course:UICourse | null=null;
-  if(res.status===200) course=await res.json();
-  const tutorial= course?.links.find((l:any)=>l.slug===linkSlug);
-
-  if (!course || !tutorial) {
-    return {
-      title: "SkillHub Tutorial",
-      description: "This tutorial is not published or no longer available on server.",
-    };
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+  let res;
+  if(token){
+   res = await fetch(
+     `${process.env.NEXT_PUBLIC_API_URL}/tutorial/draft/${courseSlug}/${linkSlug}`,
+     {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+       },
+     },
+   );
+  }else{
+   res = await fetch(
+     `${process.env.NEXT_PUBLIC_API_URL}/tutorial/${courseSlug}/${linkSlug}`,
+   );
   }
+  const data=await res.json();
+  const tutorial: TutorialType = data.tutorial;
 
   const keywords = [
     "SkillHub Tutorial",
-    `${course.title}`,
     `${tutorial.title}`,
     "Last minute tutorial",
     "Fast revision tutorial",
@@ -36,11 +45,11 @@ export async function generateMetadata({
   ].filter(Boolean);
 
   return {
-    title: `${tutorial.title} ${course.title}`,
-    description: tutorial.title,
+    title: tutorial.title,
+    description: tutorial.courseSlug + tutorial.slug,
     keywords,
     openGraph: {
-      title: `${tutorial.title} ${course.title}`,
+      title: tutorial.title,
       description: tutorial.title,
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/course/${courseSlug}/${linkSlug}`,
       siteName: "SkillHub",
@@ -49,14 +58,14 @@ export async function generateMetadata({
           url: `${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`,
           width: 1200,
           height: 630,
-          alt: `${tutorial.title} ${course.title}`
+          alt: tutorial.title
         },
       ],
       type: "article",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${tutorial.title} ${course.title}`,
+      title: tutorial.title,
       description: tutorial.title,
       images: [`${process.env.NEXT_PUBLIC_SITE_URL}/og-image.png`],
     },
@@ -66,35 +75,37 @@ export async function generateMetadata({
 export default async function Page({params}:{
     params:{courseSlug:string;linkSlug:string;};
 }){
-  const cookieStore = await cookies();
-  const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
-
-  const parameters= await params;
+  const parameters = await params;
   const courseSlug = parameters.courseSlug;
-  const linkSlug  = parameters.linkSlug;
+  const linkSlug = parameters.linkSlug;
+  const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-
-  const pathUrl= isLoggedIn ? `draft/courses/${courseSlug}` : `courses/${courseSlug}`;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${pathUrl}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+  let res;
+  if (token) {
+    res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tutorial/draft/${courseSlug}/${linkSlug}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-  });
-
-  if(res.status===401 || res.status===404){
-    const msg=await res.json();
-    return (
-      <p>{msg}</p>
-    )
+    );
+  } else {
+    res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tutorial/${courseSlug}/${linkSlug}`,
+    );
   }
+  const res2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${courseSlug}`);
+  if(res.status===404 || res2.status===404) return notFound();
 
-  let course:UICourse=await res.json();;
+  const data = await res.json();
+  const course: UICourse = await res2.json();
 
   return (
-    <CourseProvider isLoggedIn={isLoggedIn} serverCourse={course}>
-      <Tutorial/>
+    <CourseProvider serverCourse={course}>
+      <Tutorial t={data.tutorial} statusCode={res.status} isTutorialOwner={data.isTutorialOwner}/>
     </CourseProvider>
   );
 }

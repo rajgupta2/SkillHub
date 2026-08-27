@@ -2,18 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { PlusCircle, BookOpen } from "lucide-react";
-import { generateLinkSlug } from "@/lib/slugify";
+import { PlusCircle } from "lucide-react";
 
 export default function CreateCoursePage() {
   const router = useRouter();
-
   const [courseName, setCourseName] = useState("");
   const [courseDescription,setCourseDescription]=useState("");
-  const [linksText, setLinksText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function saveCourse(course:{title:string,description:string,links:any}) {
+  async function saveCourse(title:string,description:string) {
     const tokenRes = await fetch("/api/find-token", {method: "GET"});
     const dataToken = await tokenRes.json();
     const token=dataToken.token;
@@ -24,42 +21,27 @@ export default function CreateCoursePage() {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify(course),
+      body: JSON.stringify({
+        title,
+        description
+      }),
     });
 
     const data = await res.json();
-
-    if (data.published) {
-      alert("Course Published Successfully.");
+    if (data.created) {
+      alert("Course created Successfully.");
     }else{
-      alert("Something went wrong while publishing. Please try again.");
+      alert("Something went wrong while creating. Please try again.");
     }
   }
 
   async function handleCreateCourse() {
-    if (!courseName.trim() || !linksText.trim() || !courseDescription.trim()){
+    if (!courseName.trim() || !courseDescription.trim()){
       alert("Please enter all details.");
       return;
     }
-
     setLoading(true);
-
-    const links = linksText
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean)
-      .map((title, ind) => ({
-        linkId: generateLinkSlug(title),
-        title,
-        order: ind,
-        slug: generateLinkSlug(title),
-      }));
-
-   await saveCourse({
-      title:courseName,
-      description:courseDescription,
-      links
-    });
+    await saveCourse(courseName,courseDescription);
     router.replace("/tutorials");
   }
 
@@ -101,23 +83,6 @@ export default function CreateCoursePage() {
             className="w-full rounded-lg border px-4 py-2
             focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
-        </div>
-
-        {/* Links */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Course Sections (comma separated)
-          </label>
-          <textarea
-            placeholder="Introduction, HTML Basics, CSS, JavaScript"
-            value={linksText}
-            onChange={(e) => setLinksText(e.target.value)}
-            className="w-full min-h-[100px] rounded-lg border px-4 py-2
-            focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-          <p className="text-xs text-gray-400 mt-1">
-            You can edit or add more sections later
-          </p>
         </div>
 
         {/* Button */}

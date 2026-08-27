@@ -35,5 +35,12 @@ export default async function TutorialPage({ params }: PageProps) {
       ;
   const data = await res.json();
   const statusCode=res.status;
-  return <ArticleRenderer article={data.article}  statusCode={statusCode} isContentOwner={data.isContentOwner}/>;
+  if(statusCode===401){
+    return (
+      <div className="flex items-center justify-center min-h-[85vh] text-gray-700">
+        You are unauthorized to access the content;
+      </div>
+    );
+  }
+  return <ArticleRenderer article={data.article} isContentOwner={data.isContentOwner}/>;
 }

@@ -22,17 +22,11 @@ export default function CoursesPage({courses}:{courses:UICourse[]}) {
 
       {/* Courses Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {
-          courses.map((course,ind) => {
-
+        {courses.map((course,ind) => {
           return (
             <Link
               key={ind}
-              href={
-                course.status === "draft"
-                  ? `/tutorials/${course.slug}`
-                  : `/tutorials/${course.slug}/${course.links[0].slug}`
-              }
+              href={`/tutorials/${course.slug}`}
               className="group relative flex flex-col items-center justify-center
               rounded-2xl border border-blue-600
               shadow-xl shadow-blue-50 hover:shadow-2xl
@@ -40,7 +34,6 @@ export default function CoursesPage({courses}:{courses:UICourse[]}) {
               hover:-translate-y-5
               min-h-[220px]"
             >
-
               {/* Content */}
               <div className="px-6 text-center">
                 <h2
@@ -49,16 +42,6 @@ export default function CoursesPage({courses}:{courses:UICourse[]}) {
                 >
                   {course.title}
                 </h2>
-
-                {course.status ==="draft" && (
-                  <span
-                    className={`absolute bottom-4 right-4
-                      px-3 py-1 text-xs font-semibold rounded-full
-                    bg-white/70 backdrop-blur`}
-                  >
-                    {course.status}
-                  </span>
-                )}
               </div>
             </Link>
           );

@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
 import PublishPage from "./Publish";
 import CourseProvider from "./CourseProvider";
 import type { Metadata } from "next";
 import { UICourse } from "@/types/types";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({
     params,
@@ -13,26 +13,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const parameters= await params;
   const courseSlug = parameters.courseSlug;
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/slug/${courseSlug}`);
-  let course:UICourse| null=null;
-  if(res.status===200) course=await res.json();
-
-  if (!course) {
-    return {
-      title: "SkillHub Tutorial",
-      description: "This tutorial is not published or no longer available on server.",
-      robots: {
-        index: false,
-        follow: false,
-        nocache: true,
-        googleBot: {
-          index: false,
-          follow: false,
-        },
-      },
-    };
-  }
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${courseSlug}`);
+  let course:UICourse=await res.json();
 
   const keywords = [
     "SkillHub Tutorial",
@@ -43,16 +25,14 @@ export async function generateMetadata({
     "SkillHub",
   ].filter(Boolean);
 
-  const linkSlug=course.links[0].slug;
-
   return {
-    title: `${course.title}`,
+    title: course.title,
     description: course.description,
     keywords,
     openGraph: {
-      title: `${course.title}`,
+      title: course.title,
       description: course.description,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/course/${courseSlug}/${linkSlug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/course/${courseSlug}`,
       siteName: "SkillHub",
       images: [
         {
@@ -76,29 +56,19 @@ export async function generateMetadata({
 export default async function Page({params}:{
     params:{courseSlug:string};
 }){
-  const cookieStore = await cookies();
-  const isLoggedIn:boolean = cookieStore.get("user")?.value ? true :false;
   const parameters= await params;
   const courseSlug = parameters.courseSlug;
-  const token = cookieStore.get("token")?.value;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/draft/courses/${courseSlug}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${courseSlug}`);
+  if(res.status===404) return notFound();
 
-  if(res.status===401){
-    return (
-      <p>You are unauthorized to access the tutorials.</p>
-    )
+  const course = await res.json();
+  if(res.status===200 && course.links.length>0){
+    return redirect(`/tutorials/${courseSlug}/${course.links[0].slug}`);
   }
-  let course=await res.json();
 
   return (
-    <CourseProvider isLoggedIn={isLoggedIn} serverCourse={course}>
+    <CourseProvider serverCourse={course}>
         <PublishPage/>
     </CourseProvider>
   );

@@ -8,19 +8,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Edit } from "lucide-react";
 
-export default function ArticleRenderer({article,statusCode,isContentOwner=false}:{
+export default function ArticleRenderer({article,isContentOwner=false}:{
   article:ArticleSchema;
-  statusCode:Number;
   isContentOwner:Boolean;
 }){
-
-  if(statusCode===401){
-    return (
-      <div className="flex items-center justify-center min-h-[85vh] text-gray-700">
-        You are unauthorized to access the content;
-      </div>
-    );
-  }
 
   if (!article) {
     return notFound();

@@ -71,32 +71,37 @@ export interface ArticleSchema {
 
 import type { PartialBlock } from "@blocknote/core";
 
+export interface Tutorial {
+  _id:any;
+  title: string;
+  order: number;
+  content?: PartialBlock[];
+  slug: string;
+  courseSlug: string;
+  owner: {
+    name: string;
+    email?: string;
+  };
+  status: "published" | "draft";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface UICourse {
   _id: any; // mongoId OR localCourseId
   title: string;
   description?: string;
   slug: string;
-
-  links: {
-    linkId: string;
-    title: string;
-    order: number;
-    content?: PartialBlock[];
-    slug: string;
-  }[];
-
-  status: "published" | "draft";
-
-  owner: {
-    name: string;
-    email: string;
-  };
+  links: Tutorial[];
   createdAt: string;
   updatedAt: string;
 };
 
 export interface Peers {
   name: string;
-  profile: { course: { name: string }; startYear: number; endYear: number };
+  profile: {
+    course: { name: string };
+    startYear: number;
+    endYear: number
+  };
 }
-
