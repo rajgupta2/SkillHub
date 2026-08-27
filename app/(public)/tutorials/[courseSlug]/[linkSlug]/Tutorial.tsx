@@ -5,6 +5,7 @@ import {
   Delete,
   Edit,
   Pencil,
+  Rocket,
   Save,
   Trash,
 } from "lucide-react";
@@ -62,6 +63,31 @@ export default function Tutorial({
     if(res.status===500) alert("Failed to update tutorial.");
   }
 
+  async function publishTutorial() {
+    const tokenRes = await fetch("/api/find-token", { method: "GET" });
+    const dataToken = await tokenRes.json();
+    const token = dataToken.token;
+    if (!token) return alert("Please login to make it publish.");
+    else if (!isTutorialOwner)
+      return alert("You are unauthorized to publish it.");
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/publish/${t.courseSlug}/${t.slug}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    if (res.status === 200){
+       console.log("Tutorial published successfully.");
+       router.refresh();
+    }
+    if (res.status === 500) alert("Failed to publish tutorial.");
+  }
+
   async function deleteTutorial() {
     try {
       const toDelete:boolean=confirm("Are you sure to delete the tutorial?. You can't access it later.");
@@ -110,6 +136,17 @@ export default function Tutorial({
   return (
     <div className=" mx-auto px-6">
       <div className="flex justify-end gap-4 mb-4 px-12">
+        {isTutorialOwner && t.status==="draft" && (
+          <Button
+            onClick={() => {
+              publishTutorial();
+            }}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white cursor-pointer"
+            title="Publish"
+          >
+            <Rocket /> Publish
+          </Button>
+        )}
         {isTutorialOwner && isEditing === false && (
           <Button
             onClick={() => {
