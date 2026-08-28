@@ -107,7 +107,7 @@ export function CoursePage({
         </div>
 
         {/* Sidebar Links */}
-        <nav className="flex flex-col max-h-screen px-4">
+        <nav className="flex flex-col px-4">
           {course.links.map((link: any) => {
             const isActive = linkSlug === link.slug;
             return (

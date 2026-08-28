@@ -135,7 +135,7 @@ export default function Tutorial({
 
   return (
     <div className=" mx-auto px-6">
-      <div className="flex justify-end gap-4 mb-4 px-12">
+      <div className="flex justify-end gap-4">
         {isTutorialOwner && t.status==="draft" && (
           <Button
             onClick={() => {
@@ -180,7 +180,7 @@ export default function Tutorial({
             className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
             title="Delete"
           >
-            <Trash />
+            <Trash /> Delete
           </Button>
         )}
       </div>

@@ -8,29 +8,14 @@ import { formateDate } from "@/lib/formateDate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { generateLinkSlug } from "@/lib/slugify";
-import { Material } from "@/types/types";
-
-const handleShare = async (url:string) => {
-
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: "Check this out",
-        text: "View this resource",
-        url:`${window.location.origin}/resources`,
-      });
-    } catch (e) {
-      console.log("Share cancelled");
-    }
-  } else {
-    await navigator.clipboard.writeText(url);
-    alert("Link copied to clipboard!");
-  }
-};
+import { College, Material } from "@/types/types";
 
 export function ResourcesPage({materials}:{materials:Material[]}) {
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
+  const filterTypes = ["All", "Notes", "Assignment", "Project", "PYQ"];
+  const [colleges, setColleges] = useState<Array<College>>([]);
+  const [collegeId, setCollegeId] = useState<Number>(0);
 
     // Filter + Search logic
   const filteredResources = materials.filter((r) => {
@@ -39,17 +24,26 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
       r.title.toLowerCase().includes(search.toLowerCase()) ||
       r.subject.toLowerCase().includes(search.toLowerCase()) ||
       r.uploadedBy.name.toLowerCase().includes(search.toLowerCase());
-    return matchesFilter && matchesSearch;
+    const matchCollege =
+      (collegeId===0) ||  //No College Selected.
+      (r.uploadedBy.profile?.college && r.uploadedBy.profile.college.id === collegeId) ||
+      (!r.uploadedBy.profile?.college && collegeId===-1); //collegeId=-1 set by developer for others resource whose college is missing.
+    return matchesFilter && matchesSearch && matchCollege;
   });
 
-  const filterTypes = ["All", "Notes", "Assignment", "Project","PYQ"];
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/colleges`).then(async (res)=>{
+      if(res.status===200)  setColleges(await res.json());
+    });
+  }, []);
   const pathname=usePathname();
+  const isStudentCollegePage: boolean = pathname === "/student/college";
   return (
     <div className="pt-8 bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:justify-between gap-4 px-4 md:px-10">
+      <div className="grid md:grid-cols-3 items-center justify-center gap-3 px-4 md:px-10">
         {/* Filter Section */}
-        <div className="flex gap-3 flex-wrap justify-center">
+        <div className="flex flex-wrap gap-3 justify-center">
           {filterTypes.map((type) => (
             <Button
               key={type}
@@ -64,31 +58,42 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
             </Button>
           ))}
         </div>
-        {/* Search + Share Container */}
-        <div className="w-full md:w-auto flex flex-row items-center justify-center gap-3">
-          <div className="relative w-90 mt-4 md:mt-0">
-            <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+        <div>
+          {
+          !isStudentCollegePage && (
+          <select
+            name="collegeId"
+            onChange={(e) => {
+              setCollegeId(Number(e.target.value));
+            }}
+            className="w-full border border-gray-500 rounded-lg px-4 py-2 focus:outline-none"
+          >
+            <option value="0">Filter By College</option>
+            {colleges.map((c) => (
+              <option
+                key={c.id}
+                value={c.id}
+                title={`${c.name}, ${c.city}, ${c.district}, ${c.state}`}
+              >
+                {`${c.name}, ${c.city}, ${c.district}, ${c.state}`}
+              </option>
+            ))}
+            <option value="-1">Other</option>
+          </select>
+          )}
+        </div>
+        {/* Search Container */}
+        <div>
+          <div className="w-full flex items-center border border-gray-500 rounded-lg">
+            <Search className="text-gray-400 w-5 h-5 ml-2" />
             <input
               type="text"
               placeholder="Search by title, subject, or uploader..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full p-2 focus:outline-none"
             />
           </div>
-
-          {/* Share button – small & inline on mobile */}
-          <button
-            onClick={() => {
-              handleShare(window.location.href);
-            }}
-            className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2
-                      rounded-md hover:bg-blue-700 transition shadow-sm md:mt-0
-                      w-fit text-sm mt-4"
-          >
-            <Share2 className="w-5 h-5" />
-            Share
-          </button>
         </div>
       </div>
 
@@ -139,7 +144,8 @@ export function ResourcesPage({materials}:{materials:Material[]}) {
                   </span>
                 </p>
                 <span className="flex text-gray-400 text-xs mt-1">
-                  <Calendar className="w-4 h-4 mr-2" /> {formateDate(resource.createdAt)}
+                  <Calendar className="w-4 h-4 mr-2" />{" "}
+                  {formateDate(resource.createdAt)}
                 </span>
                 <div className="flex justify-end mt-auto">
                   <Link
